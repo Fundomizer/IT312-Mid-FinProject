@@ -1,0 +1,63 @@
+:root {
+    --border-rad: 10px;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+button {
+    cursor: pointer;
+}
+
+.CenterContent {
+    display: flex;
+    flex-direction: column;
+    width: 30vw;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    gap: 10px;
+}
+
+.CenterContent > div, .CenterContent div {
+    display: flex;
+    flex-direction: column;
+    gap:  10px;
+}
+
+#InputFields {
+    gap: 20px;
+}
+
+.CenterContent > :nth-last-child(2) {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+}
+
+.CenterContent input {
+    border-radius: var(--border-rad);
+    height: 2rem;
+}
+
+.CenterContent button {
+    margin-top: 25px;
+    padding: 10px;
+    height: 3rem;
+    width: 100%;
+    border-radius: var(--border-rad);
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.CenterContent button > img {
+    aspect-ratio: 1 / 1;
+    height: 100%;
+}
