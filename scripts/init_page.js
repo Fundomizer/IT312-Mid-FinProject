@@ -7,10 +7,10 @@ const sideNav = document.getElementById("SideNav");
 const navButs = {
     admin: [
         {
-            label: "Users", icon: "📊", onClick: () => console.log("Navigating to users")
+            label: "Users", icon: "📊", onClick: () => loadPage("../pages/admin/users_page.html")
         },
         {
-            label: "Logs", icon: "👥", onClick: () => console.log("Navigating to logs")
+            label: "Logs", icon: "👥", onClick: () => loadPage("../pages/admin/logs_page.html")
         }
     ],
     osa: [
@@ -39,7 +39,7 @@ const navButs = {
 }
 
 // NOTE change userType to either admin, osa, or org
-function loadNav(userType = "org") {
+function loadNav(userType = "admin") {
     console.log(userType);
 
     const list = document.createElement("ul")
@@ -75,17 +75,16 @@ function createNavItem({ icon, label, onClick }) {
     return li;
 }
 
+function loadPage(page) {
+    fetch(page)
+        .then(result => result.text()) // Convert into html text
+        .then(html => document.getElementsByClassName("Content")[0].innerHTML = html);
+}
 loadNav()
 
 sideNavButton.addEventListener("click", function () {
     sideNav.classList.toggle("expanded");
     console.log("Clicked");
 });
-
-function loadPage(page) {
-    fetch(page)
-        .then(result => result.text()) // Convert into html text
-        .then(html => document.getElementsByClassName("Content")[0].innerHTML = html);
-}
 
 loadPage("../pages/admin/users_page.html")

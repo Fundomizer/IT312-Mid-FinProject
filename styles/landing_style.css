@@ -111,10 +111,8 @@ button {
 }
 
 
-
 /*TOP NAV BAR*/
 #TopNav {
-    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -176,4 +174,9 @@ button {
   width: 1rem;
   height: 1rem;
   display: inline-block;
+}
+
+.Content {
+    height: 100%;
+    padding: 0 1rem 0 5rem;
 }
