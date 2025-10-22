@@ -81,3 +81,11 @@ sideNavButton.addEventListener("click", function () {
     sideNav.classList.toggle("expanded");
     console.log("Clicked");
 });
+
+function loadPage(page) {
+    fetch(page)
+        .then(result => result.text()) // Convert into html text
+        .then(html => document.getElementsByClassName("Content")[0].innerHTML = html);
+}
+
+loadPage("../pages/admin/users_page.html")
