@@ -15,7 +15,7 @@ loginButton.addEventListener("click", () => {
     console.log(passwordInput.value);
 
     // Add site redirect here
-    window.location.href = "./landing/landing_page.html"; // TODO once database is implemented add a secure way to fix to redirect
+    window.location.href = "./pages/landing_page.html"; // TODO once database is implemented add a secure way to fix to redirect
 
 });
 
