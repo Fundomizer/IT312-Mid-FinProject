@@ -180,3 +180,11 @@ button {
     height: 100%;
     padding: 0 1rem 0 5rem;
 }
+#TopNav {
+    
+    transition: margin-left 0.4s ease;
+}
+
+#SideNav.expanded ~ #TopNav {
+    margin-left: 12rem; 
+}
