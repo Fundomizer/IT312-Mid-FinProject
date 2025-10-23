@@ -24,7 +24,7 @@ const navButs = {
             label: "Forms", icon: "👥", onClick: () => console.log("Navigating to forms")
         },
         {
-            label: "Forms", icon: "🏫", onClick: () => console.log("Navigating to repository")
+            label: "Repository", icon: "🏫", onClick: () => console.log("Navigating to repository")
         }
     ],
     org: [
