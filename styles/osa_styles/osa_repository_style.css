@@ -1,0 +1,11 @@
+.MainContent {
+    margin-left: 4rem; 
+    padding: 20px;
+    background-color: #f9f9f9;
+    min-height: 100vh;
+    transition: margin-left 0.4s ease;
+}
+
+#SideNav.expanded ~ .MainContent {
+    margin-left: 16rem; 
+}
