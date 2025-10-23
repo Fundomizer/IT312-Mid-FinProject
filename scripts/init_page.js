@@ -1,9 +1,12 @@
+import { createNavItem } from "./components.js";
+
 // This script will be for dynamically generating the buttons for the navigation.
 const sideNavContent = document.getElementsByClassName("SideNavContent")
 const sideNavButton = document.getElementById("ToggleSideNavButton");
 const sideNav = document.getElementById("SideNav");
 
 // TODO This code doesn't feel safe
+// Might need a better way for structuring this thing
 const navButs = {
     admin: [
         {
@@ -39,6 +42,7 @@ const navButs = {
 }
 
 // NOTE change userType to either admin, osa, or org
+// This default value will be changed later on
 function loadNav(userType = "admin") {
     console.log(userType);
 
@@ -50,36 +54,12 @@ function loadNav(userType = "admin") {
     sideNavContent[0].appendChild(list);
 }
 
-
-// Reusable function for creating nav bar buttons
-function createNavItem({ icon, label, onClick }) {
-    const li = document.createElement("li");
-
-    const button = document.createElement("button");
-    button.classList.add("NavItems");
-
-    const iconSpan = document.createElement("span");
-    iconSpan.classList.add("icon");
-    iconSpan.textContent = icon;
-
-    const labelSpan = document.createElement("span");
-    labelSpan.classList.add("label");
-    labelSpan.textContent = label;
-
-    button.appendChild(iconSpan);
-    button.appendChild(labelSpan);
-
-    if (onClick) button.addEventListener("click", onClick);
-
-    li.appendChild(button);
-    return li;
-}
-
 function loadPage(page) {
     fetch(page)
         .then(result => result.text()) // Convert into html text
         .then(html => document.getElementsByClassName("Content")[0].innerHTML = html);
 }
+
 loadNav()
 
 sideNavButton.addEventListener("click", function () {
