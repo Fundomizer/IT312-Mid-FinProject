@@ -176,7 +176,7 @@ button {
   display: inline-block;
 }
 
-.Content {
+#Content {
     height: 100%;
     padding: 0 1rem 0 5rem;
 }

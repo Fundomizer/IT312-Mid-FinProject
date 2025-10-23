@@ -1,11 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../../scripts/admin/users_page.js" defer></script>
+    <link rel="stylesheet" href="../../styles/admin/users_page.css">
     <title>Document</title>
 </head>
+
 <body>
-    <p>Welcome to the user page</p>
+    <section id="PageContent">
+        <div>
+            <h1>Dashboard</h1>
+            <p>Manage user accounts and view system activity</p>
+        </div>
+
+        <div id="AccountsView">
+            <div class="Header">
+                <div>
+                    <p><b>User accounts</b></p>
+                    <p>Create, Read, Update, and Delete user accounts</p>
+                </div>
+                <button id="AddUserButton">
+                    <img src="" alt="add-user-icon">
+                    <span>Add user</span>
+                </button>
+            </div>
+            <div>
+                <table id="AccountsTableView">
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Created</th>
+                        <th>Action</th>
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+    </section>
 </body>
+
 </html>
