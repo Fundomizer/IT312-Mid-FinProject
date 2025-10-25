@@ -1,8 +1,3 @@
-// This script will be for dynamically generating the buttons for the navigation.
-const sideNavContent = document.getElementsByClassName("SideNavContent")
-const sideNavButton = document.getElementById("ToggleSideNavButton");
-const sideNav = document.getElementById("SideNav");
-
 // TODO This code doesn't feel safe
 // Might need a better way for structuring this thing
 const navButs = {
@@ -47,8 +42,8 @@ const navButs = {
  * @param {String} script File name of the script the page uses, it should include the file extension.
  * @param {String} loadInto Default as "Content". ID of the container to load the page into
  */
-function loadPage(role="admin", page="users_page.html",
-    style="users_style.css", script="users_script.js",
+export function loadPage(role, page,
+    style, script,
     loadInto = "Content") {
 
     let pathToPage = `../../pages/${role}/${page}`
@@ -88,11 +83,3 @@ function loadPage(role="admin", page="users_page.html",
     }
 
 }
-
-// initalise side bar buttons
-sideNavButton.addEventListener("click", function () {
-    sideNav.classList.toggle("expanded");
-    console.log("Clicked");
-});
-
-loadPage()
