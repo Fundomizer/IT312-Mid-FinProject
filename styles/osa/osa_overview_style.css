@@ -1,4 +1,4 @@
-.MainContent {
+#PageContent {
     margin-left: 4rem; 
     padding: 20px;
     background-color: #f9f9f9;
@@ -6,7 +6,7 @@
     transition: margin-left 0.4s ease;
 }
 
-#SideNav.expanded ~ .MainContent {
+#SideNav.expanded ~ #PageContent {
     margin-left: 16rem; 
 }
   .dashboard-content .card{
@@ -30,7 +30,7 @@
     display: flex;
     flex-wrap: wrap; 
     gap: 20px; 
-    justify-content: flex-start;
+    justify-content: center;
     margin-top: 20px;
     }
 
@@ -63,7 +63,7 @@
     display: flex;
     flex-wrap: wrap; 
     gap: 20px; 
-    justify-content: flex-start;
+    justify-content: center;
     margin-top: 20px;
 }
 .charts-section .chart-container{

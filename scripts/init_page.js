@@ -18,13 +18,13 @@ const navButs = {
     ],
     osa: [
         {
-            label: "Overview", icon: "📊", onClick: () => console.log("Navigating to overview")
+            label: "Overview", icon: "📊", onClick: () => loadPage("osa", "overview_page.html", "osa_overview_style.css", "overview_script.js")
         },
         {
-            label: "Forms", icon: "👥", onClick: () => console.log("Navigating to forms")
+            label: "Forms", icon: "👥", onClick: () => loadPage("osa", "forms_page.html", "osa_forms_style.css", "forms_script.js")
         },
         {
-            label: "Repository", icon: "🏫", onClick: () => console.log("Navigating to repository")
+            label: "Repository", icon: "🏫", onClick: () => loadPage("osa", "repository_page.html", "osa_repository_style.css", "repository_script.js")
         }
     ],
     org: [
@@ -43,7 +43,7 @@ const navButs = {
 
 // NOTE change userType to either admin, osa, or org
 // This default value will be changed later on
-function loadNav(userType = "admin") {
+function loadNav(userType = "osa") {
     console.log(userType);
 
     const list = document.createElement("ul")
@@ -76,6 +76,8 @@ function loadPage(role, page, style, script, loadInto = "Content") {
             const html = parser.parseFromString(htmlText, "text/html")
             const mainContent = html.querySelector("#PageContent");
             document.getElementById(loadInto).innerHTML = mainContent.innerHTML
+
+            
 
             // Load CSS and Script into assigned to that page
             if (pathToStyle) loadCSS(pathToStyle);
