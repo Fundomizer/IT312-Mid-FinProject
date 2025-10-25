@@ -6,9 +6,6 @@
     transition: margin-left 0.4s ease;
 }
 
-#SideNav.expanded ~ #PageContent {
-    margin-left: 16rem; 
-}
   .dashboard-content .card{
     background-color: #ffffff;
     border-radius: 8px;
