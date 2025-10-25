@@ -1,10 +1,3 @@
-import { createNavItem } from "./components.js";
-
-// This script will be for dynamically generating the buttons for the navigation.
-const sideNavContent = document.getElementsByClassName("SideNavContent")
-const sideNavButton = document.getElementById("ToggleSideNavButton");
-const sideNav = document.getElementById("SideNav");
-
 // TODO This code doesn't feel safe
 // Might need a better way for structuring this thing
 const navButs = {
@@ -41,6 +34,7 @@ const navButs = {
 
 }
 
+
 // NOTE change userType to either admin, osa, or org
 // This default value will be changed later on
 function loadNav(userType = "osa") {
@@ -54,19 +48,23 @@ function loadNav(userType = "osa") {
     sideNavContent[0].appendChild(list);
 }
 
+
 /**
- * Dynamically loads and injects a HTML file into the container, "Content".
+ * Dynamically loads and injects a HTML file into the container, "Content". Provide the file name for the style and script if you intend to use a different file for them.
+ * 
  * @param {String} role User type. Should match the directory name. Values should be "admin", "org", or "osa".
  * @param {String} page HTML page being loaded into the container, "Content".
- * @param {String} style File name of the style sheet the page uses, it should include the file exntension.
- * @param {String} script File name of the script the page uses, it should include the file extension.
+ * @param {String} style Defaults to an empty string. File name of the style sheet the page uses, it should include the file exntension.
+ * @param {String} script Defaults to an empty string. File name of the script the page uses, it should include the file extension.
  * @param {String} loadInto Default as "Content". ID of the container to load the page into
  */
-function loadPage(role, page, style, script, loadInto = "Content") {
+export function loadPage(role, page,
+    style = "", script = "",
+    loadInto = "Content") {
 
-    let pathToPage = `../pages/${role}/${page}`
-    let pathToScript = `../scripts/${role}/${script}`
-    let pathToStyle = `../styles/${role}/${style}`
+    let pathToPage = `../../pages/${role}/${page}`
+    let pathToScript = `../../scripts/${role}/${script}`
+    let pathToStyle = `../../styles/${role}/${style}`
 
     fetch(pathToPage)
         .then(result => result.text()) // Convert into html text
@@ -103,14 +101,3 @@ function loadPage(role, page, style, script, loadInto = "Content") {
     }
 
 }
-
-// initalise side bar buttons
-
-sideNavButton.addEventListener("click", function () {
-    sideNav.classList.toggle("expanded");
-    console.log("Clicked");
-});
-
-// TODO change this later. Add a better way to dynamically change to the different views later on
-loadNav()
-loadPage( "admin", "users_page.html", "users_style.css", "users_script.js")

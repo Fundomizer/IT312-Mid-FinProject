@@ -2,49 +2,68 @@
     --border-rad: 10px;
 }
 
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 button {
     cursor: pointer;
 }
 
-.CenterContent {
+body {
+    margin: 0;
+    padding: 0;
+}
+
+section {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+}
+
+section>div {
+    width: 50%;
     display: flex;
     flex-direction: column;
-    width: 30vw;
+    justify-content: center;
+    align-items: center;
+}
+
+section>div:first-child {}
+
+section>div:last-child {}
+
+.Card {
+    display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
     justify-content: center;
     align-items: stretch;
+    width: 40%;
     gap: 10px;
+    padding: 50px 40px;
 }
 
-.CenterContent > div, .CenterContent div {
+.Card>div,
+.Card div {
     display: flex;
     flex-direction: column;
-    gap:  10px;
+    gap: 10px;
 }
 
 #InputFields {
     gap: 20px;
 }
 
-.CenterContent > :nth-last-child(2) {
+.Card> :nth-last-child(2) {
     display: flex;
     align-items: center;
     text-align: center;
     width: 100%;
 }
 
-.CenterContent input {
+.Card input {
     border-radius: var(--border-rad);
     height: 2rem;
 }
 
-.CenterContent button {
+.Card button {
     margin-top: 25px;
     padding: 10px;
     height: 3rem;
@@ -57,7 +76,7 @@ button {
     justify-content: center;
 }
 
-.CenterContent button > img {
+.Card button>img {
     aspect-ratio: 1 / 1;
     height: 100%;
 }
