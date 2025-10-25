@@ -35,15 +35,16 @@ const navButs = {
 }
 
 /**
- * Dynamically loads and injects a HTML file into the container, "Content".
+ * Dynamically loads and injects a HTML file into the container, "Content". Provide the file name for the style and script if you intend to use a different file for them.
+ * 
  * @param {String} role User type. Should match the directory name. Values should be "admin", "org", or "osa".
  * @param {String} page HTML page being loaded into the container, "Content".
- * @param {String} style File name of the style sheet the page uses, it should include the file exntension.
- * @param {String} script File name of the script the page uses, it should include the file extension.
+ * @param {String} style Defaults to an empty string. File name of the style sheet the page uses, it should include the file exntension.
+ * @param {String} script Defaults to an empty string. File name of the script the page uses, it should include the file extension.
  * @param {String} loadInto Default as "Content". ID of the container to load the page into
  */
 export function loadPage(role, page,
-    style, script,
+    style = "", script = "",
     loadInto = "Content") {
 
     let pathToPage = `../../pages/${role}/${page}`
