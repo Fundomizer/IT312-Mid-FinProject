@@ -1,5 +1,3 @@
-import { createNavItem } from "./components.js";
-
 // This script will be for dynamically generating the buttons for the navigation.
 const sideNavContent = document.getElementsByClassName("SideNavContent")
 const sideNavButton = document.getElementById("ToggleSideNavButton");
@@ -41,19 +39,6 @@ const navButs = {
 
 }
 
-// NOTE change userType to either admin, osa, or org
-// This default value will be changed later on
-function loadNav(userType = "admin") {
-    console.log(userType);
-
-    const list = document.createElement("ul")
-    navButs[userType].forEach(element => {
-        list.appendChild(createNavItem(element))
-    })
-
-    sideNavContent[0].appendChild(list);
-}
-
 /**
  * Dynamically loads and injects a HTML file into the container, "Content".
  * @param {String} role User type. Should match the directory name. Values should be "admin", "org", or "osa".
@@ -62,11 +47,13 @@ function loadNav(userType = "admin") {
  * @param {String} script File name of the script the page uses, it should include the file extension.
  * @param {String} loadInto Default as "Content". ID of the container to load the page into
  */
-function loadPage(role, page, style, script, loadInto = "Content") {
+function loadPage(role="admin", page="users_page.html",
+    style="users_style.css", script="users_script.js",
+    loadInto = "Content") {
 
-    let pathToPage = `../pages/${role}/${page}`
-    let pathToScript = `../scripts/${role}/${script}`
-    let pathToStyle = `../styles/${role}/${style}`
+    let pathToPage = `../../pages/${role}/${page}`
+    let pathToScript = `../../scripts/${role}/${script}`
+    let pathToStyle = `../../styles/${role}/${style}`
 
     fetch(pathToPage)
         .then(result => result.text()) // Convert into html text
@@ -103,12 +90,9 @@ function loadPage(role, page, style, script, loadInto = "Content") {
 }
 
 // initalise side bar buttons
-
 sideNavButton.addEventListener("click", function () {
     sideNav.classList.toggle("expanded");
     console.log("Clicked");
 });
 
-// TODO change this later. Add a better way to dynamically change to the different views later on
-loadNav()
-loadPage( "admin", "users_page.html", "users_style.css", "users_script.js")
+loadPage()
