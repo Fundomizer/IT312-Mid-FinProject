@@ -1,5 +1,6 @@
 :root {
     --card-bg-color: #131824;
+    --subcard-bg-color: #131824;
     --outline-color: #232937;
     --text-color: white;
 }
@@ -9,9 +10,17 @@ body {
     color: var(--text-color);
 }
 
-.Card {
-    padding: 4rem 2rem;
-    background-color: var(--card-bg-color);
+.Card, .SubCard{
     color: white;
     border-radius: 25px;
+    outline: 2px solid var(--outline-color);
+}
+
+.Card {
+    background-color: var(--card-bg-color);
+    padding: 2rem;
+}
+
+.SubCard {
+    background-color: var(--subcard-bg-color);
 }
