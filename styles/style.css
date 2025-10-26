@@ -25,11 +25,7 @@ section>div {
     align-items: center;
 }
 
-section>div:first-child {}
-
-section>div:last-child {}
-
-.Card {
+.LoginForm {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -40,8 +36,8 @@ section>div:last-child {}
     padding: 50px 40px;
 }
 
-.Card>div,
-.Card div {
+.LoginForm>div,
+.LoginForm div {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -51,19 +47,19 @@ section>div:last-child {}
     gap: 20px;
 }
 
-.Card> :nth-last-child(2) {
+.LoginForm> :nth-last-child(2) {
     display: flex;
     align-items: center;
     text-align: center;
     width: 100%;
 }
 
-.Card input {
+.LoginForm input {
     border-radius: var(--border-rad);
     height: 2rem;
 }
 
-.Card button {
+.LoginForm button {
     margin-top: 25px;
     padding: 10px;
     height: 3rem;
@@ -76,7 +72,7 @@ section>div:last-child {}
     justify-content: center;
 }
 
-.Card button>img {
+.LoginForm button>img {
     aspect-ratio: 1 / 1;
     height: 100%;
 }
