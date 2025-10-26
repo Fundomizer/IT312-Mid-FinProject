@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <script src="../../scripts/navigation_bar.js" defer></script>
     <title>Document</title>
 </head>
+
 <body>
     <div id="SideNav">
         <button id="ToggleSideNavButton">
@@ -37,15 +39,22 @@
     </div>
     <section class="Main">
         <div id="TopNav">
-            <h1 class="logo">Welcome student</h1>
+
             <div class="TopNavContents">
-                <button class="TopNavButton">Notif</button>
-                <button class="TopNavButton">Button</button>
-                <button class="TopNavButton">Logout</button>
+                <button class="TopNavButton">
+                    <img src="../../assets/images/icons/bell_icon.png" alt="Bell icon">
+                </button>
+                <button class="TopNavButton UserProfile">
+                    <img id="UserProfilePic" src="" alt="User profile pic">
+                    <p id="UsernameLabel">Username</p>
+                </button>
+                <button class="TopNavButton">
+                    <img src="../../assets/images/icons/logout_icon.png" alt="Logout icon">Logout</button>
             </div>
         </div>
         <div id="Content">
         </div>
     </section>
 </body>
+
 </html>
