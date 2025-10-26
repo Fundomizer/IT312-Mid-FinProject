@@ -1,5 +1,5 @@
 
-.PageContent {
+#PageContent {
     margin-left: 4rem; 
     padding: 20px;
     background-color: #f9f9f9;
@@ -7,6 +7,4 @@
     transition: margin-left 0.4s ease;
 }
 
-#SideNav.expanded ~ .PageContent {
-    margin-left: 16rem; 
-}
+

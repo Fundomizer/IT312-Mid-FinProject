@@ -58,8 +58,7 @@ function loadNav(userType = "osa") {
  * @param {String} script Defaults to an empty string. File name of the script the page uses, it should include the file extension.
  * @param {String} loadInto Default as "Content". ID of the container to load the page into
  */
-export function loadPage(role, page,
-    style = "", script = "",
+export function loadPage(role, page, style, script,
     loadInto = "Content") {
 
     let pathToPage = `../../pages/${role}/${page}`
