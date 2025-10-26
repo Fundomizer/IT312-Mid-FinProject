@@ -3,9 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../styles/navigation_bar_style.css">
+    <link rel="stylesheet" href="../../styles/org/org_assigned_overview.css">
+    <script src="../../scripts/navigation_bar.js" defer></script>
     <title>Document</title>
 </head>
 <body>
-    
+    <div id="SideNav">
+        <button id="ToggleSideNavButton">
+            <img src="../../assets/images/icons/Hamburger_Icon.png" alt="HamburgerMenu" class="hamburger-icon">
+        </button>
+        <div class="SideNavContent">
+            <ul>
+                <li>
+                    <button class="NavItems">
+                        <span class="icon">📊</span>
+                        <span class="label">Dashboard</span>
+                    </button>
+                </li>
+                <li>
+                    <button class="NavItems">
+                        <span class="icon">👥</span>
+                        <span class="label">Assigned Form</span>
+                    </button>
+                </li>
+                <li>
+                    <button class="NavItems">
+                        <span class="icon">🏫</span>
+                        <span class="label">History</span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <section class="Main">
+        <div id="TopNav">
+            <div class="TopNavContents">
+                <button class="TopNavButton">Notif</button>
+                <button class="TopNavButton">Button</button>
+                <button class="TopNavButton">Logout</button>
+            </div>
+        </div>
+        <div id="Content">
+            <div id="Space"> <!-- This is only to set the right margin -->
+                <h1 id="Associated-Org-Name">Association for Computing Machinery (ACM)</h1>
+                <h3 style="color: rgb(175, 175, 175)">Submit and manage your organization's requirements</h3>
+                <div>
+                    <input id="Search-Bar" placeholder="Search files, forms, organization">
+                </div>
+                <div class="Org-Layout">
+                    <h4>Forms Assigned to Your organization</h4>
+                    <p>
+                        Fill out these structured forms to submit requirements. Forms ensure all necessary information is captured 
+                        for easy searching by OSA
+                    </p>
+                    <div style="background-color: #1e1f47;" class="Org-Layout">
+                        <div id="Form-Section">
+                            <img src="../../assets/images/org_icons/form.png" class="Form-Image">
+                            <span>OSA-Assigned Forms</span>
+                        </div>
+                        <p id="Alert-Space">
+                            These forms are specifically assigned to your organization by OSA. Filling them out ensures you 
+                            provide all required information in a searchable format.
+                        </p>
+                    </div>
+                    <div class="Org-Layout">
+                        <div id="Form-Section">
+                            <h3>Strategic Plan Submission</h3>
+                            <p id="type">Strategic Plan</p>
+                            <button id="Form-Button">
+                                <img src="../../assets/images/org_icons/form.png" class="Form-Image">
+                                Fill Out Form
+                            </button>
+                        </div>
+                        <p>
+                            Submit your organization's strategic plan with detailed objectives and action items
+                        </p>
+                        <div id="Form-Section">
+                            <p>
+                                <img src="../../assets/images/org_icons/field.png" class="Form-Image">
+                                7 fields
+                            </p>
+                            <p>
+                                <img src="../../assets/images/org_icons/upload.png" class="Form-Image">
+                                File upload required
+                            </p>
+                        </div>
+                        <div id="Form-Section">
+                            <p id="tag">strategic-plan</p>
+                            <p id="tag">planning</p>
+                            <p id="tag">organizational</p>
+                        </div>
+                    </div>
+                    <div class="Org-Layout">
+                        <div id="Form-Section">
+                            <h3>Event After-Action Report</h3>
+                            <p id="type">Activity Report</p>
+                            <button id="Form-Button">
+                                <img src="../../assets/images/org_icons/form.png" class="Form-Image">
+                                Fill Out Form
+                            </button>
+                        </div>
+                        <p>
+                            Document completed events with outcomes and learnings
+                        </p>
+                        <div id="Form-Section">
+                            <p>
+                                <img src="../../assets/images/org_icons/field.png" class="Form-Image">
+                                10 fields
+                            </p>
+                            <p>
+                                <img src="../../assets/images/org_icons/upload.png" class="Form-Image">
+                                File upload required
+                            </p>
+                        </div>
+                        <div id="Form-Section">
+                            <p id="tag">activity-report</p>
+                            <p id="tag">event</p>
+                            <p id="tag">documentation</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </body>
 </html>
