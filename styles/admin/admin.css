@@ -19,3 +19,48 @@
     border-radius: 5px;
     width: 100%;
 }
+
+.Main>div:last-child>p {
+    font-size: 3rem;
+    margin: 10px 0px;
+}
+
+.AdminDashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.AdminDashboard>div {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+}
+
+.SubCard {
+    padding: 1rem 1.5rem;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    width: 20vw;
+}
+
+.SubCard>span {
+    width: 100%;
+}
+
+.SubCard>span>p:last-of-type {
+    font-size: 3rem;
+}
+
+.SubCard>img {
+    aspect-ratio: 1/1;
+    object-fit: cover;
+}
+
+.SubCard>div {
+    aspect-ratio: 1/1;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+}
