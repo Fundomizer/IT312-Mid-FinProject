@@ -1,3 +1,8 @@
+@font-face {
+    font-family: "Ubuntu";
+    src: url("../assets/fonts/Ubuntu-Regular.ttf");
+}
+
 :root {
     --card-bg-color: #131824;
     --subcard-bg-color: #131824;
@@ -6,11 +11,13 @@
 }
 
 body {
+    font-family: "Ubuntu";
     height: 100vh;
     color: var(--text-color);
 }
 
-.Card, .SubCard{
+.Card,
+.SubCard {
     color: white;
     border-radius: 25px;
     outline: 2px solid var(--outline-color);
