@@ -75,11 +75,11 @@ export function loadPage(role, page,
             const mainContent = html.querySelector("#PageContent");
             document.getElementById(loadInto).innerHTML = mainContent.innerHTML
 
-            
+
 
             // Load CSS and Script into assigned to that page
-            if (pathToStyle) loadCSS(pathToStyle);
-            if (pathToScript) loadScript(pathToScript);
+            if (style) loadCSS(pathToStyle);
+            if (script) loadScript(pathToScript);
         });
 
     function loadScript(src) {
