@@ -8,6 +8,7 @@
     --subcard-bg-color: #131824;
     --outline-color: #232937;
     --text-color: white;
+    --search-bar-bg-color: #1E2432;
 }
 
 body {
@@ -30,4 +31,25 @@ body {
 
 .SubCard {
     background-color: var(--subcard-bg-color);
+}
+
+.SearchBar {
+    margin: 5px;
+    padding: 5px 15px;
+    width: 100%;
+    gap: 5px;
+    display: flex;
+    align-items: center;
+    background-color: var(--search-bar-bg-color);
+    border-radius: 20px;
+}
+
+
+.SearchBar>input {
+    background-color: transparent;
+    border: 0px;
+    outline: none;
+    height: 2rem;
+    width: 40%;
+    color: var(--text-color);
 }
