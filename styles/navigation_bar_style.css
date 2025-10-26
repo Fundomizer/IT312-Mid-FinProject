@@ -1,3 +1,8 @@
+:root {
+    --main-bg-color: #0A0E1A;
+    --nav-bars-bg-color: #131824;
+}
+
 * {
     padding: 0;
     margin: 0;
@@ -9,7 +14,20 @@ button {
     cursor: pointer;
 }
 
+body {
+    background-color: var(--main-bg-color);
+}
 
+.Main {
+    width: auto;
+    height: 100%;
+}
+
+#SideNav,
+#TopNav {
+    background-color: var(--nav-bars-bg-color);
+    outline: 1px solid var(--outline-color);
+}
 
 /*SIDE NAVIGATION BAR*/
 #SideNav {
@@ -18,7 +36,6 @@ button {
     left: 0;
     height: 100vh;
     width: 4rem;
-    background-color: #1C2833;
     transition: width 0.4s ease;
     display: flex;
     flex-direction: column;
@@ -115,14 +132,12 @@ button {
 #TopNav {
     top: 0;
     left: 0;
-    width: 100%;
     height: 5rem;
-    background-color: white;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 1rem 0 5rem;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     z-index: 1;
     box-sizing: border-box;
     overflow: hidden;
@@ -149,47 +164,57 @@ button {
 }
 
 .TopNavButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  
-  padding: 0.4rem 0.9rem;
-  border: 1px solid #2c3e50;
-  border-radius: 4px;
-  background-color: transparent;
-  color: #2c3e50;
-  font-size: 0.9rem;
-  cursor: pointer;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    padding: 0.5rem;
+    border: 1px solid #2c3e50;
+    border-radius: 10px;
+    background-color: transparent;
+    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .TopNavButton:hover {
-  background-color: #f0f0f0;
+    background-color: #f0f0f0;
 }
 
 /*constrain icons inside buttons */
-.TopNavButton .ButtonIcon{
-  width: 1rem;
-  height: 1rem;
-  display: inline-block;
+.TopNavButton .ButtonIcon {
+    width: 1rem;
+    height: 1rem;
+    display: inline-block;
 }
 
 #Content {
     height: 100%;
     padding: 0 1rem 0 5rem;
-    margin-left: 4rem; 
+    margin-left: 4rem;
     transition: margin-left 0.4s ease;
 }
+
 #TopNav {
-    
+
     transition: margin-left 0.4s ease;
 }
-#SideNav.expanded ~ .Main #Content
-{
-    margin-left: 16rem; 
+
+#SideNav.expanded~.Main #Content {
+    margin-left: 16rem;
 }
-#SideNav.expanded ~ .Main #TopNav {
+
+#SideNav.expanded~.Main #TopNav {
     margin-left: 12rem;
+}
+
+.UserProfile {
+    padding: 10px;
+    background-color: #1A1F2E;
+    border-radius: 10px;
+    
+    display: flex;
 }

@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../styles/common.css">
     <link rel="stylesheet" href="../../styles/navigation_bar_style.css">
     <link rel="stylesheet" href="../../styles/admin/admin.css">
     <script src="/scripts/navigation_bar.js" defer></script>
@@ -20,7 +21,8 @@
             <ul>
                 <li>
                     <button class="NavItems" id="dashboardButton">
-                        <span class="icon"><img src="/assets/images/icons/dashboard_icon.png" alt="Dashboard icon"></span>
+                        <span class="icon"><img src="/assets/images/icons/dashboard_icon.png"
+                                alt="Dashboard icon"></span>
                         <span class="label">Dashboard</span>
                     </button>
                 </li>
@@ -32,7 +34,8 @@
                 </li>
                 <li>
                     <button class="NavItems" id="activityLogButton">
-                        <span class="icon"><img src="/assets/images/icons/activity_icon.png" alt="Dashboard icon"></span>
+                        <span class="icon"><img src="/assets/images/icons/activity_icon.png"
+                                alt="Dashboard icon"></span>
                         <span class="label">Activity Logs</span>
                     </button>
                 </li>
@@ -41,11 +44,17 @@
     </div>
     <section class="Main">
         <div id="TopNav">
-            <h1 class="logo">Welcome Admin</h1>
+
             <div class="TopNavContents">
-                <button class="TopNavButton">Notif</button>
-                <button class="TopNavButton">Button</button>
-                <button class="TopNavButton">Logout</button>
+                <button class="TopNavButton">
+                    <img src="../../assets/images/icons/bell_icon.png" alt="Bell icon">
+                </button>
+                <button class="TopNavButton UserProfile">
+                    <img id="UserProfilePic" src="" alt="User profile pic">
+                    <p id="UsernameLabel">Username</p>
+                </button>
+                <button class="TopNavButton">
+                    <img src="../../assets/images/icons/logout_icon.png" alt="Logout icon">Logout</button>
             </div>
         </div>
         <div id="Content">

@@ -1,0 +1,17 @@
+:root {
+    --card-bg-color: #131824;
+    --outline-color: #232937;
+    --text-color: white;
+}
+
+body {
+    height: 100vh;
+    color: var(--text-color);
+}
+
+.Card {
+    padding: 4rem 2rem;
+    background-color: var(--card-bg-color);
+    color: white;
+    border-radius: 25px;
+}
