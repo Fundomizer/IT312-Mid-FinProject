@@ -124,6 +124,8 @@
 .recent-submissions-section h3{
     margin-top: 0;  
     margin-bottom: 20px;
+    font-size: 2.5rem;
+
 }
 
 .recent-submissions-section {
@@ -147,6 +149,7 @@
 .active-organizations-section h3{
     margin-top: 0;  
     margin-bottom: 20px;
+    font-size: 2.5rem;
 }
 
 .active-organizations-section {
