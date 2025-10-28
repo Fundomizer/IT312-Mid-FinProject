@@ -1,10 +1,104 @@
-
 #PageContent {
-    margin-left: 4rem; 
+    margin-left: 4rem;
     padding: 20px;
     background-color: #f9f9f9;
     min-height: 100vh;
     transition: margin-left 0.4s ease;
 }
+
+
+.form-builder-section{
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    color:white;
+    background-color: #333333;
+}
+
+
+.form-builder-section h3{
+    margin-top: 0;
+    margin-bottom: 30px;
+}  
+
+
+.form-builder-section .form-item{
+    margin-top:20px;
+    margin-bottom: 15px;
+    border: 1px solid white;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+
+.form-builder-section .form-header{
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 24px;
+    gap: 20px;
+    display: flex;
+}
+.form-builder-section .form-description{
+    font-size: 16px;
+    color: #cccccc;
+}
+
+
+.form-builder-section .form-tag{
+   display: inline-block;
+    background-color: #AA336A;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 15px;
+    font-size: 18px;
+    font-weight: bold;
+   
+
+
+}
+
+
+.form-builder-section .form-field-count{
+    font-size: 16px;
+    color: #cccccc;
+}
+ .form-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+
+    .form-header-row h3 {
+      margin: 0;
+    }
+
+
+    .form-header-row p {
+      color: #475569;
+      margin-top: 5px;
+      font-size: 14px;
+    }
+
+
+    .create-form-btn {
+      padding: 10px 20px;
+      background-color: #1e90ff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.2s ease;
+    }
+
+
+    .create-form-btn:hover {
+      background-color: #0f6cd6;
+    }
+
 
 
