@@ -23,3 +23,23 @@ export function createNavItem({ icon, label, onClick }) {
     li.appendChild(button);
     return li;
 }
+
+/**
+ * Creates a "tr" HTML element based on the object passed.
+ * @param {JSON} object The JSON object that contains the data in the table row
+ * @returns tr HTML element
+ */
+export function createTableRow(object) {
+
+    // Create a table row for each object recieved
+    const tr = document.createElement("tr");
+
+    // Loop through all keys in the object
+    Object.values(object).forEach(value => {
+        const td = document.createElement("td");
+        td.textContent = value;
+        tr.appendChild(td);
+    });
+
+    return tr
+}
