@@ -77,7 +77,8 @@
     border-spacing: 0 2rem;
 }
 
-#AccountsTableView td, #AccountsTableView th {
+#AccountsTableView td,
+#AccountsTableView th {
     border-bottom: 1px solid var(--outline-color);
     padding-bottom: 2rem;
 }
@@ -85,4 +86,26 @@
 #AccountsTableView th {
     text-align: left;
     font-weight: normal;
+}
+
+
+/* Logs Page styling */
+
+#LogsView {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+#Logs {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.Log {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
 }

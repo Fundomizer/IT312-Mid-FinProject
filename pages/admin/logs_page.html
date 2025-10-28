@@ -9,7 +9,36 @@
 
 <body>
     <section id="PageContent">
-        <p>Welcome to the log page</p>
+        <div>
+            <h1>Admin Dashboard</h1>
+            <p>View system activity</p>
+        </div>
+
+        <div class="SearchBar">
+            <img src="../../assets/images/icons/magnify_icon.png" alt="Magnify icon">
+            <input id="SearchInput" type="text" placeholder="Search for users">
+        </div>
+
+        <div class="Card" id="LogsView">
+            <div class="Header">
+                <div>
+                    <p><b>Activity Logs</b></p>
+                    <p>Complete log of all user and OSA activities</p>
+                </div>
+            </div>
+            <div id="Logs">
+                <div class="Log SubCard">
+                    <p id="UserLogLabel">User</p>
+                    <p id="ActivityLogLabel">Activity</p>
+                    <p id="TimeStampLogLabel">Date, Time</p>
+                </div>
+                <div class="Log SubCard">
+                    <p id="UserLogLabel">User</p>
+                    <p id="ActivityLogLabel">Activity</p>
+                    <p id="TimeStampLogLabel">Date, Time</p>
+                </div>
+            </div>
+        </div>
     </section>
 </body>
 

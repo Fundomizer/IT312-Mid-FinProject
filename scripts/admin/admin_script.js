@@ -17,9 +17,9 @@ async function loadUsers() {
 
     let user = await requestUsers()
 
-    loadUserList(user)
+    displayUsers(user)
 
-    function loadUserList(list) {
+    function displayUsers(list) {
         const userTableView = document.getElementById("AccountsTableView")
 
         list.forEach(item => {
@@ -32,6 +32,53 @@ async function loadUsers() {
 function loadLogs() {
     console.log("Loading activity logs");
     loadPage("admin", "logs_page.html")
+
+
+    /**
+     * Displays the list of logs
+     * @param {JSON} logs 
+     */
+    function displayLog(logs) {
+        const logsDisplay = document.getElementById("Logs")
+
+        logs.forEach(item => {
+            logsDisplay.appendChild(createLog(item))
+        });
+    }
+
+    /**
+     * Creates a log card element based on the object passed.
+     * @param {Object} log - The log object
+     * @param {string} log.user - The user name
+     * @param {string} log.activity - The activity description
+     * @param {string} log.timestamp - The date/time string
+     * @returns {HTMLDivElement} The constructed log card
+     */
+    function createLog(log) {
+        const div = document.createElement("div");
+        div.classList.add("Log", "SubCard");
+
+        const userP = document.createElement("p");
+        userP.id = "UserLogLabel";
+        userP.textContent = log.user;
+
+        const activityP = document.createElement("p");
+        activityP.id = "ActivityLogLabel";
+        activityP.textContent = log.activity;
+
+        const timeP = document.createElement("p");
+        timeP.id = "TimeStampLogLabel";
+        timeP.textContent = log.timestamp;
+
+        div.appendChild(userP);
+        div.appendChild(activityP);
+        div.appendChild(timeP);
+
+        return div;
+    }
+
+
+
 }
 
 async function requestUsers() {
