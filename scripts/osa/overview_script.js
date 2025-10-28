@@ -1,5 +1,7 @@
+import { API_BASE_URL } from "../config.js";
+
 async function loadOrganizations() {
-  const response = await fetch("http://localhost:3000/api/student_organization");
+const response = await fetch(`${API_BASE_URL}/api/student_organization`);
   const data = await response.json();
   const orgContainer = document.getElementById("organizations-list");
   const subContainer = document.getElementById("submissions-list");
