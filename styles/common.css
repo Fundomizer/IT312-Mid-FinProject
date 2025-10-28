@@ -9,6 +9,7 @@
     --outline-color: #232937;
     --text-color: white;
     --search-bar-bg-color: #1E2432;
+    --accent-color: #6366F1;
 }
 
 body {
@@ -44,12 +45,22 @@ body {
     border-radius: 20px;
 }
 
-
 .SearchBar>input {
     background-color: transparent;
     border: 0px;
     outline: none;
     height: 2rem;
     width: 40%;
+    color: var(--text-color);
+}
+
+.StyledButton {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 10px;
+    background-color: var(--accent-color);
+    border: 0;
+    border-radius: 10px;
     color: var(--text-color);
 }

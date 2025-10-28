@@ -1,24 +1,4 @@
-#AccountsView {
-    display: flex;
-    flex-direction: column;
-}
-
-.Header {
-    display: flex;
-    width: 100%;
-    height: auto;
-}
-
-.Header div:first-of-type {
-    flex: 1;
-}
-
-#AccountsTableView {
-    padding: 10px;
-    outline: 1px solid #CFCFCF;
-    border-radius: 5px;
-    width: 100%;
-}
+/* Dashboard styling */
 
 .Main>div:last-child>p {
     font-size: 3rem;
@@ -63,4 +43,46 @@
     width: fit-content;
     display: flex;
     align-items: center;
+}
+
+/* Users page styling */
+
+#Content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#AccountsView {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.Header {
+    display: flex;
+    width: 100%;
+    height: auto;
+}
+
+.Header div:first-of-type {
+    flex: 1;
+}
+
+#AccountsTableView {
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 2rem;
+}
+
+#AccountsTableView td, #AccountsTableView th {
+    border-bottom: 1px solid var(--outline-color);
+    padding-bottom: 2rem;
+}
+
+#AccountsTableView th {
+    text-align: left;
+    font-weight: normal;
 }
