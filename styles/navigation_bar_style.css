@@ -1,5 +1,4 @@
 :root {
-    --main-bg-color: #0A0E1A;
     --nav-bars-bg-color: #131824;
 }
 
@@ -12,10 +11,6 @@ button {
     border: 2px solid black;
     border-radius: 5px;
     cursor: pointer;
-}
-
-body {
-    background-color: var(--main-bg-color);
 }
 
 .Main {
