@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../styles/navigation_bar_style.css">
+    <link rel="stylesheet" href="../../styles/org/org_overview.css">
+    <link rel="stylesheet" href="../../styles/common.css">
+    <script src="../../scripts/navigation_bar.js" defer></script>
+    <title>Dashboard</title>
+</head>
+<body>
+    <div id="SideNav">
+        <button id="ToggleSideNavButton">
+            <img src="../../assets/images/icons/Hamburger_Icon.png" alt="HamburgerMenu" class="hamburger-icon">
+        </button>
+        <div class="SideNavContent">
+            <ul>
+                <li>
+                    <button class="NavItems">
+                        <span class="icon">📊</span>
+                        <span class="label">Dashboard</span>
+                    </button>
+                </li>
+                <li>
+                    <button class="NavItems">
+                        <span class="icon">👥</span>
+                        <span class="label">Assigned Form</span>
+                    </button>
+                </li>
+                <li>
+                    <button class="NavItems">
+                        <span class="icon">🏫</span>
+                        <span class="label">History</span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <section class="Main">
+        <div id="TopNav">
+            <div class="TopNavContents">
+                <button class="TopNavButton">Notif</button>
+                <button class="TopNavButton">Button</button>
+                <button class="TopNavButton">Logout</button>
+            </div>
+        </div>
+        <div id="Content">
+            <div id="Space"> <!-- This is only to set the right margin -->
+                <h1 id="Associated-Org-Name">Association for Computing Machinery (ACM)</h1>
+                <h3 style="color: rgb(175, 175, 175)">Submit and manage your organization's requirements</h3>
+                <div class="Vertical-Layout">
+                    <h4>Welcom, Association for Computing Machinery (ACM)</h4>
+                    <p>Quick overview of your submissions and assigned forms</p>
+                    <div class="Horizontal-Layout">
+                        <div style="background-color: #1e1f47;" class="Vertical-Layout">
+                            <div id="Form-Section">
+                                <img src="../../assets/images/org_icons/form.png" class="Form-Image">
+                                <span>OSA-Assigned Forms</span>
+                            </div>
+                        </div>
+                        <div class="Vertical-Layout">
+                        
+                        </div>
+                        <div class="Vertical-Layout">
+                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

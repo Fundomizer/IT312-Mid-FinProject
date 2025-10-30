@@ -21,7 +21,7 @@
     border-style: hidden;
     font-size: 1vi;
 }
-.Org-Layout{
+.Vertical-Layout{
     border: 1;
     border-radius: 1rem;
     border-color: #232937;
@@ -32,6 +32,13 @@
     row-gap: 1vh;
     font-size: 1vmax;
     background-color: #131824;
+}
+.Horizontal-Layout{
+    padding: 1em 0 1em;
+    display: flex;
+    flex-direction: row;
+    column-gap: 1.5vw;
+    font-size: 1vmax;
 }
 #Form-Section{
     display: flex;
