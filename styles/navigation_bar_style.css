@@ -16,7 +16,7 @@ button {
 .Main {
     width: auto;
     height: 100%;
-    background-color: #1A1F2E; /* Added this for the background of the contents */
+    background-color: #1A1F2E; 
 }
 
 #SideNav,

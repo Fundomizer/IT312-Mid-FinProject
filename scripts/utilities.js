@@ -81,14 +81,16 @@ export function loadPage(role, page, style, script,
             if (script) loadScript(pathToScript);
         });
 
-    function loadScript(src) {
-        if (!document.querySelector(`script[src="${src}"]`)) {
-            const script = document.createElement("script");
-            script.src = src;
-            script.defer = true;
-            document.body.appendChild(script);
+       function loadScript(src) {
+         const existingScript = document.querySelector(`script[src="${src}"]`);
+         if (existingScript) existingScript.remove(); 
+
+         const script = document.createElement("script");
+         script.src = `${src}?v=${Date.now()}`; // cache busting to ensure latest version is loaded
+         script.defer = true;
+         document.body.appendChild(script);
         }
-    }
+
 
     function loadCSS(href) {
         if (!document.querySelector(`link[href="${href}"]`)) {
@@ -100,3 +102,8 @@ export function loadPage(role, page, style, script,
     }
 
 }
+document.addEventListener("click", (event) => {
+  if (event.target && event.target.id === "create-form-btn") {
+    loadPage("osa", "forms_creation.html", "osa_forms_creation_style.css", "forms_creation_script.js");
+  }
+});

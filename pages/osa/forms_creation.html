@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Form | OSA</title>
+</head>
+
+<body>
+  <section id="PageContent">
+    <div class="create-form-header">
+      <h2>Create New Form</h2>
+      <p>Design and publish forms to student organizations for structured submissions.</p>
+    </div>
+
+    <div class="form-meta">
+      <input type="text" id="formTitle" placeholder="Enter form title" required>
+      <textarea id="formDescription" placeholder="Enter form description"></textarea>
+    </div>
+
+    <div class="form-fields" id="formFields">
+    </div>
+
+    <div class="add-field-controls">
+      <select id="fieldType">
+        <option value="text">Short Answer</option>
+        <option value="textarea">Paragraph</option>
+        <option value="checkbox">Checkbox</option>
+        <option value="radio">Multiple Choice</option>
+      </select>
+      <button id="addFieldBtn">+ Add Field</button>
+    </div>
+
+    <button class="submit-form-btn" id="submitFormBtn">Submit Form</button>
+  </section>
+
+  <script src="osa_create_form_script.js"></script>
+</body>
+</html>

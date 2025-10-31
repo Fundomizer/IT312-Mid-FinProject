@@ -1,7 +1,13 @@
 #PageContent {
+
   flex: 1;
   padding: 28px 40px;
   overflow: auto;
+
+}
+
+p , h2 {
+        color : white;
 }
 
 /* Topbar */

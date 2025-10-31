@@ -13,7 +13,7 @@
   padding: 24px;
   margin-bottom: 24px;
   color: var(--text);
-}
+
 
 .form-builder-section h3 {
   margin: 0 0 20px 0;
@@ -86,6 +86,7 @@
   color: #111;
 }
 
+
 /* Header row for section */
 .form-header-row {
   display: flex;
@@ -105,7 +106,7 @@
 }
 
 /* Buttons */
-.create-form-btn,
+#create-form-btn,
 .form-action-btn {
   padding: 8px 14px;
   border-radius: 8px;
@@ -114,7 +115,7 @@
   transition: background-color 0.2s ease, transform 0.15s ease;
 }
 
-.create-form-btn {
+#create-form-btn {
   background: linear-gradient(180deg, var(--accent), #5b21b6);
   color: #fff;
   border: none;
@@ -134,4 +135,5 @@
 .form-action-btn:hover {
   border-color: var(--accent);
   color: var(--accent);
+}
 }
