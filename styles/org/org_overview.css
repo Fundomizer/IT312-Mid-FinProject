@@ -22,7 +22,6 @@
     font-size: 1vi;
 }
 .Vertical-Layout{
-    border: 1;
     border-radius: 1rem;
     border-color: #232937;
     border-style: solid;
@@ -47,14 +46,12 @@
     align-items: center;
 }
 #tag{
-    border: 1px;
     border-radius: 2rem;
     border-color: #232937;
     border-style: solid;
     padding:.3vh .7vw .3vh;
 }
 #type{
-    border: 1px;
     border-radius: 2rem;
     border-color: #232937;
     border-style: solid;
@@ -76,10 +73,48 @@
     border-radius: 1rem;
 }
 .Form-Image{
-    width: 1.4vw;
+    width: 1.4vw; /*Note: 100% for dashboard, 1.4vw for form*/
     height: auto;
-    max-width: 8vw;
 }
 #Alert-Space{
     margin-left: 2vw;
+}
+#icon-box{
+    box-sizing: border-box;
+    border-radius: .5rem;
+    width: 3vw;
+    height: auto;
+    padding: .5vh 0 .5vh;
+    margin-left: auto;
+    display: flex;
+    justify-content: center;
+}
+#icon-box.Form-Image{
+    width: 100%;
+}
+#title-board{
+    display: flex;
+    width: 20vw;
+}
+#View-Button{
+    background-color: #0A0E1A;
+    color: white;
+    margin-left: auto;
+    font-size: .9vmax;
+    display: flex;
+    flex-direction: row;
+    column-gap: 1vw;
+    border-style: solid;
+    align-items: center;
+    padding:.5em;
+    border-radius: 1rem;
+    border-color: #232937;
+}
+.Quad-Section{
+    column-gap: 5vw;
+    align-items: center;
+    color: #4A5565;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%/3, max(10vw, 100%/2)), 1fr));
+    row-gap: 1vh;
 }
