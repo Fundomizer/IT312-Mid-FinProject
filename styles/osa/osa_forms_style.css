@@ -1,104 +1,137 @@
-#PageContent {
-    margin-left: 4rem;
-    padding: 20px;
-    background-color: #f9f9f9;
-    min-height: 100vh;
-    transition: margin-left 0.4s ease;
+  #PageContent {
+  flex: 1;
+  padding: 28px 40px;
+  overflow: auto;
 }
 
-
-.form-builder-section{
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin-bottom: 20px;
-    color:white;
-    background-color: #333333;
+/* Form Builder Section (Card Style) */
+.form-builder-section {
+  background: linear-gradient(180deg, #081226 0%, #071021 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.05);
+  box-shadow: 0 6px 24px rgba(2,6,23,0.6);
+  padding: 24px;
+  margin-bottom: 24px;
+  color: var(--text);
 }
 
-
-.form-builder-section h3{
-    margin-top: 0;
-    margin-bottom: 30px;
-}  
-
-
-.form-builder-section .form-item{
-    margin-top:20px;
-    margin-bottom: 15px;
-    border: 1px solid white;
-    padding: 20px;
-    border-radius: 15px;
+.form-builder-section h3 {
+  margin: 0 0 20px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
 }
 
-
-.form-builder-section .form-header{
-    font-weight: bold;
-    margin-bottom: 10px;
-    font-size: 24px;
-    gap: 20px;
-    display: flex;
+/* Each form item */
+.form-builder-section .form-item {
+  margin-bottom: 16px;
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 10px;
+  padding: 16px;
+  background: rgba(255,255,255,0.01);
+  transition: border-color 0.2s ease;
 }
-.form-builder-section .form-description{
-    font-size: 16px;
-    color: #cccccc;
-}
-
-
-.form-builder-section .form-tag{
-   display: inline-block;
-    background-color: #AA336A;
-    color: white;
-    padding: 3px 10px;
-    border-radius: 15px;
-    font-size: 18px;
-    font-weight: bold;
-   
-
-
+.form-builder-section .form-item:hover {
+  border-color: var(--accent);
 }
 
-
-.form-builder-section .form-field-count{
-    font-size: 16px;
-    color: #cccccc;
+/* Header row inside each form */
+.form-builder-section .form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
 }
- .form-header-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
 
+/* Description / metadata */
+.form-builder-section .form-description {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
 
-    .form-header-row h3 {
-      margin: 0;
-    }
+.form-builder-section .form-tag {
+  display: inline-block;
+  background: var(--surface);
+  color: var(--muted);
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-right: 6px;
+}
 
+.form-builder-section .form-field-count {
+  font-size: 12px;
+  color: var(--muted);
+}
 
-    .form-header-row p {
-      color: #475569;
-      margin-top: 5px;
-      font-size: 14px;
-    }
+/* Status badges */
+.form-status {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.form-status.active {
+  background: linear-gradient(180deg,#10b981,#059669);
+  color: #fff;
+}
+.form-status.draft {
+  background: linear-gradient(180deg,#f59e0b,#d97706);
+  color: #111;
+}
 
+/* Header row for section */
+.form-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.form-header-row h3 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--text);
+}
+.form-header-row p {
+  color: var(--muted);
+  margin: 0;
+  font-size: 13px;
+}
 
-    .create-form-btn {
-      padding: 10px 20px;
-      background-color: #1e90ff;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background-color 0.2s ease;
-    }
+/* Buttons */
+.create-form-btn,
+.form-action-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
 
+.create-form-btn {
+  background: linear-gradient(180deg, var(--accent), #5b21b6);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 12px rgba(124,58,237,0.25);
+}
+.create-form-btn:hover {
+  background: linear-gradient(180deg, #6d28d9, #4c1d95);
+  transform: translateY(-2px);
+}
 
-    .create-form-btn:hover {
-      background-color: #0f6cd6;
-    }
-
-
-
+.form-action-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--text);
+  margin-left: 6px;
+}
+.form-action-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}

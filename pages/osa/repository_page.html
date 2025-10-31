@@ -2,22 +2,46 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Repository</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Repository</title>
 </head>
 
 <body>
-
-
-    <section class="PageContent">
+  <main id="PageContent" role="main">
     <h2>Welcome to the repository</h2>
-    <p>Testing</p>
+    <p>Search and filter all organization requirements.</p>
+
+    <div class="topbar">
+      <div class="search">
+        <input id="searchInput" placeholder="Search requirements, tags, location..." />
+        <div class="filters">
+          <select id="filterLocation">
+            <option value="">All locations</option>
+            <option value="Africa">Africa</option>
+            <option value="ACM Headquarters">ACM Headquarters</option>
+            <option value="ECIS Community Center">ECIS Community Center</option>
+            <option value="Environmental Science Department">Environmental Science Department</option>
+          </select>
+          <button class="btn" id="clearFilters">Clear</button>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:center">
+        <div class="muted">Showing <span id="shownCount">5</span> of <span id="totalCount">5</span> results</div>
+        <button class="btn" id="createBtn">New Requirement</button>
+      </div>
+    </div>
+
+    <section class="panel" aria-labelledby="repoHeading">
+      <h2 id="repoHeading">Requirements Repository</h2>
+      <div class="meta-row">
+        <div class="results-info">Use the search bar to filter by title, location or tags</div>
+        <div class="results-info" id="lastUpdated">Updated: Oct 2024</div>
+      </div>
+
+      <div class="list" id="repoList"></div>
     </section>
-
-
-
+  </main>
 </body>
 </html>
-

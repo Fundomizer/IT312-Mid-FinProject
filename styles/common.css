@@ -1,43 +1,64 @@
+/* Font */
 @font-face {
     font-family: "Ubuntu";
     src: url("../assets/fonts/Ubuntu-Regular.ttf");
-}
-
-:root {
+  }
+  
+  /* Theme Variables */
+  :root {
     --border-rad: 10px;
     --main-bg-color: #0A0E1A;
     --card-bg-color: #131824;
     --subcard-bg-color: #131824;
     --outline-color: #232937;
-    --text-color: white;
+    --text-color: #e6eef8;
+    --muted-color: #98a0b3;
     --search-bar-bg-color: #1E2432;
     --accent-color: #6366F1;
-}
-
-body {
-    font-family: "Ubuntu";
+  }
+  
+  /* Base */
+  body {
+    font-family: "Ubuntu", sans-serif;
     height: 100vh;
+    margin: 0;
     color: var(--text-color);
     background-color: var(--main-bg-color);
-}
-
+  }
+  
+  /* Generic Card Components */
 .Card,
 .SubCard {
-    color: white;
-    border-radius: 25px;
-    outline: 2px solid var(--outline-color);
+  color: var(--text-color);
+  border-radius: 12px; /* match gradient card design */
+  border: 1px solid rgba(255,255,255,0.05);
+  background: linear-gradient(180deg, #081226 0%, #071021 100%);
+  box-shadow: 0 6px 24px rgba(2,6,23,0.6);
+  transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
+/* Main Card */
 .Card {
-    background-color: var(--card-bg-color);
-    padding: 2rem;
+  padding: 2rem;
 }
 
+.Card:hover {
+  border-color: var(--accent-color);
+  transform: translateY(-3px);
+}
+
+/* SubCard (lighter variant, but same gradient shell) */
 .SubCard {
-    background-color: var(--subcard-bg-color);
+  padding: 1rem 1.25rem;
 }
 
-.SearchBar {
+.SubCard:hover {
+  border-color: var(--accent-color);
+}
+
+  
+  /* Search Bar */
+  .SearchBar {
     margin: 5px;
     padding: 5px 15px;
     width: 100%;
@@ -46,24 +67,40 @@ body {
     align-items: center;
     background-color: var(--search-bar-bg-color);
     border-radius: 20px;
-}
-
-.SearchBar>input {
+  }
+  
+  .SearchBar > input {
     background-color: transparent;
-    border: 0px;
+    border: 0;
     outline: none;
     height: 2rem;
     width: 40%;
     color: var(--text-color);
-}
-
-.StyledButton {
+    font-size: 14px;
+  }
+  
+  /* Buttons */
+  .StyledButton {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 5px 10px;
+    padding: 6px 14px;
     background-color: var(--accent-color);
-    border: 0;
-    border-radius: 10px;
+    border: none;
+    border-radius: var(--border-rad);
     color: var(--text-color);
-}
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .StyledButton:hover {
+    background-color: #4f46e5; /* slightly darker accent */
+  }
+  
+  /* Utility */
+  .muted {
+    color: var(--muted-color);
+    font-size: 14px;
+  }
+  
