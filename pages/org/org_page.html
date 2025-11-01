@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="../../styles/common.css">
     <link rel="stylesheet" href="../../styles/navigation_bar_style.css">
     <script src="../../scripts/navigation_bar.js" defer></script>
-    <title>Document</title>
+    <script type="module" src="../../scripts/org/org_script.js"></script>
+    <title>Student Organization</title>
 </head>
 
 <body>
@@ -18,20 +19,29 @@
         <div class="SideNavContent">
             <ul>
                 <li>
-                    <button class="NavItems">
-                        <span class="icon">📊</span>
+                    <button class="NavItems" id="dashboardButton">
+                        <span class="icon">
+                            <img src="../../assets/images/icons/dashboard_icon.png"
+                                alt="Dashboard icon">
+                            </span>
                         <span class="label">Dashboard</span>
                     </button>
                 </li>
                 <li>
-                    <button class="NavItems">
-                        <span class="icon">👥</span>
+                    <button class="NavItems" id="formsButton">
+                        <span class="icon">
+                            <img src="../../assets/images/icons/forms_icon.png"
+                                alt="Dashboard icon">
+                            </span>
                         <span class="label">Assigned Form</span>
                     </button>
                 </li>
                 <li>
-                    <button class="NavItems">
-                        <span class="icon">🏫</span>
+                    <button class="NavItems" id="historyButton">
+                        <span class="icon">
+                            <img src="../../assets/images/icons/folder_icon.png"
+                                alt="Dashboard icon">
+                            </span>
                         <span class="label">History</span>
                     </button>
                 </li>
