@@ -5,7 +5,6 @@ const dashboard = document.getElementById("dashboardButton")
 const users = document.getElementById("usersButton")
 const logs = document.getElementById("activityLogButton")
 
-
 function loadDashboard() {
     console.log("Loading dashboard");
     loadPage("admin", "dashboard_page.html")
@@ -23,8 +22,21 @@ async function loadUsers() {
         const userTableView = document.getElementById("AccountsTableView")
 
         list.forEach(item => {
-            userTableView.appendChild(createTableRow(item))
+            userTableView.appendChild(createTableRow(item, ["name", "email", "role", "date_created"]))
         });
+
+        
+
+    }
+
+    async function requestUsers() {
+        let PORT = 3000; // TODO hard code the port for now
+        return fetch(`http://localhost:${PORT}/api/users`)
+            .then(request => request.json())
+            .then(data => {
+                console.log(data);// TODO remove after testing
+                return data
+            })
     }
 
 }
@@ -79,15 +91,6 @@ function loadLogs() {
 
 
 
-}
-
-async function requestUsers() {
-    return fetch("../../database/sample_users.json")
-        .then(request => request.json())
-        .then(data => {
-            console.log(data);// TODO remove after testing
-            return data
-        })
 }
 
 dashboard.addEventListener('click', loadDashboard)
