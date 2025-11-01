@@ -36,12 +36,65 @@
     object-fit: cover;
 }
 
-.SubCard>div {
-    aspect-ratio: 1/1;
-    width: fit-content;
+/* Assigned forms page */
+
+#Content {
     display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#Content > div:first-child > p {
+    color: var(--muted-color);
+}
+
+.Card {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.Form {
+    width: 100%;
+    box-sizing: border-box;
+    min-width: fit-content;
     align-items: center;
 }
 
-/* Assigned forms page */
+.Form>div:last-child {
+    width: fit-content;
+    flex-shrink: 0;
+}
 
+.FormDetails {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 1rem;
+}
+
+.FormDescription,
+.FormRequirements {
+    color: var(--muted-color);
+}
+
+.FormRequirements {
+    display: flex;
+    gap: 1rem;
+}
+
+.FormRequirements>span {
+    display: flex;
+    gap: 10px;
+}
+
+.FormTags {
+    display: flex;
+    gap: 1rem;
+}
+
+.FormTag {
+    border-radius: var(--border-rad);
+    padding: 5px 10px;
+    outline: 1px solid var(--outline-color);
+}
