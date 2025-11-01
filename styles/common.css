@@ -37,7 +37,6 @@ body {
     box-shadow: 0 6px 24px rgba(2, 6, 23, 0.6);
     transition: border-color 0.2s ease, transform 0.2s ease;
     min-width: fit-content;
-    flex-wrap: wrap;
 }
 
 /* Main Card */

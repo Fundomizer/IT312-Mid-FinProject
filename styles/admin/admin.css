@@ -6,14 +6,17 @@
 }
 
 .AdminDashboard {
+    min-width: min-content;
     display: flex;
     flex-direction: column;
+    flex-wrap: wrap;
     gap: 2rem;
 }
 
 .AdminDashboard>div {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     gap: 2rem;
 }
 
@@ -21,12 +24,13 @@
     padding: 1rem 1.5rem;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     gap: 20px;
     width: 20vw;
 }
 
 .SubCard>span {
-    width: 100%;
+    flex: 1;
 }
 
 .SubCard>span>p:last-of-type {
@@ -46,7 +50,6 @@
 }
 
 /* Users page styling */
-
 #Content {
     display: flex;
     flex-direction: column;
@@ -63,6 +66,7 @@
     display: flex;
     width: 100%;
     height: auto;
+    flex-wrap: wrap;
 }
 
 .Header div:first-of-type {
@@ -75,12 +79,16 @@
     width: 100%;
     border-collapse: separate;
     border-spacing: 0 2rem;
+    min-width: 100px;
+    min-height: 100px;
+    overflow: auto;
 }
 
 #AccountsTableView td,
 #AccountsTableView th {
     border-bottom: 1px solid var(--outline-color);
     padding-bottom: 2rem;
+    word-wrap: break-word;
 }
 
 #AccountsTableView th {

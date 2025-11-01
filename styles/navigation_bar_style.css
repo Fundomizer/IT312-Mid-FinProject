@@ -15,7 +15,8 @@ button {
 
 .Main {
     width: auto;
-    height: 100%;
+    min-height: 100vh;
+    height: auto;
     background-color: #1A1F2E; 
 }
 
@@ -189,7 +190,7 @@ button {
 
 #Content {
     height: 100%;
-    padding: 0 1rem 0 5rem;
+    padding: 0 1rem 3rem 5rem;
     margin: 2rem 4rem;
     transition: margin-left 0.4s ease;
 }
