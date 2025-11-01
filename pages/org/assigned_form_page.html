@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../styles/navigation_bar_style.css">
-    <link rel="stylesheet" href="../../styles/org/org_assigned_overview.css">
+    <link rel="stylesheet" href="../../styles/org/org_overview.css">
+    <link rel="stylesheet" href="../../styles/common.css">
     <script src="../../scripts/navigation_bar.js" defer></script>
-    <title>Document</title>
+    <title>Assigned Forms</title>
 </head>
 <body>
     <div id="SideNav">
@@ -48,16 +49,17 @@
             <div id="Space"> <!-- This is only to set the right margin -->
                 <h1 id="Associated-Org-Name">Association for Computing Machinery (ACM)</h1>
                 <h3 style="color: rgb(175, 175, 175)">Submit and manage your organization's requirements</h3>
-                <div>
-                    <input id="Search-Bar" placeholder="Search files, forms, organization">
+                <div class="SearchBar">
+                    <img src="../../assets/images/icons/magnify_icon.png" alt="Magnify icon">
+                    <input id="SearchInput" type="text" placeholder="Search files, forms, organizations...">
                 </div>
-                <div class="Org-Layout">
+                <div class="Vertical-Layout">
                     <h4>Forms Assigned to Your organization</h4>
                     <p>
                         Fill out these structured forms to submit requirements. Forms ensure all necessary information is captured 
                         for easy searching by OSA
                     </p>
-                    <div style="background-color: #1e1f47;" class="Org-Layout">
+                    <div style="background-color: #1e1f47;" class="Vertical-Layout">
                         <div id="Form-Section">
                             <img src="../../assets/images/org_icons/form.png" class="Form-Image">
                             <span>OSA-Assigned Forms</span>
@@ -67,7 +69,7 @@
                             provide all required information in a searchable format.
                         </p>
                     </div>
-                    <div class="Org-Layout">
+                    <div class="Vertical-Layout">
                         <div id="Form-Section">
                             <h3>Strategic Plan Submission</h3>
                             <p id="type">Strategic Plan</p>
@@ -95,7 +97,7 @@
                             <p id="tag">organizational</p>
                         </div>
                     </div>
-                    <div class="Org-Layout">
+                    <div class="Vertical-Layout">
                         <div id="Form-Section">
                             <h3>Event After-Action Report</h3>
                             <p id="type">Activity Report</p>

@@ -1,3 +1,4 @@
+
 async function loadActiveForms() {
  
     const response = await fetch("http://localhost:3000/api/forms");
@@ -33,11 +34,5 @@ async function loadActiveForms() {
     });
  
 }
-
-
-
-
 loadActiveForms();
-
-
 
