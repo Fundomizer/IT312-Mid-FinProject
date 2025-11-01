@@ -25,17 +25,22 @@ export function createNavItem({ icon, label, onClick }) {
 }
 
 /**
- * Creates a "tr" HTML element based on the object passed.
- * @param {JSON} object The JSON object that contains the data in the table row
- * @returns tr HTML element
+ * Creates a "tr" HTML element based on selected keys from the object.
+ * @param {Object} object - The source object containing data.
+ * @param {Array<string>} keysToInclude - Array of keys to include in the row.
+ * @returns {HTMLTableRowElement} - A table row with selected data.
  */
-export function createTableRow(object) {
+export function createTableRow(object, keysToInclude = []) {
 
     // Create a table row for each object recieved
     const tr = document.createElement("tr");
 
+    const list = Array.isArray(keysToInclude) && keysToInclude.length > 0
+        ? keysToInclude.map(key => object[key] !== undefined ? object[key] : "")
+        : Object.values(object);
+
     // Loop through all keys in the object
-    Object.values(object).forEach(value => {
+    list.forEach(value => {
         const td = document.createElement("td");
         td.textContent = value;
         tr.appendChild(td);
