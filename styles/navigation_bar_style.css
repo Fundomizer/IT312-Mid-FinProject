@@ -179,7 +179,7 @@ button {
 }
 
 .TopNavButton:hover {
-    background-color: #f0f0f0;
+    background-color: var(--accent-color);
 }
 
 /*constrain icons inside buttons */
