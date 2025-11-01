@@ -1,15 +1,17 @@
-#Space{
+#Space {
     margin-right: 2rem;
     color: white;
     display: flex;
     flex-direction: column;
     row-gap: 3vh;
 }
-#Associated-Org-Name{
+
+#Associated-Org-Name {
     padding-top: 1vmax;
     font-size: 2vmax;
 }
-#Search-Bar{
+
+#Search-Bar {
     width: 35%;
     background-color: #1E2432;
     padding: 1vh 1vw 1vh;
@@ -21,7 +23,8 @@
     border-style: hidden;
     font-size: 1vi;
 }
-.Vertical-Layout{
+
+.Vertical-Layout {
     border-radius: 1rem;
     border-color: #232937;
     border-style: solid;
@@ -32,34 +35,39 @@
     font-size: 1vmax;
     background-color: #131824;
 }
-.Horizontal-Layout{
+
+.Horizontal-Layout {
     padding: 1em 0 1em;
     display: flex;
     flex-direction: row;
     column-gap: 1.5vw;
     font-size: 1vmax;
 }
-#Form-Section{
+
+#Form-Section {
     display: flex;
     flex-direction: row;
     column-gap: 1vh;
     align-items: center;
 }
-#tag{
+
+#tag {
     border-radius: 2rem;
     border-color: #232937;
     border-style: solid;
-    padding:.3vh .7vw .3vh;
+    padding: .3vh .7vw .3vh;
 }
-#type{
+
+#type {
     border-radius: 2rem;
     border-color: #232937;
     border-style: solid;
-    padding:.2vh .8vw .2vh;
+    padding: .2vh .8vw .2vh;
     background-color: #1E2432;
     color: white;
 }
-#Form-Button{
+
+#Form-Button {
     background-color: #6366F1;
     color: white;
     margin-left: auto;
@@ -69,17 +77,21 @@
     column-gap: .5rem;
     border-style: hidden;
     align-items: center;
-    padding:.5em;
+    padding: .5em;
     border-radius: 1rem;
 }
-.Form-Image{
-    width: 1.4vw; /*Note: 100% for dashboard, 1.4vw for form*/
+
+.Form-Image {
+    width: 1.4vw;
+    /*Note: 100% for dashboard, 1.4vw for form*/
     height: auto;
 }
-#Alert-Space{
+
+#Alert-Space {
     margin-left: 2vw;
 }
-#icon-box{
+
+#icon-box {
     box-sizing: border-box;
     border-radius: .5rem;
     width: 3vw;
@@ -89,14 +101,17 @@
     display: flex;
     justify-content: center;
 }
-#icon-box.Form-Image{
+
+#icon-box.Form-Image {
     width: 100%;
 }
-#title-board{
+
+#title-board {
     display: flex;
     width: 20vw;
 }
-#View-Button{
+
+#View-Button {
     background-color: #0A0E1A;
     color: white;
     margin-left: auto;
@@ -106,11 +121,12 @@
     column-gap: 1vw;
     border-style: solid;
     align-items: center;
-    padding:.5em;
+    padding: .5em;
     border-radius: 1rem;
     border-color: #232937;
 }
-.Quad-Section{
+
+.Quad-Section {
     column-gap: 5vw;
     align-items: center;
     color: #4A5565;
