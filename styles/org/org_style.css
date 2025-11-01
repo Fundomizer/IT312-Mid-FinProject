@@ -1,136 +1,47 @@
-#Space {
-    margin-right: 2rem;
-    color: white;
+/* Dashboard Styling */
+.OrgDashboard {
+    min-width: min-content;
     display: flex;
     flex-direction: column;
-    row-gap: 3vh;
+    flex-wrap: wrap;
+    gap: 2rem;
 }
 
-#Associated-Org-Name {
-    padding-top: 1vmax;
-    font-size: 2vmax;
-}
-
-#Search-Bar {
-    width: 35%;
-    background-color: #1E2432;
-    padding: 1vh 1vw 1vh;
-    color: white;
-    background-image: url('src="../../assets/images/org_icons/search.png');
-    background-repeat: no-repeat;
-    border-radius: 1rem;
-    box-sizing: border-box;
-    border-style: hidden;
-    font-size: 1vi;
-}
-
-.Vertical-Layout {
-    border-radius: 1rem;
-    border-color: #232937;
-    border-style: solid;
-    padding: 1em 1em 1em;
-    display: flex;
-    flex-direction: column;
-    row-gap: 1vh;
-    font-size: 1vmax;
-    background-color: #131824;
-}
-
-.Horizontal-Layout {
-    padding: 1em 0 1em;
+.OrgDashboard>div {
     display: flex;
     flex-direction: row;
-    column-gap: 1.5vw;
-    font-size: 1vmax;
+    flex-wrap: wrap;
+    gap: 2rem;
 }
 
-#Form-Section {
+.SubCard {
+    padding: 1rem 1.5rem;
     display: flex;
     flex-direction: row;
-    column-gap: 1vh;
-    align-items: center;
-}
-
-#tag {
-    border-radius: 2rem;
-    border-color: #232937;
-    border-style: solid;
-    padding: .3vh .7vw .3vh;
-}
-
-#type {
-    border-radius: 2rem;
-    border-color: #232937;
-    border-style: solid;
-    padding: .2vh .8vw .2vh;
-    background-color: #1E2432;
-    color: white;
-}
-
-#Form-Button {
-    background-color: #6366F1;
-    color: white;
-    margin-left: auto;
-    font-size: .9vmax;
-    display: flex;
-    flex-direction: row;
-    column-gap: .5rem;
-    border-style: hidden;
-    align-items: center;
-    padding: .5em;
-    border-radius: 1rem;
-}
-
-.Form-Image {
-    width: 1.4vw;
-    /*Note: 100% for dashboard, 1.4vw for form*/
-    height: auto;
-}
-
-#Alert-Space {
-    margin-left: 2vw;
-}
-
-#icon-box {
-    box-sizing: border-box;
-    border-radius: .5rem;
-    width: 3vw;
-    height: auto;
-    padding: .5vh 0 .5vh;
-    margin-left: auto;
-    display: flex;
-    justify-content: center;
-}
-
-#icon-box.Form-Image {
-    width: 100%;
-}
-
-#title-board {
-    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
     width: 20vw;
 }
 
-#View-Button {
-    background-color: #0A0E1A;
-    color: white;
-    margin-left: auto;
-    font-size: .9vmax;
-    display: flex;
-    flex-direction: row;
-    column-gap: 1vw;
-    border-style: solid;
-    align-items: center;
-    padding: .5em;
-    border-radius: 1rem;
-    border-color: #232937;
+.SubCard>span {
+    flex: 1;
 }
 
-.Quad-Section {
-    column-gap: 5vw;
-    align-items: center;
-    color: #4A5565;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%/3, max(10vw, 100%/2)), 1fr));
-    row-gap: 1vh;
+.SubCard>span>p:last-of-type {
+    font-size: 3rem;
 }
+
+.SubCard>img {
+    aspect-ratio: 1/1;
+    object-fit: cover;
+}
+
+.SubCard>div {
+    aspect-ratio: 1/1;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+}
+
+/* Assigned forms page */
+
