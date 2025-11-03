@@ -1,21 +1,94 @@
 .PopupForm{
-
+    display: none;
+    background-color: white;
+    color: black;
+    margin: 0 12% 0;
+    border-radius: .5rem;
+    padding: 2rem 2rem 2rem;
+    position: absolute;
+    top: 10%;
+    right: 15%;
+}
+.PopupForm > p{
+    padding-bottom: 1.4vh;
+}
+.PopupForm.show{
+    display: flex;
 }
 #Alert{
-
+    background-color: #abd6ff;
+    color: #4677ff;
+    border-style: solid;
+    padding: 1rem 1rem 1rem;
+    border-radius: 1rem;
 }
 .FormFields{
-
+    display: flex;
+    flex-direction: column;
+    row-gap: .8vh;
+    padding: 1vh 0 1vh;
+    color: #bebebe;
+}
+.FormFields span{
+    color: black;
+}
+.FormFields input{
+    border-radius: .5rem;
+    border-style: none;
+    background-color: #c9c9c9;
+    padding: 1vh 1rem 1vh;
 }
 .FormTags{
-
+    display: flex;
+    flex-direction: column;
+    row-gap: .8vh;
+}
+.FormTags p{
+    color: #bebebe;
+}
+.TagsContainer{
+    border-style: solid;
+    border-color: #bebebe;
+    border-radius: .5rem;
+    background-color: white;
+    padding: 1rem 1rem 1rem;
+    display: flex;
+}
+.TagsContainer input{
+    padding: 1rem 1rem 1rem;
 }
 .FormUpload{
-
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 1ic;
+}
+.FormUpload span{
+    padding-bottom: .6vh;
+}
+.FormUpload button{
+    border-color: #bebebe;
+    background-color: white;
+    padding: .8vh 0 .8vh;
+}
+.FormUpload button:hover{
+    background-color: #d4d4d4;
+}
+.FormButtons{
+    display: flex;
+    flex-direction: row;
+    column-gap: 1vw;
+    justify-content: flex-end;
 }
 #CancelForm{
-
+    padding: 1vh 1rem 1vh;
+    border-color: #bebebe;
+    background-color: white;
+}
+#CancelForm:hover{
+    background-color: #d4d4d4;
 }
 #SubmitForm{
-    
+    padding: 1vh 1rem 1vh;
+    color: white;
+    background-color: black;
 }
