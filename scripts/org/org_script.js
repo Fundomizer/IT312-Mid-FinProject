@@ -4,6 +4,7 @@ import { loadPage } from "../utilities.js"
 const dashboard = document.getElementById("dashboardButton")
 const forms = document.getElementById("formsButton")
 const history = document.getElementById("historyButton")
+const popup = document.getElementById()
 
 function loadDashboard() {
     loadPage('org', 'dashboard_page.html')
@@ -15,6 +16,10 @@ function loadForms() {
 
 function loadHistory() {
     loadPage('org', 'history_page.html')
+}
+
+function popupForm() {
+    
 }
 
 // Assing even hanlders

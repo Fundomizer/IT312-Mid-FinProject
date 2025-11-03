@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../styles/navigation_bar_style.css">
     <link rel="stylesheet" href="../../styles/org/org_overview.css">
+    <link rel="stylesheet" href="../../styles/org/org_form_style.css">
     <link rel="stylesheet" href="../../styles/common.css">
     <script src="../../scripts/navigation_bar.js" defer></script>
     <title>Assigned Forms</title>
@@ -30,6 +31,49 @@
                     captured
                     for easy searching by OSA
                 </p>
+            </div>
+            <div class="PopupForm">
+                <h3>Form Title</h2>
+                <p>Form Description</p>
+                <div id="Alert">
+                    <p>All information you enter in this form will be searchable by OSA. Please be thorough and accurate</p>
+                </div>
+                <div class="FormFields">
+                    <span>Planning Period</span>
+                    <input>
+                    <p>Specify the time period this plan covers</p>
+                </div>
+                <div class="FormFields">
+                    <span>Vision Statement</span>
+                    <input>
+                    <p>Your organization's long-term aspirations</p>
+                </div>
+                <div class="FormFields">
+                    <span>Mission Statement</span>
+                    <input>
+                    <p>Your organization's purpose and how you will achieve your vision</p>
+                </div>
+                <div class="FormFields">
+                    <span>Key Objectives</span>
+                    <input>
+                    <p>Specific, measurable objectives you aim to achieve</p>
+                </div>
+                <div class="FormTags">
+                    <span>Target SDGs</span>
+
+                    <p>Select all relevant UN Sustainable Development Goals</p>
+                </div>
+                <div class="FormFields">
+                    <span>Planned Activities Summary</span>
+                    <input>
+                    <p>Overview of activities planned for this period</p>
+                </div>
+                <div class="FormUpload">
+                    <span>Supporting Documents</span>
+                    <button>Upload File</button>
+                </div>
+                <button id="CancelForm">Cancel</button>
+                <button id="SubmitForm">Submit Form</button>
             </div>
             <div class="SubCard Form">
                 <div class="FormDetails">
@@ -60,7 +104,7 @@
                     <button class="StyledButton">
                         <span><img src="../../assets/images/icons/forms_icon.png" alt="Form icon"></span>
                         <span>Fill Out form</span>
-                    </button>
+                    </button>   
                 </div>
 
             </div>
