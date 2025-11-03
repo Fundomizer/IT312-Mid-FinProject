@@ -7,6 +7,7 @@
     <link rel="icon" href="../../assets/images/icons/favicon.png">
     <link rel="stylesheet" href="../../styles/common.css">
     <link rel="stylesheet" href="../../styles/navigation_bar_style.css">
+    <link rel="stylesheet" href="../../styles/navigation_bar_mobile_style.css">
     <link rel="stylesheet" href="../../styles/admin/admin_style.css">
     <link rel="stylesheet" href="../../styles/admin/admin_mobile_style.css" media="(max-width: 768px)">
     <script src="/scripts/navigation_bar.js" defer></script>
@@ -15,9 +16,14 @@
 </head>
 
 <body>
+    <div id="Overlay"></div>
     <div id="SideNav">
         <button id="ToggleSideNavButton">
-            <img src="../../assets/images/icons/Hamburger_Icon.png" alt="HamburgerMenu" class="hamburger-icon">
+            <img src="../../assets/images/icons/fav_burger_icon.png" alt="HamburgerMenu" class="hamburger-icon">
+            <span class="toggle-text">
+                <span class="toggle-label">Insert Website Name</span>
+                <span class="toggle-sublabel">Menu</span>
+            </span>
         </button>
         <div class="SideNavContent">
             <ul>

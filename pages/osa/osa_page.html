@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="../../assets/images/icons/favicon.png">
     <link rel="stylesheet" href="../../styles/navigation_bar_style.css">
+    <link rel="stylesheet" href="../../styles/navigation_bar_mobile_style.css">
     <link rel="stylesheet" href="../../styles/common.css">
+    <link rel="stylesheet" href="../../styles/common_mobile_style.css">
     <script src="../../scripts/navigation_bar.js" defer></script>
     <script type="module" src="../../scripts/osa/osa_script.js" defer></script>
 
@@ -14,26 +16,31 @@
 </head>
 
 <body>
+    <div id="Overlay"></div>
     <div id="SideNav">
         <button id="ToggleSideNavButton">
-            <img src="../../assets/images/icons/Hamburger_Icon.png" alt="HamburgerMenu" class="hamburger-icon">
+            <img src="../../assets/images/icons/fav_burger_icon.png" alt="HamburgerMenu" class="hamburger-icon">
+            <span class="toggle-text">
+                <span class="toggle-label">Insert Website Name</span>
+                <span class="toggle-sublabel">Menu</span>
+            </span>
         </button>
         <div class="SideNavContent">
             <ul>
                 <li>
-                    <button class="NavItems" id="overviewButton">
+                    <button class="NavItems" data-link="overview_page.html" id="overviewButton">
                         <span class="icon">📊</span>
                         <span class="label">Dashboard</span>
                     </button>
                 </li>
                 <li>
-                    <button class="NavItems" id="formsButton">
+                    <button class="NavItems" data-link="forms_page.html" id="formsButton">
                         <span class="icon">👥</span>
                         <span class="label">Forms</span>
                     </button>
                 </li>
                 <li>
-                    <button class="NavItems" id="repositoryButton">
+                    <button class="NavItems" data-link="repository_page.html" id="repositoryButton">
                         <span class="icon">🏫</span>
                         <span class="label">Repository</span>
                     </button>

@@ -117,3 +117,10 @@
     width: 100%;
     box-sizing: border-box;
 }
+
+@media (max-width: 480px) {
+    #Content h1{
+        font-size: 7vw;
+        padding: 1rem;
+    }
+}

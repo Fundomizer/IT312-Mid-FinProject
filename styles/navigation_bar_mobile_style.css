@@ -1,0 +1,112 @@
+@media (max-width: 720px) {
+  #SideNav {
+    position: fixed;
+    left: 0;
+    width: 4rem;              /* narrower */
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 480px) {
+  /* TopNav shrinks and stays fixed */
+  #TopNav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;              /* span full width */
+    height: 3.5rem;           /* smaller height */
+    padding: 0 0.25rem 0 2rem;
+    z-index: 1000;            /* keep above content */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+  }
+
+  #TopNav .logo {
+    font-size: 1rem;
+  }
+
+  .TopNavButton {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.4rem;
+    gap: 0.25rem;
+  }
+
+  .TopNavButton .ButtonIcon {
+    width: 0.8rem;
+    height: 0.8rem;
+  }
+
+  .UserProfile {
+    padding: 0.3rem;
+    font-size: 0.7rem;
+    gap: 0.25rem;
+  }
+
+  /* SideNav shrinks and stays fixed */
+  #SideNav {
+    position: fixed;
+    top: 3.5rem;              /* directly below TopNav */
+    left: 0;
+    width: 4rem;              /* narrower */
+    height: calc(100vh - 2.5rem);
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Hide toggle button */
+  #ToggleSideNavButton {
+    display: none;
+  }
+
+  /* Nav items stack vertically */
+  .NavItems {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 0.5rem 0;
+  }
+
+  .icon {
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  .label {
+    position: static;
+    opacity: 1 !important;
+    margin-top: 0.2rem;
+    font-size: 0.5rem;
+    white-space: normal;
+  }
+
+  /* Content area: only this scrolls */
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;          /* prevent body scroll */
+  }
+
+  #Content {
+    margin-top: 3.5rem;        /* offset TopNav */
+    margin-left: 4rem;         /* offset SideNav */
+    padding: 1rem 0.5rem 2.5rem 0.5rem;
+    font-size: 3vw;
+
+    height: calc(100vh - 3.5rem); /* fill remaining space */
+    overflow-y: auto;             /* scroll only inside content */
+    box-sizing: border-box;
+  }
+
+  #Content h2,
+  #Content p {
+    padding-left: 5vw;
+  }
+}

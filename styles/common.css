@@ -61,6 +61,8 @@ body {
     margin: 5px;
     padding: 5px 15px;
     width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     gap: 5px;
     display: flex;
     align-items: center;

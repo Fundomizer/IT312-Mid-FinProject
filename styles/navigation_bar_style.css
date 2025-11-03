@@ -14,10 +14,10 @@ button {
 }
 
 .Main {
-    width: auto;
-    min-height: 100vh;
+    width: 100vw;
+    height: 100vh;
     height: auto;
-    background-color: #1A1F2E; 
+    background-color: #1A1F2E;
 }
 
 #SideNav,
@@ -26,9 +26,22 @@ button {
     outline: 1px solid var(--outline-color);
 }
 
+/* Overlay hidden by default */
+#Overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 999; /* below SideNav, above content */
+}
+
 /*SIDE NAVIGATION BAR*/
 #SideNav {
     position: fixed;
+    background-color: #0F1420;
     top: 0;
     left: 0;
     height: 100vh;
@@ -38,7 +51,7 @@ button {
     flex-direction: column;
     align-items: stretch;
     overflow-x: hidden;
-    z-index: 2;
+    z-index: 1000;
 }
 
 /* Expanded state */
@@ -46,26 +59,82 @@ button {
     width: 16rem;
 }
 
+/* When nav is open, show overlay */
+body.nav-open #Overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Remove margin shifts */
+#SideNav.expanded ~ .Main #Content,
+#SideNav.expanded ~ .Main #TopNav {
+  margin-left: 4rem !important;
+}
+
 /* Toggle button */
 #ToggleSideNavButton {
-    align-self: flex-end;
+    color: white;
+    align-self: center;
     background: none;
     border: none;
     cursor: pointer;
-    padding: 1rem;
+    width: 100%;
+    padding: 1.18rem 0.75rem 1.18rem 0.75rem;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    border-radius: 0;
 }
 
 #ToggleSideNavButton:hover {
     background-color: #34495e;
 }
 
-.hamburger-icon {
-    width: 2rem;
-    height: auto;
-    max-width: 8vw;
+/* Icon stays fixed size */
+#ToggleSideNavButton .hamburger-icon {
+  width: 2.5rem;
+  height: auto;
+  flex-shrink: 0;
+}
+
+/* Text container stacks vertically */
+#ToggleSideNavButton .toggle-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 0.75rem;
+  line-height: 1.5;
+}
+
+/* Label hidden by default */
+#ToggleSideNavButton .toggle-label {
+  font-size: 1rem;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+}
+
+/* Sub-label */
+#ToggleSideNavButton .toggle-sublabel {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: #aaa;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+}
+
+/* Expanded state: button fills nav width, label shows */
+#SideNav.expanded #ToggleSideNavButton {
+  width: 100%;
+  justify-content: flex-start; /* keep icon at left */
+}
+
+#SideNav.expanded #ToggleSideNavButton .toggle-label,
+#SideNav.expanded #ToggleSideNavButton .toggle-sublabel {
+  display: inline;
+  opacity: 1;
 }
 
 .SideNavContent {
@@ -113,7 +182,7 @@ button {
 
 .label {
     position: absolute;
-    left: 3rem;
+    left: 4rem;
     opacity: 0;
     white-space: nowrap;
     pointer-events: none;
@@ -123,6 +192,16 @@ button {
 #SideNav.expanded .label {
     opacity: 1;
 }
+
+body.nav-open::after {
+  content: "";
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.4);
+  z-index: 999; /* just below the nav */
+}
+
 
 
 /*TOP NAV BAR*/
@@ -155,6 +234,7 @@ button {
     display: flex;
     align-items: center;
     gap: 1rem;
+    padding: 0.25rem 1rem 0.25rem;
     flex: 1;
     min-width: 0;
     justify-content: flex-end;
@@ -166,7 +246,7 @@ button {
     align-items: center;
     gap: 0.4rem;
 
-    padding: 0.5rem;
+    padding: 0.25rem 1rem 0.25rem;
     border: 1px solid #2c3e50;
     border-radius: 10px;
     background-color: transparent;
@@ -190,9 +270,10 @@ button {
 }
 
 #Content {
-    height: 100%;
+    min-height: 100vh;
+    height: auto;
     padding: 0 1rem 3rem 5rem;
-    margin: 2rem 4rem;
+    margin: 2vw 3vw;
     transition: margin-left 0.4s ease;
 }
 

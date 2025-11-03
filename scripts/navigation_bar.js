@@ -1,13 +1,25 @@
-const sideNavContent = document.getElementsByClassName("SideNavContent")
 const sideNavButton = document.getElementById("ToggleSideNavButton");
 const sideNav = document.getElementById("SideNav");
-const logoutButton = document.getElementById("Logout")
+const logoutButton = document.getElementById("Logout");
 
-sideNavButton.addEventListener("click", function () {
-    sideNav.classList.toggle("expanded");
-    console.log("Clicked");
+// Toggle SideNav + overlay
+sideNavButton.addEventListener("click", () => {
+  sideNav.classList.toggle("expanded");
+  document.body.classList.toggle("nav-open");
 });
 
-logoutButton.addEventListener('click', () => {
-    window.location.href = "/index.html";
-})
+// Close SideNav if overlay is clicked
+document.body.addEventListener("click", (e) => {
+  if (document.body.classList.contains("nav-open")) {
+    // if click is on the overlay (the ::after pseudo-element)
+    if (e.target === document.body) {
+      sideNav.classList.remove("expanded");
+      document.body.classList.remove("nav-open");
+    }
+  }
+});
+
+// Logout button
+logoutButton.addEventListener("click", () => {
+  window.location.href = "/index.html";
+});
