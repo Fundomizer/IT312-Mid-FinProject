@@ -30,7 +30,7 @@ async function loadUsers() {
     }
 
     async function requestUsers() {
-        return fetch(`http://localhost/MongoDB/index.php`)
+        return fetch(`http://localhost/MongoDB/index.php?collection=users`)
             .then(request => request.json())
             .then(data => {
                 console.log(data);// TODO remove after testing
