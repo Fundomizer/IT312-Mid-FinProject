@@ -30,8 +30,7 @@ async function loadUsers() {
     }
 
     async function requestUsers() {
-        let PORT = 3000; // TODO hard code the port for now
-        return fetch(`http://localhost:${PORT}/api/users`)
+        return fetch(`http://localhost/MongoDB/index.php`)
             .then(request => request.json())
             .then(data => {
                 console.log(data);// TODO remove after testing
