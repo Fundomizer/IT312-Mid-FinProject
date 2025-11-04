@@ -134,3 +134,9 @@ cursor: pointer;
 .add-option-btn:hover, .remove-option-btn:hover, .remove-field-btn:hover {
   background-color: #444;
 }
+#BackBtn {
+  position: relative;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
