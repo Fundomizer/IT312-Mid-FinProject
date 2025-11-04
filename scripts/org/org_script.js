@@ -28,39 +28,103 @@ async function loadForms() {
     }
 
     function createForm(form) {
+        // Parent wrapper
         const wrapper = document.createElement("div");
         wrapper.className = "SubCard Form";
 
-        // Build the inner HTML
-        wrapper.innerHTML = `
-      <div class="FormDetails">
-      <span>
-        <h3 class="FormTitle">${form["title"]}</h3>
-        <p class="Tag">${form["action"]}</p>
-      </span>
-      <p class="FormDescription">${form["activity"]}</p>
-      <div class="FormRequirements">
-        <span>
-          <div class="ImageWrapper">
-            <img src="../../assets/images/org_icons/document_icon.png" alt="Document icon">
-          </div>
-          <p>${form["field_num"]} Fields required</p>
-        </span>
-      </div>
-      <div class="Tags">
-        ${form["tags"].map(tag => `<p class="Tag">${tag}</p>`).join("")}
-      </div>
-     </div>
-     <div>
-        <button class="StyledButton">
-            <span><img src="../../assets/images/icons/forms_icon.png" alt="Form icon"></span>
-            <span>Fill Out form</span>
-            </button>
-    </div>
-  `;
+        // Attach the two big parts
+        wrapper.appendChild(createFormDetails());
+        wrapper.appendChild(createStyledButtonDiv());
 
         return wrapper;
+
+        function createFormDetails() {
+            const formDetails = document.createElement("div");
+            formDetails.className = "FormDetails";
+
+            // Title + Action
+            const titleBlock = document.createElement("span");
+            const titleEl = document.createElement("h3");
+            titleEl.className = "FormTitle";
+            titleEl.textContent = form.title;
+
+            const actionEl = document.createElement("p");
+            actionEl.className = "Tag";
+            actionEl.textContent = form.action;
+
+            titleBlock.appendChild(titleEl);
+            titleBlock.appendChild(actionEl);
+
+            // Description
+            const descEl = document.createElement("p");
+            descEl.className = "FormDescription";
+            descEl.textContent = form.activity;
+
+            // Requirements
+            const requirements = document.createElement("div");
+            requirements.className = "FormRequirements";
+
+            const reqSpan = document.createElement("span");
+
+            const imageWrapper = document.createElement("div");
+            imageWrapper.className = "ImageWrapper";
+
+            const icon = document.createElement("img");
+            icon.src = "../../assets/images/org_icons/document_icon.png";
+            icon.alt = "Document icon";
+
+            imageWrapper.appendChild(icon);
+
+            const reqText = document.createElement("p");
+            reqText.textContent = `${form.field_num} Fields required`;
+
+            reqSpan.appendChild(imageWrapper);
+            reqSpan.appendChild(reqText);
+            requirements.appendChild(reqSpan);
+
+            // Tags
+            const tagsContainer = document.createElement("div");
+            tagsContainer.className = "Tags";
+            form.tags.forEach(tag => {
+                const tagEl = document.createElement("p");
+                tagEl.className = "Tag";
+                tagEl.textContent = tag;
+                tagsContainer.appendChild(tagEl);
+            });
+
+            // Assemble FormDetails
+            formDetails.appendChild(titleBlock);
+            formDetails.appendChild(descEl);
+            formDetails.appendChild(requirements);
+            formDetails.appendChild(tagsContainer);
+
+            return formDetails;
+        }
+
+        // --- Internal function: Styled button ---
+        function createStyledButtonDiv() {
+            const buttonWrapper = document.createElement("div");
+
+            const button = document.createElement("button");
+            button.className = "StyledButton";
+
+            const iconSpan = document.createElement("span");
+            const formIcon = document.createElement("img");
+            formIcon.src = "../../assets/images/icons/forms_icon.png";
+            formIcon.alt = "Form icon";
+            iconSpan.appendChild(formIcon);
+
+            const labelSpan = document.createElement("span");
+            labelSpan.textContent = "Fill Out form";
+
+            button.appendChild(iconSpan);
+            button.appendChild(labelSpan);
+            buttonWrapper.appendChild(button);
+
+            return buttonWrapper;
+        }
     }
+
 
 }
 
@@ -129,9 +193,13 @@ async function loadHistory() {
 
             // Academic year + Semester
             const academicYear = document.createElement("p");
-            academicYear.textContent = log['academic_yr'];
+            academicYear.textContent = `Academic Year: ${log['academic_yr']}`;
             const semester = document.createElement("p");
-            semester.textContent = log['semester'];
+            semester.textContent = `Semester: ${log['semester']}`;
+
+            logDate.appendChild(dateSpan)
+            logDate.appendChild(academicYear)
+            logDate.appendChild(semester)
 
             // Tags section
             const tagsContainer = document.createElement("div");
@@ -177,9 +245,6 @@ async function loadHistory() {
 
             return buttonWrapper;
         }
-
-
-
 
     }
 }
