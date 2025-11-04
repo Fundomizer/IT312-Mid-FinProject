@@ -54,7 +54,8 @@
     gap: 2rem;
 }
 
-#Forms {
+#Forms,
+#History {
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -97,6 +98,7 @@
 
 .Tags {
     display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
 }
 
@@ -104,7 +106,15 @@
     border-radius: var(--border-rad);
     padding: 5px 10px;
     outline: 1px solid var(--outline-color);
+    display: inline-block;
+    max-width: fit-content;
+    min-width: 40px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+
+
 
 /* History page style */
 .Log {
@@ -113,6 +123,7 @@
 
 .LogDetails {
     flex: 1;
+    /* flex-wrap: wrap; */
     display: flex;
     flex-direction: column;
     gap: 1rem;
