@@ -71,7 +71,8 @@ document.addEventListener("click", (event) => {
  * @returns 
  */
 export async function fetchCollection(collection, URI = "") {
-    const endpoint = URI || `http://localhost/MongoDB/index.php?collection=${collection}`;
+    const endpoint = URI || `http://localhost/IT312-Mid-FinProject/php/api.php?collection=${collection}`;
+
     return fetch(endpoint)
         .then(request => request.json())
         .then(data => data)

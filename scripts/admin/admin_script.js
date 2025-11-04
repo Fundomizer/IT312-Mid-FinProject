@@ -23,7 +23,7 @@ async function loadUsers() {
     console.log("Loading users page");
     loadPage("admin", "users_page.html")
 
-    let users = await fetchCollection()
+    let users = await fetchCollection('users')
 
     displayUsers(users)
 
@@ -34,8 +34,6 @@ async function loadUsers() {
             userTableView.appendChild(createTableRow(item, ["name", "email", "role", "date_created"]))
         });
 
-
-
     }
 
 }
@@ -44,7 +42,7 @@ async function loadLogs() {
     console.log("Loading activity logs");
     loadPage("admin", "logs_page.html")
 
-    let logs = await fetchCollection();
+    let logs = await fetchCollection('log')
 
     displayLog(logs)
 
