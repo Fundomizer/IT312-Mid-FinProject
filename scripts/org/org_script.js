@@ -276,14 +276,15 @@ if (dashboard) dashboard.addEventListener('click', loadDashboard)
 if (forms) forms.addEventListener('click', loadForms)
 if (history) history.addEventListener('click', loadHistory)
 
-// Use event delegation for dynamically loaded elements
+// EventHandlers for popup forms
 document.addEventListener("click", (e) => {
-    // Check if clicked element is a StyledButton
     if (e.target.closest(".StyledButton")) {
         openForm();
     }
-    // Check if clicked element is the cancel button
     if (e.target.id === "CancelForm") {
+        closeForm();
+    }
+    if (e.target.closest("#EkisButton")) {
         closeForm();
     }
 });
