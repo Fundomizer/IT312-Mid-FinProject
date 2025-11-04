@@ -44,4 +44,25 @@ const response = await fetch("http://localhost/IT312-Mid-FinProject/php/api.php?
   });
 }
 
+async function loadDashboard() {
+    let orgs = await fetchCollection('http://localhost/IT312-Mid-FinProject/php/api.php?collection=student_organization');
+    let forms = await fetchCollection('http://localhost/IT312-Mid-FinProject/php/api.php?collection=forms');
+
+    // Count active organizations
+    const activeOrgs = orgs.length;
+    document.getElementById('active-org-count').textContent = activeOrgs;
+
+    // Count total requirements
+    const totalRequirements = orgs.reduce((sum, org) => {
+        return sum + (org.requirements ? org.requirements.length : 0);
+    }, 0);
+    document.getElementById('all-time-submission-count').textContent = totalRequirements;
+
+    // Count active forms
+    const activeForms = forms.length;
+    document.getElementById('active_form_count').textContent = activeForms;
+}
+
+loadDashboard();
 loadOrganizations();
+

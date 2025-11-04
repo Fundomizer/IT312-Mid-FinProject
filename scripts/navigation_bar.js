@@ -21,5 +21,5 @@ document.body.addEventListener("click", (e) => {
 
 // Logout button
 logoutButton.addEventListener("click", () => {
-  window.location.href = "/index.html";
+  window.location.href = "/IT312-Mid-FinProject/index.html";
 });
