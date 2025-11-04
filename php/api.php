@@ -1,19 +1,7 @@
 <?php
-require '../vendor/autoload.php';
-/*
-How to access endpoints:
-With this script you can access the endpoints and get the JSON data via:
-- http://<server>/<project>/<phpfile>.php?collection=<collection_name>
-- Example: http://localhost/MongoDB/api.php?collection=users
-You can just plug that URL in the fetch to get the JSON data from the endpoint
+require './vendor/autoload.php';
 
-NOTE: The collection can be any string from the $collections variable
-
-This is hosted in a wamp server when this script was written (03/11/2025).
-*/
-
-
-// ----- CORS headers -----
+// --- CORS headers ---
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
@@ -26,10 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 try {
-    // MongoDB connection
+    // --- MongoDB connection ---
     $uri = "mongodb://localhost:27017/";
     $client = new MongoDB\Client($uri);
-    $db = $client->DMS;
+    $db = $client->OrganizationManagementDatabase;
 
     // --- Allowed collections ---
     $collections = [
@@ -38,7 +26,7 @@ try {
         'log',
         'org_forms',
         'osa_submissions',
-        'student_organizations',
+        'student_organization',
         'users'
     ];
 
