@@ -23,7 +23,7 @@ async function loadUsers() {
     console.log("Loading users page");
     loadPage("admin", "users_page.html")
 
-    let users = await fetchUsers()
+    let users = await fetchCollection()
 
     displayUsers(users)
 
@@ -38,30 +38,15 @@ async function loadUsers() {
 
     }
 
-    async function fetchUsers() {
-        return fetch(`http://localhost/MongoDB/index.php?collection=users`)
-            .then(request => request.json())
-            .then(data => data)
-    }
-
 }
 
 async function loadLogs() {
     console.log("Loading activity logs");
     loadPage("admin", "logs_page.html")
 
-    let logs = await fetchLogs();
+    let logs = await fetchCollection();
 
     displayLog(logs)
-
-    async function fetchLogs() {
-        return fetch('http://localhost/MongoDB/index.php?collection=log')
-            .then(request => request.json())
-            .then(data => {
-                console.log("Logs: ", data);
-                return data
-            })
-    }
 
     /**
      * Displays the list of logs, appends a "Log" into the "Logs" div
