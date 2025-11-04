@@ -73,24 +73,7 @@ addFieldBtn.addEventListener("click", () => {
   }
 });
 
-submitFormBtn.addEventListener("click", () => {
-  const title = document.getElementById("formTitle").value.trim();
-  const description = document.getElementById("formDescription").value.trim();
 
-  if (!title) return alert("Please enter a form title.");
-
-  const questions = [...document.querySelectorAll(".form-field")].map(field => {
-    const type = fieldTypeSelect.value;
-    const questionTitle = field.querySelector(".field-title").value.trim();
-
-    const options = [...field.querySelectorAll(".option-text")].map(opt => opt.value.trim());
-    return { questionTitle, options };
-  });
-
-  const formData = { title, description, questions };
-
-  console.log("Form created:", formData);
-});
 }
 
 loadFormCreation();

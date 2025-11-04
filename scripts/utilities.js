@@ -64,6 +64,52 @@ document.addEventListener("click", (event) => {
         loadPage("osa", "forms_page.html", "osa_forms_style.css", "forms_script.js");
     }
 });
+
+document.addEventListener("click", async (event) => {
+  if (event.target && event.target.id === "submitFormBtn") {
+    event.preventDefault();
+
+    const requirement_name = document.getElementById("formTitle").value.trim();
+    const description = document.getElementById("formDescription").value.trim();
+
+    if (!requirement_name) return alert("Please enter a form title.");
+
+    const fields = [...document.querySelectorAll(".form-field")].map(field => {
+      const question = field.querySelector(".field-title").value.trim();
+      const field_type = field.dataset.type || "text";
+      const required = true; 
+
+      return { question, field_type, required };
+    });
+
+    const formData = { requirement_name, description, fields, tags: [] };
+
+    try {
+      const response = await fetch("http://localhost/IT312-Mid-FinProject/php/insert_form.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert("Form successfully saved!");
+        console.log("Inserted ID:", result.inserted_id);
+
+        // Clear form
+        document.getElementById("formTitle").value = "";
+        document.getElementById("formDescription").value = "";
+        document.getElementById("formFields").innerHTML = "";
+      } else {
+        alert("Error saving form: " + (result.error || "Unknown error"));
+      }
+    } catch (err) {
+      console.error("Fetch error:", err);
+      alert("Failed to connect to the server.");
+    }
+  }
+});
 /**
  * Fetches data from an endpoint
  * @param {String} collection Name of the collection
