@@ -14,9 +14,9 @@ async function loadUsers() {
     console.log("Loading users page");
     loadPage("admin", "users_page.html")
 
-    let user = await requestUsers()
+    let users = await fetchUsers()
 
-    displayUsers(user)
+    displayUsers(users)
 
     function displayUsers(list) {
         const userTableView = document.getElementById("AccountsTableView")
@@ -25,28 +25,37 @@ async function loadUsers() {
             userTableView.appendChild(createTableRow(item, ["name", "email", "role", "date_created"]))
         });
 
-        
+
 
     }
 
-    async function requestUsers() {
+    async function fetchUsers() {
         return fetch(`http://localhost/MongoDB/index.php?collection=users`)
             .then(request => request.json())
-            .then(data => {
-                console.log(data);// TODO remove after testing
-                return data
-            })
+            .then(data => data)
     }
 
 }
 
-function loadLogs() {
+async function loadLogs() {
     console.log("Loading activity logs");
     loadPage("admin", "logs_page.html")
 
+    let logs = await fetchLogs();
+
+    displayLog(logs)
+
+    async function fetchLogs() {
+        return fetch('http://localhost/MongoDB/index.php?collection=log')
+            .then(request => request.json())
+            .then(data => {
+                console.log("Logs: ", data);
+                return data
+            })
+    }
 
     /**
-     * Displays the list of logs
+     * Displays the list of logs, appends a "Log" into the "Logs" div
      * @param {JSON} logs 
      */
     function displayLog(logs) {
@@ -57,35 +66,42 @@ function loadLogs() {
         });
     }
 
-    /**
-     * Creates a log card element based on the object passed.
-     * @param {Object} log - The log object
-     * @param {string} log.user - The user name
-     * @param {string} log.activity - The activity description
-     * @param {string} log.timestamp - The date/time string
-     * @returns {HTMLDivElement} The constructed log card
-     */
     function createLog(log) {
-        const div = document.createElement("div");
-        div.classList.add("Log", "SubCard");
 
-        const userP = document.createElement("p");
-        userP.id = "UserLogLabel";
-        userP.textContent = log.user;
+        // Create main container
+        const card = document.createElement("div");
+        card.className = "SubCard Log";
 
-        const activityP = document.createElement("p");
-        activityP.id = "ActivityLogLabel";
-        activityP.textContent = log.activity;
+        // User section
+        const userDiv = document.createElement("div");
+        const userLabel = document.createElement("p");
+        userLabel.textContent = log["name"];
 
-        const timeP = document.createElement("p");
-        timeP.id = "TimeStampLogLabel";
-        timeP.textContent = log.timestamp;
+        const activityType = document.createElement("p");
+        activityType.className = "Tag";
+        activityType.textContent = log["action"];
 
-        div.appendChild(userP);
-        div.appendChild(activityP);
-        div.appendChild(timeP);
+        userDiv.appendChild(userLabel);
+        userDiv.appendChild(activityType);
 
-        return div;
+        // Activity, date, and time
+        const activityDiv = document.createElement("div");
+        const activityLabel = document.createElement("p");
+        activityLabel.textContent = log["activity"];
+
+        const timeStamp = document.createElement("p");
+        timeStamp.textContent = `${log["date"]}, ${log["time"]}`;
+
+
+        activityDiv.appendChild(activityLabel);
+        activityDiv.appendChild(timeStamp);
+
+
+        // Put it all together
+        card.appendChild(userDiv);
+        card.appendChild(activityDiv);
+
+        return card;
     }
 
 

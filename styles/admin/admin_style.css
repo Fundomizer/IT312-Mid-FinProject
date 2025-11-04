@@ -116,10 +116,38 @@
     flex-direction: column;
     width: 100%;
     box-sizing: border-box;
+    gap: 0.5rem;
+    height: fit-content;
+}
+
+.Log>div:first-child {
+    aspect-ratio: auto;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.Log>div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    align-items: flex-start;
+    aspect-ratio: auto;
+}
+
+.Log>div:last-child>p {
+    color: var(--muted-color);
+}
+
+.Tag {
+    border-radius: var(--border-rad);
+    padding: 5px 10px;
+    outline: 1px solid var(--outline-color);
 }
 
 @media (max-width: 480px) {
-    #Content h1{
+    #Content h1 {
         font-size: 7vw;
         padding: 1rem;
     }

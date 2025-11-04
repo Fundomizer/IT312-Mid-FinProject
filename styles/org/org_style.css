@@ -54,6 +54,13 @@
     gap: 2rem;
 }
 
+#Forms,
+#History {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
 .Form {
     width: 100%;
     box-sizing: border-box;
@@ -83,13 +90,15 @@
     gap: 1rem;
 }
 
-.FormRequirements>span {
+.FormRequirements>span,
+.FormDetails>span {
     display: flex;
     gap: 10px;
 }
 
 .Tags {
     display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
 }
 
@@ -97,7 +106,15 @@
     border-radius: var(--border-rad);
     padding: 5px 10px;
     outline: 1px solid var(--outline-color);
+    display: inline-block;
+    max-width: fit-content;
+    min-width: 40px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+
+
 
 /* History page style */
 .Log {
@@ -106,6 +123,7 @@
 
 .LogDetails {
     flex: 1;
+    /* flex-wrap: wrap; */
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -144,7 +162,7 @@
     align-items: center;
 }
 
-button > .ImageWrapper>img {
+button>.ImageWrapper>img {
     aspect-ratio: 1/1;
     max-width: 1rem;
     height: auto;

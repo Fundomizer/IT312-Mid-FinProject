@@ -1,54 +1,3 @@
-// TODO This code doesn't feel safe
-// Might need a better way for structuring this thing
-const navButs = {
-    admin: [
-        {
-            label: "Users", icon: "📊", onClick: () => loadPage("../pages/admin/users_page.html")
-        },
-        {
-            label: "Logs", icon: "👥", onClick: () => loadPage("../pages/admin/logs_page.html")
-        }
-    ],
-    osa: [
-        {
-            label: "Overview", icon: "📊", onClick: () => loadPage("osa", "overview_page.html", "osa_overview_style.css", "overview_script.js")
-        },
-        {
-            label: "Forms", icon: "👥", onClick: () => loadPage("osa", "forms_page.html", "osa_forms_style.css", "forms_script.js")
-        },
-        {
-            label: "Repository", icon: "🏫", onClick: () => loadPage("osa", "repository_page.html", "osa_repository_style.css", "repository_script.js")
-        }
-    ],
-    org: [
-        {
-            label: "Assigned forms", icon: "📊", onClick: () => console.log("Navigating to assigned forms")
-        },
-        {
-            label: "Manual submit", icon: "👥", onClick: () => console.log("Navigating to manual submit")
-        },
-        {
-            label: "History", icon: "🏫", onClick: () => console.log("Navigating to history")
-        }
-    ]
-
-}
-
-
-// NOTE change userType to either admin, osa, or org
-// This default value will be changed later on
-function loadNav(userType = "osa") {
-    console.log(userType);
-
-    const list = document.createElement("ul")
-    navButs[userType].forEach(element => {
-        list.appendChild(createNavItem(element))
-    })
-
-    sideNavContent[0].appendChild(list);
-}
-
-
 /**
  * Dynamically loads and injects a HTML file into the container, "Content". Provide the file name for the style and script if you intend to use a different file for them.
  * 
@@ -81,15 +30,15 @@ export function loadPage(role, page, style, script,
             if (script) loadScript(pathToScript);
         });
 
-       function loadScript(src) {
-         const existingScript = document.querySelector(`script[src="${src}"]`);
-         if (existingScript) existingScript.remove(); 
+    function loadScript(src) {
+        const existingScript = document.querySelector(`script[src="${src}"]`);
+        if (existingScript) existingScript.remove();
 
-         const script = document.createElement("script");
-         script.src = `${src}?v=${Date.now()}`; // cache busting to ensure latest version is loaded
-         script.defer = true;
-         document.body.appendChild(script);
-        }
+        const script = document.createElement("script");
+        script.src = `${src}?v=${Date.now()}`; // cache busting to ensure latest version is loaded
+        script.defer = true;
+        document.body.appendChild(script);
+    }
 
 
     function loadCSS(href) {
@@ -102,8 +51,24 @@ export function loadPage(role, page, style, script,
     }
 
 }
+/**
+ * Loads the default OSA page
+ */
 document.addEventListener("click", (event) => {
-  if (event.target && event.target.id === "create-form-btn") {
-    loadPage("osa", "forms_creation.html", "osa_forms_creation_style.css", "forms_creation_script.js");
-  }
+    if (event.target && event.target.id === "create-form-btn") {
+        loadPage("osa", "forms_creation.html", "osa_forms_creation_style.css", "forms_creation_script.js");
+    }
 });
+
+/**
+ * Fetches data from an endpoint
+ * @param {String} collection Name of the collection
+ * @param {*} URI 
+ * @returns 
+ */
+export async function fetchCollection(collection, URI = "") {
+    const endpoint = URI || `http://localhost/MongoDB/index.php?collection=${collection}`;
+    return fetch(endpoint)
+        .then(request => request.json())
+        .then(data => data)
+}
