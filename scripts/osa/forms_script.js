@@ -1,7 +1,7 @@
 
 async function loadActiveForms() {
  
-    const response = await fetch("http://localhost:3000/api/forms");
+const response = await fetch("http://localhost/IT312-Mid-FinProject/php/api.php?collection=forms")
     const forms = await response.json();
 
 

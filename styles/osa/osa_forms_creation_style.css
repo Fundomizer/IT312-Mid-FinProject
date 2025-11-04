@@ -12,6 +12,24 @@ html, body {
   padding-bottom: 50px; 
 }
 
+
+ .back-button {
+ background: linear-gradient(180deg, #081226 0%, #071021 100%);
+ contain: white;
+ border: 1px solid rgba(255,255,255,0.2);
+ padding: 8px 14px;
+border-radius: 8px;
+color:white;
+cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  margin-bottom: 50px;
+        }
+
+   .back-button:hover {
+ background: #0c1830;
+ border-color: #4f9eff;
+        }
 .create-form-header h2 {
   color: white;
   margin-bottom: 5px;

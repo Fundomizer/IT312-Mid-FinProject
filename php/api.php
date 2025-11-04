@@ -1,5 +1,5 @@
 <?php
-require './vendor/autoload.php';
+require '../vendor/autoload.php';
 /*
 How to access endpoints:
 With this script you can access the endpoints and get the JSON data via:
@@ -27,9 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 try {
     // MongoDB connection
-    $uri = "mongodb+srv://testuser:test321@cluster0.lbsrw5e.mongodb.net/";
+    $uri = "mongodb://localhost:27017/";
     $client = new MongoDB\Client($uri);
-    $db = $client->OrganizationManagementDatabase;
+    $db = $client->DMS;
 
     // --- Allowed collections ---
     $collections = [
@@ -38,7 +38,7 @@ try {
         'log',
         'org_forms',
         'osa_submissions',
-        'student_organization',
+        'student_organizations',
         'users'
     ];
 
