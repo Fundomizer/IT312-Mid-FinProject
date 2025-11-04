@@ -12,9 +12,6 @@
 .PopupForm > p{
     padding-bottom: 1.4vh;
 }
-.PopupForm.show{
-    display: flex;
-}
 #Alert{
     background-color: #abd6ff;
     color: #4677ff;

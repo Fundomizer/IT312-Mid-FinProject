@@ -1,12 +1,8 @@
 import { loadPage } from "../utilities.js"
 
-
 const dashboard = document.getElementById("dashboardButton")
 const forms = document.getElementById("formsButton")
 const history = document.getElementById("historyButton")
-const popupButtons = document.querySelectorAll(".StyledButton");
-let popup = document.getElementsByClassName("PopupForm");
-const cancel = document.getElementById("CancelForm");
 
 function loadDashboard() {
     loadPage('org', 'dashboard_page.html')
@@ -21,20 +17,36 @@ function loadHistory() {
 }
 
 function openForm() {
-    popup.style.display = block;
-    loadForms()
+    const popup = document.querySelector(".PopupForm");
+    if (popup) {
+        popup.style.display = "block";
+    } else {
+        console.error("Popup element not found");
+    }
 }
 
 function closeForm() {
-    popup.style.display = none;
-    loadForms()
+    const popup = document.querySelector(".PopupForm");
+    if (popup) {
+        popup.style.display = "none";
+    }
 }
 
-// Assing even hanlders
-dashboard.addEventListener('click', loadDashboard)
-forms.addEventListener('click', loadForms)
-history.addEventListener('click', loadHistory)
-popupButtons.addEventListener('click', openForm)
-cancel.addEventListener('click', closeForm)
+// Assign event handlers for navigation
+if (dashboard) dashboard.addEventListener('click', loadDashboard)
+if (forms) forms.addEventListener('click', loadForms)
+if (history) history.addEventListener('click', loadHistory)
+
+// Use event delegation for dynamically loaded elements
+document.addEventListener("click", (e) => {
+    // Check if clicked element is a StyledButton
+    if (e.target.closest(".StyledButton")) {
+        openForm();
+    }
+    // Check if clicked element is the cancel button
+    if (e.target.id === "CancelForm") {
+        closeForm();
+    }
+});
 
 loadDashboard() // Load dashboard by default
