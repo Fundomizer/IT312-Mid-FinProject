@@ -1,6 +1,6 @@
 
 async function loadOrganizations() {
-const response = await fetch("http://localhost/IT312-Mid-FinProject/php/api.php?collection=student_organizations")
+const response = await fetch("http://localhost/IT312-Mid-FinProject/php/api.php?collection=student_organization")
 
   const data = await response.json();
   const orgContainer = document.getElementById("organizations-list");
