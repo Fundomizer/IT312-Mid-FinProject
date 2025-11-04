@@ -9,7 +9,7 @@
 
   async function loadItems() {
     try {
-    const res = await fetch("http://localhost/IT312-Mid-FinProject/php/api.php?collection=student_organizations")
+    const res = await fetch("http://localhost/IT312-Mid-FinProject/php/api.php?collection=student_organization")
       const data = await res.json();
       console.log("Fetched data:", data);
 
