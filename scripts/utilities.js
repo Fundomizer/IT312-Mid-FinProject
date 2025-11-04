@@ -59,7 +59,11 @@ document.addEventListener("click", (event) => {
         loadPage("osa", "forms_creation.html", "osa_forms_creation_style.css", "forms_creation_script.js");
     }
 });
-
+document.addEventListener("click", (event) => {
+    if (event.target && event.target.id === "backBtn") {
+        loadPage("osa", "forms_page.html", "osa_forms_style.css", "forms_script.js");
+    }
+});
 /**
  * Fetches data from an endpoint
  * @param {String} collection Name of the collection
