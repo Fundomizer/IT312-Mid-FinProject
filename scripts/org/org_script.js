@@ -4,8 +4,18 @@ const dashboard = document.getElementById("dashboardButton")
 const forms = document.getElementById("formsButton")
 const history = document.getElementById("historyButton")
 
-function loadDashboard() {
+async function loadDashboard() {
     loadPage('org', 'dashboard_page.html')
+
+    // Display the actual number of total submissions and forms
+    let submissions = await fetchCollection('history')
+    let assignedForms = await fetchCollection('org_forms')
+
+    const totalSubs = document.querySelector("#TotalSubmissions b");
+    const totalAssForms = document.querySelector("#AssignedForms b");
+
+    totalSubs.textContent = submissions.length;
+    totalAssForms.textContent = assignedForms.length;
 }
 
 async function loadForms() {
@@ -278,4 +288,4 @@ document.addEventListener("click", (e) => {
     }
 });
 
-loadHistory() // Load dashboard by default
+loadDashboard() // Load dashboard by default

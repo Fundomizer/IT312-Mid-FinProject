@@ -1,13 +1,22 @@
-import { loadPage } from "../utilities.js"
+import { loadPage, fetchCollection } from "../utilities.js"
 import { createTableRow } from "../components.js"
 
 const dashboard = document.getElementById("dashboardButton")
 const users = document.getElementById("usersButton")
 const logs = document.getElementById("activityLogButton")
 
-function loadDashboard() {
-    console.log("Loading dashboard");
+async function loadDashboard() {
+
     loadPage("admin", "dashboard_page.html")
+
+    let users = await fetchCollection('users')
+    let logs = await fetchCollection('log')
+
+    const totalUsers = document.querySelector("#TotalUsers b");
+    const totalLogs = document.querySelector("#ActivityLogs b");
+
+    totalUsers.textContent = users.length;
+    totalLogs.textContent = logs.length;
 }
 
 async function loadUsers() {
