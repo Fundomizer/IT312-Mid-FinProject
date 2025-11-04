@@ -5,47 +5,53 @@ const loginButton = document.getElementById("LoginButton");
 const googleLogButton = document.getElementById("GoogleLogin");
 
 loginButton.addEventListener("click", () => {
-
     if (!idInput.value || !passwordInput.value) {
-        alert("ID and Password must not be empty"); // TODO add a proper alert later on
+        alert("Email and Password must not be empty");
         return;
     }
 
-    console.log(idInput.value);
+    console.log(idInput.value , passwordInput.value);
+    
 
-    let userType = validate(idInput.value, passwordInput.value)
-    console.log(userType);
+    fetch("http://localhost/IT312-Mid-FinProject/php/login.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            email: idInput.value,
+            password: passwordInput.value
+        })
+    })
+        .then(res => {
+            let json = res.json()
+            console.log("Json: ", json);
+            return json
+        })
+        .then(data => {
+            console.log("Current data: ", data);
 
-    switch (userType) {
-        case "osa":
-            window.location.href = "./pages/osa/osa_page.html";
-            break;
-        case "org":
-            window.location.href = "./pages/org/org_page.html";
-            break;
-        case "admin":
-            window.location.href = "./pages/admin/admin_page.html";
-            break;
-        default:
-            console.log("unknown ID");
-            return;
-    }
-
-    function validate(ID, password) {
-
-        // TODO change this later on when we implement a database.
-        let prefix = ID.substring(0, 2);
-
-        switch (prefix) {
-            case "11": return "org";
-            case "22": return "osa";
-            case "33": return "admin";
-            default: return null;
-        }
-
-    }
+            if (data['success']) {
+                switch (data['role'].toLowerCase()) {
+                    case "student organization user":
+                        window.location.href = "./pages/org/org_page.html";
+                        break;
+                    case "osa":
+                        window.location.href = "./pages/osa/osa_page.html";
+                        break;
+                    case "admin":
+                        window.location.href = "./pages/admin/admin_page.html";
+                        break;
+                    default:
+                        alert("Unknown role");
+                }
+            } else {
+                alert(data.message || "Login failed");
+            }
+        })
+        .catch(err => console.error("Error:", err));
 });
+
 
 googleLogButton.addEventListener("click", () => {
     // Add google login through here
+    console.log("Under construction!");
 });
