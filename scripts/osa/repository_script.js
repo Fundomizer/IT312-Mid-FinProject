@@ -21,7 +21,7 @@
             const div = document.createElement("div");
             div.classList.add("submission-item");
 
-            div.setAttribute("data-location", org.location || "");
+            div.setAttribute("data-location", org.short_name || "");
 
             div.innerHTML = `
               <div class="sub-header">

@@ -9,7 +9,7 @@ async function loadDashboard() {
 
     // Display the actual number of total submissions and forms
     let submissions = await fetchCollection('history')
-    let assignedForms = await fetchCollection('org_forms')
+    let assignedForms = await fetchCollection('forms')
 
     const totalSubs = document.querySelector("#TotalSubmissions b");
     const totalAssForms = document.querySelector("#AssignedForms b");
@@ -21,7 +21,7 @@ async function loadDashboard() {
 async function loadForms() {
     loadPage('org', 'assigned_form_page.html')
 
-    let forms = await fetchCollection('org_forms')
+    let forms = await fetchCollection('forms')
 
     displayForm(forms)
 
@@ -52,19 +52,17 @@ async function loadForms() {
             const titleBlock = document.createElement("span");
             const titleEl = document.createElement("h3");
             titleEl.className = "FormTitle";
-            titleEl.textContent = form.title;
+            titleEl.textContent = form.requirement_name;
 
-            const actionEl = document.createElement("p");
-            actionEl.className = "Tag";
-            actionEl.textContent = form.action;
+
 
             titleBlock.appendChild(titleEl);
-            titleBlock.appendChild(actionEl);
+
 
             // Description
             const descEl = document.createElement("p");
             descEl.className = "FormDescription";
-            descEl.textContent = form.activity;
+            descEl.textContent = form.description;
 
             // Requirements
             const requirements = document.createElement("div");
@@ -82,7 +80,7 @@ async function loadForms() {
             imageWrapper.appendChild(icon);
 
             const reqText = document.createElement("p");
-            reqText.textContent = `${form.field_num} Fields required`;
+            reqText.textContent = `${form.fields.length} Fields required`;
 
             reqSpan.appendChild(imageWrapper);
             reqSpan.appendChild(reqText);
