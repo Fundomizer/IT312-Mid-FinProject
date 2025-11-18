@@ -1,7 +1,7 @@
 <?php
 require './vendor/autoload.php';
 
-// CORS headers (same as your API file)
+// CORS headers 
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
