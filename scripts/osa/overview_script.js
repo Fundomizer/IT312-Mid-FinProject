@@ -1,13 +1,14 @@
-
+const HOST = window.location.origin
 
 async function loadOrganizations() {
-const response = await fetch("http://localhost/IT312-Mid-FinProject/php/api.php?collection=student_organization")
+
+  const response = await fetch(`${HOST}/IT312-Mid-FinProject/php/api.php?collection=student_organization`)
 
   const data = await response.json();
   const orgContainer = document.getElementById("organizations-list");
   const subContainer = document.getElementById("submissions-list");
 
- 
+
   const orgHeader = orgContainer.querySelector("h3");
   orgContainer.innerHTML = "";
   orgContainer.appendChild(orgHeader);
@@ -47,25 +48,25 @@ const response = await fetch("http://localhost/IT312-Mid-FinProject/php/api.php?
 
 async function loadDashboard() {
 
-    const orgResponse = await fetch('http://localhost/IT312-Mid-FinProject/php/api.php?collection=student_organization');
-    const orgs = await orgResponse.json();
+  const orgResponse = await fetch(`${HOST}/IT312-Mid-FinProject/php/api.php?collection=student_organization`);
+  const orgs = await orgResponse.json();
 
-    const formResponse = await fetch('http://localhost/IT312-Mid-FinProject/php/api.php?collection=forms');
-    const forms = await formResponse.json();
-
-
-    const activeOrgs = orgs.length;
-    document.getElementById('active-org-count').textContent = activeOrgs;
+  const formResponse = await fetch(`${HOST}/IT312-Mid-FinProject/php/api.php?collection=forms`);
+  const forms = await formResponse.json();
 
 
-    const totalRequirements = orgs.reduce((sum, org) => {
-        return sum + (org.requirements ? Object.keys(org.requirements).length : 0);
-    }, 0);
-    document.getElementById('all-time-submission-count').textContent = totalRequirements;
-    document.getElementById('new-submissions-count').textContent = totalRequirements;
+  const activeOrgs = orgs.length;
+  document.getElementById('active-org-count').textContent = activeOrgs;
 
-    const activeForms = forms.length;
-    document.getElementById('active_form_count').textContent = activeForms;
+
+  const totalRequirements = orgs.reduce((sum, org) => {
+    return sum + (org.requirements ? Object.keys(org.requirements).length : 0);
+  }, 0);
+  document.getElementById('all-time-submission-count').textContent = totalRequirements;
+  document.getElementById('new-submissions-count').textContent = totalRequirements;
+
+  const activeForms = forms.length;
+  document.getElementById('active_form_count').textContent = activeForms;
 }
 
 loadDashboard();
