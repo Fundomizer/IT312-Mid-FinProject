@@ -1,5 +1,3 @@
-const HOST = window.location.origin; // Host machine's IP
-
 /**
  * Dynamically loads and injects a HTML file into the container, "Content". Provide the file name for the style and script if you intend to use a different file for them.
  *
@@ -10,22 +8,22 @@ const HOST = window.location.origin; // Host machine's IP
  * @param {String} loadInto Default as "Content". ID of the container to load the page into
  */
 export function loadPage(role, page, style, script, loadInto = "Content") {
-    let pathToPage = `../../pages/${role}/${page}`;
-    let pathToScript = `../../scripts/${role}/${script}`;
-    let pathToStyle = `../../styles/${role}/${style}`;
+  let pathToPage = `../../pages/${role}/${page}`;
+  let pathToScript = `../../scripts/${role}/${script}`;
+  let pathToStyle = `../../styles/${role}/${style}`;
 
-    fetch(pathToPage)
-      .then((result) => result.text()) // Convert into html text
-      .then((htmlText) => {
-        // Parse and grab the #PageContent only to ensure that you don't get the Head tag from the HTML element
-        const parser = new DOMParser();
-        const html = parser.parseFromString(htmlText, "text/html");
-        const mainContent = html.querySelector("#PageContent");
-        document.getElementById(loadInto).innerHTML = mainContent.innerHTML;
+  fetch(pathToPage)
+    .then((result) => result.text()) // Convert into html text
+    .then((htmlText) => {
+      // Parse and grab the #PageContent only to ensure that you don't get the Head tag from the HTML element
+      const parser = new DOMParser();
+      const html = parser.parseFromString(htmlText, "text/html");
+      const mainContent = html.querySelector("#PageContent");
+      document.getElementById(loadInto).innerHTML = mainContent.innerHTML;
 
-        // Load CSS and Script into assigned to that page
-        if (style) loadCSS(pathToStyle);
-        if (script) loadScript(pathToScript);
+      // Load CSS and Script into assigned to that page
+      if (style) loadCSS(pathToStyle);
+      if (script) loadScript(pathToScript);
     });
 
   function loadScript(src) {
@@ -93,6 +91,7 @@ document.addEventListener("click", async (event) => {
     const formData = { requirement_name, description, fields, tags: [] };
 
     try {
+      const HOST = window.location.origin; // Host machine's IP
       const response = await fetch(
         `${HOST}/IT312-Mid-FinProject/php/insert_form.php`,
         {
@@ -130,7 +129,7 @@ document.addEventListener("click", async (event) => {
  */
 export async function fetchCollection(collection, URI = "") {
 
-
+  const HOST = window.location.origin; // Host machine's IP
   const endpoint =
     URI ||
     `${HOST}/IT312-Mid-FinProject/php/api.php?collection=${collection}`;
@@ -139,5 +138,3 @@ export async function fetchCollection(collection, URI = "") {
     .then((request) => request.json())
     .then((data) => data);
 }
-
-console.log(HOST);
