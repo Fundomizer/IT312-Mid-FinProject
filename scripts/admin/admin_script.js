@@ -54,6 +54,8 @@ async function loadLogs() {
         const logsDisplay = document.getElementById("Logs")
 
         logs.forEach(item => {
+
+
             logsDisplay.appendChild(createLog(item))
         });
     }
@@ -95,8 +97,6 @@ async function loadLogs() {
 
         return card;
     }
-
-
 
 }
 

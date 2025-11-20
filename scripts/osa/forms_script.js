@@ -1,22 +1,23 @@
 
 async function loadActiveForms() {
- 
-const response = await fetch("http://localhost/IT312-Mid-FinProject/php/api.php?collection=forms")
-    const forms = await response.json();
+
+  const HOST = window.location.origin
+  const response = await fetch(`${HOST}/IT312-Mid-FinProject/php/api.php?collection=forms`)
+  const forms = await response.json();
 
 
-    const formsContainer = document.getElementById("forms-list");
-    formsContainer.innerHTML = "";
+  const formsContainer = document.getElementById("forms-list");
+  formsContainer.innerHTML = "";
 
 
-    forms.forEach(form => {
+  forms.forEach(form => {
 
 
-      const formItem = document.createElement("div");
-      formItem.classList.add("form-item");
+    const formItem = document.createElement("div");
+    formItem.classList.add("form-item");
 
 
-      formItem.innerHTML = `
+    formItem.innerHTML = `
         <div class="form-header">
           ${form.requirement_name || "Untitled Form"}
           <div class="form-tag">${(form.tags || []).join(", ")}</div>
@@ -30,9 +31,9 @@ const response = await fetch("http://localhost/IT312-Mid-FinProject/php/api.php?
       `;
 
 
-      formsContainer.appendChild(formItem);
-    });
- 
+    formsContainer.appendChild(formItem);
+  });
+
 }
 loadActiveForms();
 

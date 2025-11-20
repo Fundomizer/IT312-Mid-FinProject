@@ -14,23 +14,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require __DIR__ . '/vendor/autoload.php';
 
 use MongoDB\Client;
-
-// Read raw JSON body
-$raw = file_get_contents('php://input');
-$data = json_decode($raw, true);
-
-
-$email = $data['email'] ?? '';
-$password = $data['password'] ?? '';
+// Get form fields from POST
+$email = $_POST['email'] ?? '';
+$password = $_POST['password'] ?? '';
 
 // Guard: missing credentials
 if (!$email || !$password) {
-    echo json_encode(["success" => false, "message" => "Missing credentials"]);
+    echo "Missing credentials";
     exit;
 }
 
 try {
-    // Connect to local MongoDB (adjust URI if needed)
     $client = new Client("mongodb://localhost:27017");
     $collection = $client->OrganizationManagementDatabase->users;
 
@@ -38,26 +32,33 @@ try {
     $user = $collection->findOne(['email' => $email]);
 
     if ($user) {
-        // If using plaintext passwords (testing only)
         if (isset($user['password']) && $user['password'] === $password) {
-            echo json_encode(["success" => true, "role" => $user['role']]);
-            exit;
+
+            // Redirect based on role
+            switch ($user['role']) {
+                case 'admin':
+                    header("Location: ../pages/admin/admin_page.html");
+                    exit;
+                case 'OSA':
+                    header("Location: ../pages/osa/osa_page.html");
+                    exit;
+                case 'Student Organization User':
+                    header("Location: ../pages/org/org_page.html");
+                    exit;
+                default:
+                    echo "Unknown role";
+                    exit;
+            }
         }
 
-        // If passwords were hashed with password_hash() (recommended), use:
-        // if (isset($user['password']) && password_verify($password, $user['password'])) { ... }
-
-        // password mismatch
-        echo json_encode(["success" => false, "message" => "Invalid credentials"]);
+        echo "Invalid credentials";
         exit;
     } else {
-        // user not found
-        echo json_encode(["success" => false, "message" => "Invalid credentials"]);
+        echo "Invalid credentials";
         exit;
     }
 } catch (Throwable $e) {
-    // Log error server-side (do not expose sensitive error details to client)
     error_log("Login error: " . $e->getMessage());
-    echo json_encode(["success" => false, "message" => "Server error"]);
+    echo "Server error";
     exit;
 }
