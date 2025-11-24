@@ -1,0 +1,24 @@
+{
+  "name": "it312-mid-finproject",
+  "version": "1.0.0",
+  "description": "Webtech Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fundomizer/IT312-Mid-FinProject.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Fundomizer/IT312-Mid-FinProject/issues"
+  },
+  "homepage": "https://github.com/Fundomizer/IT312-Mid-FinProject#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
