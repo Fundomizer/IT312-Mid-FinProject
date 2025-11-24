@@ -2,7 +2,7 @@ const HOST = window.location.origin
 
 async function loadOrganizations() {
 
-  const response = await fetch(`${HOST}/IT312-Mid-FinProject/php/api.php?collection=student_organization`)
+  const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`)
 
   const data = await response.json();
   const orgContainer = document.getElementById("organizations-list");
@@ -48,10 +48,10 @@ async function loadOrganizations() {
 
 async function loadDashboard() {
 
-  const orgResponse = await fetch(`${HOST}/IT312-Mid-FinProject/php/api.php?collection=student_organization`);
+  const orgResponse = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`);
   const orgs = await orgResponse.json();
 
-  const formResponse = await fetch(`${HOST}/IT312-Mid-FinProject/php/api.php?collection=forms`);
+  const formResponse = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=forms`);
   const forms = await formResponse.json();
 
 

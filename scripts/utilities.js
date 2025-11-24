@@ -93,7 +93,7 @@ document.addEventListener("click", async (event) => {
     try {
       const HOST = window.location.origin; // Host machine's IP
       const response = await fetch(
-        `${HOST}/IT312-Mid-FinProject/php/insert_form.php`,
+        `${HOST}/IT312-Mid-FinProject/server/php/insert_form.php`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -132,7 +132,7 @@ export async function fetchCollection(collection, URI = "") {
   const HOST = window.location.origin; // Host machine's IP
   const endpoint =
     URI ||
-    `${HOST}/IT312-Mid-FinProject/php/api.php?collection=${collection}`;
+    `${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=${collection}`;
 
   return fetch(endpoint)
     .then((request) => request.json())
