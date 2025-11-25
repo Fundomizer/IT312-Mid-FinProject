@@ -37,13 +37,13 @@ try {
             // Redirect based on role
             switch ($user['role']) {
                 case 'admin':
-                    header("Location: ../pages/admin/admin_page.html");
+                    header("Location: ../../pages/admin/admin_page.html");
                     exit;
                 case 'OSA':
-                    header("Location: ../pages/osa/osa_page.html");
+                    header("Location: ../../pages/osa/osa_page.html");
                     exit;
                 case 'Student Organization User':
-                    header("Location: ../pages/org/org_page.html");
+                    header("Location: ../../pages/org/org_page.html");
                     exit;
                 default:
                     echo "Unknown role";
