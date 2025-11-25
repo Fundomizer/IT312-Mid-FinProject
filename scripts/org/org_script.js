@@ -7,14 +7,19 @@ const history = document.getElementById("historyButton")
 async function loadDashboard() {
     loadPage('org', 'dashboard_page.html')
 
-    // Display the actual number of total submissions and forms
-    let submissions = await fetchCollection('history')
+    let orgs = await fetchCollection('student_organization');
+    let totalSubmissions = 0;
+    orgs.forEach(org => {
+        const reqs = org.requirements || {};
+        totalSubmissions += Object.keys(reqs).length;
+    });
+
     let assignedForms = await fetchCollection('forms')
 
     const totalSubs = document.querySelector("#TotalSubmissions b");
     const totalAssForms = document.querySelector("#AssignedForms b");
 
-    totalSubs.textContent = submissions.length;
+    totalSubs.textContent = totalSubmissions;
     totalAssForms.textContent = assignedForms.length;
 }
 
@@ -132,96 +137,78 @@ async function loadForms() {
 
 }
 
+// this fucntion is currently reading all requirements from
+//student organization use session handling to specify org
+//and also add fields as necessary
 async function loadHistory() {
-    loadPage('org', 'history_page.html')
+    await loadPage('org', 'history_page.html');
 
-    let history = await fetchCollection('history')
+    // Fetch all student organizations
+    let orgs = await fetchCollection('student_organization');
 
-    displayHistory(history)
-
-    function displayHistory(history) {
-
-        const logsDisplay = document.getElementById("History")
-
-        history.forEach(item => {
-            logsDisplay.appendChild(createLog(item))
+    // Collect all requirements from all orgs
+    let allRequirements = [];
+    orgs.forEach(org => {
+        const reqs = org.requirements || {};
+        Object.keys(reqs).forEach(key => {
+            // key is the requirement name, reqs[key] is the details
+            allRequirements.push({
+                name: key,
+                ...reqs[key]
+            });
         });
+    });
 
+    displayHistory(allRequirements);
+
+    function displayHistory(requirements) {
+        const logsDisplay = document.getElementById("History");
+        if (!logsDisplay) return;
+        logsDisplay.innerHTML = "";
+
+        requirements.forEach(item => {
+            logsDisplay.appendChild(createLog(item));
+        });
     }
 
-    function createLog(log) {
-        // Create parent Wrapper
+    function createLog(requirement) {
         const wrapper = document.createElement("div");
         wrapper.className = "SubCard Log";
 
-        wrapper.appendChild(createLogDetails())
-        wrapper.appendChild(createStyledButtonDiv())
+        wrapper.appendChild(createLogDetails());
+        wrapper.appendChild(createStyledButtonDiv());
 
-        return wrapper
+        return wrapper;
 
         function createLogDetails() {
-            // Log details
             const logDetails = document.createElement("div");
             logDetails.className = "LogDetails";
 
-            // For the title and the action
+            // Requirement Name
             const titleBlock = document.createElement("div");
             const titleEl = document.createElement("h4");
-            titleEl.textContent = log['title'];
-            const actionEl = document.createElement("p");
-            actionEl.textContent = log['action'];
+            titleEl.textContent = requirement.name || "No name";
             titleBlock.appendChild(titleEl);
-            titleBlock.appendChild(actionEl);
 
-            const activityEl = document.createElement("p");
-            activityEl.textContent = log['activity'];
+            // Last Updated
+            const updatedEl = document.createElement("p");
+            updatedEl.textContent = `Last Updated: ${requirement.last_updated || "N/A"}`;
 
-            // Date details, time of activity and submission, A.Y. and semester
-            const logDate = document.createElement("div");
-            logDate.className = "LogDate";
-
-            const dateSpan = document.createElement("span");
-            const imgWrapper = document.createElement("div");
-            imgWrapper.className = "ImageWrapper";
-            const calendarImg = document.createElement("img");
-            calendarImg.src = "../../assets/images/icons/calendar.png";
-            calendarImg.alt = "Calendar icon";
-            imgWrapper.appendChild(calendarImg);
-
-            // Time of submission
-            const submittedText = document.createElement("p");
-            submittedText.textContent = `Submitted: ${log['submission_date']}`;
-
-            dateSpan.appendChild(imgWrapper);
-            dateSpan.appendChild(submittedText);
-
-            // Academic year + Semester
-            const academicYear = document.createElement("p");
-            academicYear.textContent = `Academic Year: ${log['academic_yr']}`;
-            const semester = document.createElement("p");
-            semester.textContent = `Semester: ${log['semester']}`;
-
-            logDate.appendChild(dateSpan)
-            logDate.appendChild(academicYear)
-            logDate.appendChild(semester)
-
-            // Tags section
+            // Tags
             const tagsContainer = document.createElement("div");
             tagsContainer.className = "Tags";
-            log['tags'].forEach(tag => {
+            (requirement.tags || []).forEach(tag => {
                 const tagEl = document.createElement("p");
                 tagEl.className = "Tag";
                 tagEl.textContent = tag;
                 tagsContainer.appendChild(tagEl);
             });
 
-            // Assemble everything into LogDetails
             logDetails.appendChild(titleBlock);
-            logDetails.appendChild(activityEl);
-            logDetails.appendChild(logDate);
+            logDetails.appendChild(updatedEl);
             logDetails.appendChild(tagsContainer);
 
-            return logDetails
+            return logDetails;
         }
 
         function createStyledButtonDiv() {
@@ -244,14 +231,14 @@ async function loadHistory() {
 
             button.appendChild(imgWrapper);
             button.appendChild(label);
-
             buttonWrapper.appendChild(button);
 
             return buttonWrapper;
         }
-
     }
 }
+
+
 
 function openForm() {
     const popup = document.querySelector(".PopupForm");
