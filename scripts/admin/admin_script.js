@@ -5,7 +5,7 @@ const dashboard = document.getElementById("dashboardButton")
 const users = document.getElementById("usersButton")
 const logs = document.getElementById("activityLogButton")
 
-async function loadDashboard() {
+async function loadDashboardPage() {
 
     loadPage("admin", "dashboard_page.html")
 
@@ -19,9 +19,9 @@ async function loadDashboard() {
     totalLogs.textContent = logs.length;
 }
 
-async function loadUsers() {
+async function loadUsersPage() {
     console.log("Loading users page");
-    loadPage("admin", "users_page.html")
+    loadPage("admin", "users_page.html", "", "users_script.js")
 
     let users = await fetchCollection('users')
 
@@ -38,7 +38,7 @@ async function loadUsers() {
 
 }
 
-async function loadLogs() {
+async function loadLogsPage() {
     console.log("Loading activity logs");
     loadPage("admin", "logs_page.html")
 
@@ -100,12 +100,12 @@ async function loadLogs() {
 
 }
 
-dashboard.addEventListener('click', loadDashboard)
+dashboard.addEventListener('click', loadDashboardPage)
 
-users.addEventListener('click', loadUsers)
+users.addEventListener('click', loadUsersPage)
 
 logs.addEventListener('click', () => {
-    loadLogs()
+    loadLogsPage()
 })
 
-loadDashboard() // Load the dashboard by default. There is probably a better way of doing this
+loadDashboardPage() // Load the dashboard by default. There is probably a better way of doing this

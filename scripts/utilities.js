@@ -32,6 +32,7 @@ export function loadPage(role, page, style, script, loadInto = "Content") {
 
     const script = document.createElement("script");
     script.src = `${src}?v=${Date.now()}`; // cache busting to ensure latest version is loaded
+    script.type = "module";
     script.defer = true;
     document.body.appendChild(script);
   }
@@ -128,14 +129,41 @@ document.addEventListener("click", async (event) => {
  * @param {String} URI
  * @returns
  */
-export async function fetchCollection(collection, URI = "") {
+export async function fetchCollection(collection, URI = "", Port=8123) {
 
   const HOST = window.location.origin; // Host machine's IP
   const endpoint =
     URI ||
-    `${HOST}:8123/api/${collection}`;
+    `${HOST}:${Port}/api/${collection}`;
 
   return fetch(endpoint)
     .then((request) => request.json())
     .then((data) => data);
 }
+
+/**
+ * 
+ * @param {String} popupId The ID of the popup container element.
+ * @param {String} openButtonId The ID of the button that triggers opening the popup.
+ * @param {String} closeButtonId The ID of the button that closes the popup.
+ */
+export function setupPopup(popupId, openButtonId, closeButtonId) {
+  const popup = document.getElementById(popupId);
+  const openBtn = document.getElementById(openButtonId);
+  const closeBtn = document.getElementById(closeButtonId);
+
+  openBtn.addEventListener("click", () => {
+    popup.style.display = "block";
+  });
+
+  closeBtn.addEventListener("click", () => {
+    popup.style.display = "none";
+  });
+
+  window.addEventListener("click", (event) => {
+    if (event.target === popup) {
+      popup.style.display = "none";
+    }
+  });
+}
+

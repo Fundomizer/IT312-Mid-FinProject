@@ -9,6 +9,41 @@
 
 <body>
     <section id="PageContent">
+        <div class="PopUp" id="AddPopup">
+            <div class="PopUpContent" id="AddPopupContent">
+                <button id="EkisButton"><img src="../../assets/images/org_icons/close.png"></button>
+                <form>
+                    <label for="UserRole">User role:</label>
+                    <select name="UserRole" id="UserRole">
+                        <option value="Admin">Admin</option>
+                        <option value="OSA">Office of student affair</option>
+                        <option value="ORG">Student organization</option>
+                    </select>
+                    <br />
+                    <label for="name">Name</label>
+                    <input type="text" name="name">
+                    <br />
+                    <label for="email">Email</label>
+                    <input type="text" name="email">
+                    <br />
+                    <label for="password">Password</label>
+                    <input type="text" name="password">
+
+                    <!-- Forms for ORG -->
+                    <div class="Hidden" id="OrgForm">
+                        <label for="organization">Organization</label>
+                        <input type="text" name="organization">
+                    </div>
+                    <!-- Forms for OSA -->
+                    <div class="Hidden" id="OsaForm">
+                        <label for="department">Department</label>
+                        <input type="text" name="department">
+                    </div>
+
+                    <input type="submit">
+                </form>
+            </div>
+        </div>
         <div>
             <h1>User management</h1>
             <p>Manage user accounts</p>
@@ -25,7 +60,7 @@
                     <p><b>User accounts</b></p>
                     <p>Create, Read, Update, and Delete user accounts</p>
                 </div>
-                <button class="StyledButton"  id="AddUserButton">
+                <button class="StyledButton" id="AddUserButton">
                     <img src="../../assets/images/admin_icons/addusers_icon.png" alt="add-user-icon">
                     <span>Add user</span>
                 </button>
