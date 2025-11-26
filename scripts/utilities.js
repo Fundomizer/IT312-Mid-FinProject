@@ -11,7 +11,7 @@ export function loadPage(role, page, style, script, loadInto = "Content") {
   let pathToPage = `../../pages/${role}/${page}`;
   let pathToScript = `../../scripts/${role}/${script}`;
   let pathToStyle = `../../styles/${role}/${style}`;
-
+ const HOST = window.location.origin;
   fetch(pathToPage)
     .then((result) => result.text()) // Convert into html text
     .then((htmlText) => {
@@ -100,7 +100,7 @@ document.addEventListener("click", async (event) => {
     try {
       const HOST = window.location.origin;
       const response = await fetch(
-        `${HOST}/IT312-Mid-FinProject/server/php/insert_form.php`,
+        `${HOST}/IT312-Mid-FinProject/server/php/forms.php`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -129,6 +129,76 @@ document.addEventListener("click", async (event) => {
     }
   }
 });
+
+document.addEventListener("click", async (event) => {
+  if (event.target && event.target.classList.contains("delete-form-btn")) {
+    const formItem = event.target.closest(".form-item");
+    const formName = formItem.querySelector(".form-header").textContent.trim();
+const HOST = window.location.origin;
+
+    if (!formName) {
+      return alert("Form name not found. Cannot delete.");
+    }
+
+    if (confirm(`Are you sure you want to delete "${formName}"?`)) {
+      try {
+        const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/forms.php`, {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ requirement_name: formName })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          if (result.deleted_count > 0) {
+            alert(`Form "${formName}" deleted successfully.`);
+          } else {
+            alert(`No form found with the name "${formName}".`);
+          }
+          loadPage("osa", "forms_page.html", "osa_forms_style.css", "forms_script.js");
+        } else {
+          alert("Error deleting form: " + (result.error || "Unknown error"));
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Error deleting form. Check console for details.");
+      }
+    }
+  }
+});
+
+
+document.addEventListener("click", async (event) => {
+  if (event.target && event.target.classList.contains("update-form-btn")) {
+    const formItem = event.target.closest(".form-item");
+    const formId = formItem.dataset.id;
+    const currentName = formItem.querySelector(".form-header").textContent.trim();
+
+    const newName = prompt("Enter new form name:", currentName);
+    if (!newName) return;
+
+    try {
+      const HOST = window.location.origin;
+      const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/forms.php`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({requirement_name: newName })
+      });
+      const result = await response.json();
+      if (result.success) {
+        alert("Form updated successfully.");
+        loadPage("osa", "forms_page.html", "osa_forms_style.css", "forms_script.js");
+      } else {
+        alert("Error updating form: " + (result.error || "Unknown error"));
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error updating form.");
+    }
+  }
+});
+
 /**
  * Fetches data from an endpoint.
  * NOTE: This function is specifically for fetching from the Node server and not PHP server

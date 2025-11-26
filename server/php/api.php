@@ -22,10 +22,7 @@ try {
     // --- Allowed collections ---
     $collections = [
         'forms',
-        'history',
         'log',
-        'org_forms',
-        'osa_submissions',
         'student_organization',
         'users'
     ];

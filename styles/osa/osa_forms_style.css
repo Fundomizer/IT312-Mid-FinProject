@@ -75,6 +75,35 @@
   color: var(--muted);
   text-align: right;
 }
+.form-fields-container {
+  margin-top: 10px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.form-buttons {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.form-action-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
+  color: var(--text);
+}
+
+.form-action-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
 
 /* Status badges */
 .form-status {
