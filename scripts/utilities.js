@@ -122,9 +122,10 @@ document.addEventListener("click", async (event) => {
 });
 
 /**
- * Fetches data from an endpoint
+ * Fetches data from an endpoint.
+ * NOTE: This function is specifically for fetching from the Node server and not PHP server
  * @param {String} collection Name of the collection
- * @param {*} URI
+ * @param {String} URI
  * @returns
  */
 export async function fetchCollection(collection, URI = "") {
@@ -132,7 +133,7 @@ export async function fetchCollection(collection, URI = "") {
   const HOST = window.location.origin; // Host machine's IP
   const endpoint =
     URI ||
-    `${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=${collection}`;
+    `${HOST}:8123/api/${collection}`;
 
   return fetch(endpoint)
     .then((request) => request.json())
