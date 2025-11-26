@@ -75,5 +75,50 @@ addFieldBtn.addEventListener("click", () => {
 
 
 }
+// MULTI TAG SYSTEM
+const tagInput = document.getElementById("tagInput");
+const tagsList = document.getElementById("tagsList");
+
+let tags = [];
+
+function renderTags() {
+  tagsList.innerHTML = "";
+  tags.forEach((tag, index) => {
+    const tagEl = document.createElement("div");
+    tagEl.classList.add("tag-item");
+
+    tagEl.innerHTML = `
+      ${tag}
+      <button type="button" class="remove-tag-btn" data-index="${index}">×</button>
+    `;
+
+    tagsList.appendChild(tagEl);
+  });
+
+
+  document.querySelectorAll(".remove-tag-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const index = btn.getAttribute("data-index");
+      tags.splice(index, 1);
+      renderTags();
+    });
+  });
+}
+
+
+tagInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    const val = tagInput.value.trim();
+    if (val === "") return;
+
+    if (!tags.includes(val)) {
+      tags.push(val);
+      renderTags();
+    }
+
+    tagInput.value = "";
+    e.preventDefault();
+  }
+});
 
 loadFormCreation();

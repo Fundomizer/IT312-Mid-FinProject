@@ -4,7 +4,7 @@ const clearFiltersBtn = document.getElementById("clearFilters");
 const repoList = document.getElementById("repoList");
 const totalCount = document.getElementById("totalCount");
 const shownCount = document.getElementById("shownCount");
-const HOST_IP = window.location.origin
+const HOST = window.location.origin
 let allItems = [];
 
 async function loadItems() {

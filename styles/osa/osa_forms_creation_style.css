@@ -79,6 +79,7 @@ cursor: pointer;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   padding: 15px;
+  margin-top: 10px;
   margin-bottom: 15px;
   background-color: #f9fafb;
 }
@@ -139,4 +140,43 @@ cursor: pointer;
   top: 20px;
   right: 20px;
   z-index: 1000;
+}
+.tag-section {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tag-input-box input {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 250px;
+}
+
+.tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag-item {
+  background: #e8f0ff;
+  border: 1px solid #b7ccff;
+  padding: 5px 10px;
+  border-radius: 14px;
+  color:black;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.tag-item button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 16px;
+  color: #444;
 }

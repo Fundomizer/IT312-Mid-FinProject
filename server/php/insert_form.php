@@ -33,6 +33,7 @@ try {
         "requirement_name" => $data["requirement_name"],
         "description" => $data["description"] ?? "",
         "fields" => $data["fields"] ?? [],
+        "tags" => $data["tags"] ?? [],
     ]);
 
     echo json_encode([
