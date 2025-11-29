@@ -1,7 +1,7 @@
 const express = require('express');
 const { MongoClient } = require('mongodb');
 
-const connection = "mongodb+srv://testuser:test321@cluster0.lbsrw5e.mongodb.net/"
+const connection = "mongodb+srv://testuser:test321@cluster0.lbsrw5e.mongodb.net/" // TODO change this to use local later on
 const port = 8123
 const app = express();
 
@@ -12,7 +12,6 @@ app.use((req, res, next) => { // Set Headers
     res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
-    // Handle preflight requests
     if (req.method === "OPTIONS") {
         return res.sendStatus(200);
     }
@@ -40,3 +39,43 @@ collectionNames.forEach(name => {
 app.listen(port, "0.0.0.0", () => {
     console.log(`Node server running on port ${port}`);
 })
+
+// Handle POST requests
+app.post("/api/users", async (request, response) => {
+    try {
+        const newUser = sanitizeObject(request.body)
+
+        const result = await db.collection("users").insertOne(newUser);
+        console.log(result);
+
+        if (result['acknowledged']) {
+            response.status(201).json({ message: "User Successfully created", status: true }) // Note that true means successful
+        } else {
+            response.status(500).send({ message: "Could not create user", status: false }) // Note that true means successful
+        }
+    } catch (ex) {
+        response.status(500).send({ message: "Could not create user", status: false })
+    }
+})
+
+/**
+ * Removes empty properties
+ * @param {Object} obj 
+ * @returns 
+ */
+function sanitizeObject(obj) {
+    const cleaned = {};
+
+    for (const [key, value] of Object.entries(obj)) {
+        if (typeof value === "string") {
+            const trimmed = value.trim();
+            if (trimmed !== "") {
+                cleaned[key] = trimmed;
+            }
+        } else if (value !== null && value !== undefined) {
+            cleaned[key] = value;
+        }
+    }
+
+    return cleaned;
+}
