@@ -11,7 +11,7 @@ export function loadPage(role, page, style, script, loadInto = "Content") {
   let pathToPage = `../../pages/${role}/${page}`;
   let pathToScript = `../../scripts/${role}/${script}`;
   let pathToStyle = `../../styles/${role}/${style}`;
- const HOST = window.location.origin;
+  const HOST = window.location.origin;
   fetch(pathToPage)
     .then((result) => result.text()) // Convert into html text
     .then((htmlText) => {
@@ -90,11 +90,11 @@ document.addEventListener("click", async (event) => {
       return tag.textContent.replace("×", "").trim();
     });
 
-    const formData = { 
-      requirement_name, 
-      description, 
-      fields, 
-      tags  
+    const formData = {
+      requirement_name,
+      description,
+      fields,
+      tags
     };
 
     try {
@@ -114,7 +114,7 @@ document.addEventListener("click", async (event) => {
         alert("Form successfully saved!");
         console.log("Inserted ID:", result.inserted_id);
 
-    
+
         document.getElementById("formTitle").value = "";
         document.getElementById("formDescription").value = "";
         document.getElementById("formFields").innerHTML = "";
@@ -134,7 +134,7 @@ document.addEventListener("click", async (event) => {
   if (event.target && event.target.classList.contains("delete-form-btn")) {
     const formItem = event.target.closest(".form-item");
     const formName = formItem.querySelector(".form-header").textContent.trim();
-const HOST = window.location.origin;
+    const HOST = window.location.origin;
 
     if (!formName) {
       return alert("Form name not found. Cannot delete.");
@@ -183,7 +183,7 @@ document.addEventListener("click", async (event) => {
       const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/forms.php`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({requirement_name: newName })
+        body: JSON.stringify({ requirement_name: newName })
       });
       const result = await response.json();
       if (result.success) {
@@ -206,7 +206,7 @@ document.addEventListener("click", async (event) => {
  * @param {String} URI
  * @returns
  */
-export async function fetchCollection(collection, URI = "", Port=8123) {
+export async function fetchCollection(collection, URI = "", Port = 8123) {
 
   const HOST = window.location.origin; // Host machine's IP
   const endpoint =
@@ -219,23 +219,25 @@ export async function fetchCollection(collection, URI = "", Port=8123) {
 }
 
 /**
- * 
- * @param {String} popupId The ID of the popup container element.
- * @param {String} openButtonId The ID of the button that triggers opening the popup.
- * @param {String} closeButtonId The ID of the button that closes the popup.
+ * @param {HTMLElement} popup The popup container element.
+ * @param {HTMLElement} openBtn The button that triggers opening the popup.
+ * @param {HTMLElement} closeBtn The button that closes the popup.
+ * @param {Function} onOpen - Optional callback to run when popup opens.
  */
-export function setupPopup(popupId, openButtonId, closeButtonId) {
-  const popup = document.getElementById(popupId);
-  const openBtn = document.getElementById(openButtonId);
-  const closeBtn = document.getElementById(closeButtonId);
+export function setupPopup(popup, openBtn, closeBtn, onOpen = null, onClose = null) {
+  if (openBtn) {
+    openBtn.addEventListener("click", () => {
+      popup.style.display = "block";
+      if (typeof onOpen === "function") onOpen();
+    });
+  }
 
-  openBtn.addEventListener("click", () => {
-    popup.style.display = "block";
-  });
-
-  closeBtn.addEventListener("click", () => {
-    popup.style.display = "none";
-  });
+  if (closeBtn) {
+    closeBtn.addEventListener("click", () => {
+      popup.style.display = "none";
+      if (typeof onOpen === "function") onClose();
+    });
+  }
 
   window.addEventListener("click", (event) => {
     if (event.target === popup) {
@@ -243,4 +245,5 @@ export function setupPopup(popupId, openButtonId, closeButtonId) {
     }
   });
 }
+
 
