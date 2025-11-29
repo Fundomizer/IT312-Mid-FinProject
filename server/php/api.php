@@ -22,9 +22,7 @@ try {
     // --- Allowed collections ---
     $collections = [
         'forms',
-        'log',
         'student_organization',
-        'users'
     ];
 
     // --- Get collection from query string ---
