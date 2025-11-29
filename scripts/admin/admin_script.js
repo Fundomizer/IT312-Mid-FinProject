@@ -51,51 +51,11 @@ async function loadLogsPage() {
      * @param {JSON} logs 
      */
     function displayLog(logs) {
-        const logsDisplay = document.getElementById("Logs")
+        const logsDisplay = document.getElementById("AccountsTableView")
 
         logs.forEach(item => {
-
-
-            logsDisplay.appendChild(createLog(item))
+            logsDisplay.appendChild(createTableRow(item, ["action", "name", "activity", "date", "time"]))
         });
-    }
-
-    function createLog(log) {
-
-        // Create main container
-        const card = document.createElement("div");
-        card.className = "SubCard Log";
-
-        // User section
-        const userDiv = document.createElement("div");
-        const userLabel = document.createElement("p");
-        userLabel.textContent = log["name"];
-
-        const activityType = document.createElement("p");
-        activityType.className = "Tag";
-        activityType.textContent = log["action"];
-
-        userDiv.appendChild(userLabel);
-        userDiv.appendChild(activityType);
-
-        // Activity, date, and time
-        const activityDiv = document.createElement("div");
-        const activityLabel = document.createElement("p");
-        activityLabel.textContent = log["activity"];
-
-        const timeStamp = document.createElement("p");
-        timeStamp.textContent = `${log["date"]}, ${log["time"]}`;
-
-
-        activityDiv.appendChild(activityLabel);
-        activityDiv.appendChild(timeStamp);
-
-
-        // Put it all together
-        card.appendChild(userDiv);
-        card.appendChild(activityDiv);
-
-        return card;
     }
 
 }
@@ -104,8 +64,6 @@ dashboard.addEventListener('click', loadDashboardPage)
 
 users.addEventListener('click', loadUsersPage)
 
-logs.addEventListener('click', () => {
-    loadLogsPage()
-})
+logs.addEventListener('click', loadLogsPage)
 
-loadDashboardPage() // Load the dashboard by default. There is probably a better way of doing this
+loadDashboardPage()
