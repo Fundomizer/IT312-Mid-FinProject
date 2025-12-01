@@ -68,7 +68,53 @@ async function loadDashboard() {
   const activeForms = forms.length;
   document.getElementById('active_form_count').textContent = activeForms;
 }
+async function updateProgressBars() {
+    const HOST = window.location.origin;
 
-loadDashboard();
-loadOrganizations();
+    const orgResponse = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`);
+    const orgs = await orgResponse.json();
 
+    const typeCounts = {};
+    let totalRequirements = 0;
+
+    orgs.forEach(org => {
+        if (org.requirements) {
+            for (const [reqType, reqData] of Object.entries(org.requirements)) {
+                typeCounts[reqType] = (typeCounts[reqType] || 0) + 1;
+                totalRequirements++;
+            }
+        }
+    });
+
+    const topSubmissionContainer = document.querySelector('.charts-section .chart-container:first-child');
+    topSubmissionContainer.innerHTML = `<h3>Top Submissions</h3>
+        <p class="chart-header">Most common requirement types</p>`;
+
+    const sortedTypes = Object.entries(typeCounts).sort((a,b) => b[1] - a[1]);
+
+    sortedTypes.forEach(([type, count]) => {
+        const percent = Math.min(Math.round((count / Math.max(...Object.values(typeCounts))) * 100), 100);
+        topSubmissionContainer.innerHTML += `
+        <div class="progress-header">
+            <p>${type.replace(/_/g, " ")}</p>
+            <div class="progress-label">${count}</div>
+        </div>
+        <div class="progress-bar">
+            <div class="progress" style="width: ${percent}%;"></div>
+        </div>
+        `;
+    });
+
+    const totalContainer = document.querySelector('.charts-section .chart-container:last-child');
+    totalContainer.innerHTML = `<h3>Total Requirements</h3>
+        <p class="chart-header">All requirements across organizations</p>
+        <div class="progress-header">
+            <p>Total</p>
+            <div class="progress-label">${totalRequirements}</div>
+        </div>
+        <div class="progress-bar">
+            <div class="progress" style="width: 100%;"></div>
+        </div>`;
+}
+
+loadDashboard().then(() => loadOrganizations().then(updateProgressBars));
