@@ -40,10 +40,11 @@ app.listen(port, "0.0.0.0", () => {
     console.log(`Node server running on port ${port}`);
 })
 
-// Handle POST requests
+// Handle creating new users
 app.post("/api/users", async (request, response) => {
     try {
         const newUser = sanitizeObject(request.body)
+        newUser.date_created = new Date()
 
         const result = await db.collection("users").insertOne(newUser);
         console.log(result);

@@ -92,6 +92,7 @@ async function loadUsersPage() {
             }
 
             function onClose() {
+                // Clear the inptus
                 let elementIds = ['name', 'email', 'password', 'department', 'organization']
                 elementIds.forEach(id => {
                     const element = document.querySelector(`#DetailsForm #${id}`)
@@ -99,6 +100,10 @@ async function loadUsersPage() {
                         element.innerHTML = ""
                     }
                 });
+            }
+
+            function onEdit() {
+                
             }
         }
 
