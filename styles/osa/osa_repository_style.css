@@ -400,3 +400,114 @@ select#filterLocation {
   align-items: center;
   margin-bottom: 6px;
 }
+
+.topbar {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+
+.topbar #searchInput {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.03);
+    background: var(--pill);
+    color: var(--text);
+    font-size: 14px;
+}
+
+
+.search {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;    
+  margin-top: 10px;        
+}
+
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;    
+    gap: 10px;              
+    background: rgba(255,255,255,0.02);
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.05);
+    width: 100%;
+    max-width: 1000px;
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+
+
+
+
+.filter-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+    min-width: 120px;
+    flex: 1 1 auto;          
+    max-width: 200px;        
+}
+
+
+.filter-block input[type="text"],
+.filter-block select,
+.filter-block input[type="date"] {
+    width: 100%;
+    padding: 5px 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.05);
+    background: var(--pill);
+    color: var(--text);
+    font-size: 12px;
+    box-sizing: border-box;
+}
+
+
+
+
+#clearFilters {
+    padding: 6px 10px;
+    height: fit-content;
+    align-self: flex-start;  
+    margin-left: auto;      
+    flex-shrink: 0;          
+}
+
+
+.muted {
+    margin-top: 4px;
+    text-align: right;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+
+
+
+@media (max-width: 768px) {
+    .filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .filter-block {
+        width: 100%;
+        max-width: 100%;
+    }
+    #clearFilters {
+        width: 100%;
+        margin-left: 0;
+        align-self: stretch;
+    }
+    .muted {
+        text-align: left;
+    }
+}
