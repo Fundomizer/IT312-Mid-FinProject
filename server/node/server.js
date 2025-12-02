@@ -1,5 +1,5 @@
 const express = require('express');
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 
 const connection = "mongodb+srv://testuser:test321@cluster0.lbsrw5e.mongodb.net/" // TODO change this to use local later on
 const port = 8123
@@ -44,7 +44,11 @@ app.listen(port, "0.0.0.0", () => {
 app.post("/api/users", async (request, response) => {
     try {
         const newUser = sanitizeObject(request.body)
-        newUser.date_created = new Date()
+
+        const date = new Date();
+        const formattedDate = date.toISOString().split("T")[0];
+
+        newUser.date_created = formattedDate
 
         const result = await db.collection("users").insertOne(newUser);
         console.log(result);
@@ -58,6 +62,32 @@ app.post("/api/users", async (request, response) => {
         response.status(500).send({ message: "Could not create user", status: false })
     }
 })
+
+// Handle updating user
+app.put("/api/users/:id", async (req, res) => {
+    try {
+        const userId = req.params.id; // from URL
+        const updatedData = sanitizeObject(req.body); // from form submission
+
+        // Add updatedAt timestamp
+        updatedData.last_updated = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+
+        const result = await db.collection("users").updateOne(
+            { _id: new ObjectId(userId) },
+            { $set: updatedData }
+        );
+
+        if (result.modifiedCount > 0) {
+            res.status(200).json({ message: "User updated successfully", status: true });
+        } else {
+            res.status(404).json({ message: "User not found", status: false });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Error updating user", status: false });
+    }
+});
+
 
 /**
  * Removes empty properties

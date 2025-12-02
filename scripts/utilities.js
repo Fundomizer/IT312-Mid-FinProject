@@ -242,6 +242,7 @@ export function setupPopup(popup, openBtn, closeBtn, onOpen = null, onClose = nu
   window.addEventListener("click", (event) => {
     if (event.target === popup) {
       popup.style.display = "none";
+      if (typeof onOpen === "function") onClose();
     }
   });
 }
