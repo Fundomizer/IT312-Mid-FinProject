@@ -88,6 +88,25 @@ app.put("/api/users/:id", async (req, res) => {
     }
 });
 
+// Handle deleting
+app.delete("/api/users/:id", async (req, res) => {
+    try {
+        const userId = req.params.id;
+
+        const result = await db.collection("users").deleteOne({
+            _id: new ObjectId(userId)
+        });
+
+        if (result.deletedCount > 0) {
+            res.json({ message: "User deleted successfully", status: true });
+        } else {
+            res.status(404).json({ message: "User not found", status: false });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Error deleting user", status: false });
+    }
+});
 
 /**
  * Removes empty properties

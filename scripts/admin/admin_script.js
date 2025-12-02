@@ -42,12 +42,13 @@ async function loadUsersPage() {
         list.forEach(item => {
             let tr = createTableRow(item, ["name", "email", "role", "date_created"])
             let container = document.createElement("td")
-            let viewButton = createButton("View", "")
-            let deleteButton = createButton("Delete", handleDelete)
+            let viewButton = createButton("View")
+            let deleteButton = createButton("Delete")
 
             // Attach the MongoDB _id to the buttons
             viewButton.dataset.userId = item._id;
             deleteButton.dataset.userId = item._id;
+            deleteButton.addEventListener('click', (event) => handleDelete(event.currentTarget))
 
             container.appendChild(viewButton)
             container.appendChild(deleteButton)
@@ -143,8 +144,22 @@ async function loadUsersPage() {
 
         }
 
-        function handleDelete() {
+        function handleDelete(button) {
+            const confirmed = confirm(`Are you sure you want to delete user?`);
+            if (!confirmed) {
+                alert("Delete cancelled.");
+                return;
+            }
 
+            let userId = button.dataset.userId
+            console.log("Deleting ", userId);
+
+            const HOST = window.location.origin;
+            fetch(`${HOST}:8123/api/users/${userId}`, {
+                method: "DELETE"
+            }).then(response => response.json())
+                .then(result => alert(result['message']))
+                .catch(err => console.error("Error:", err));
         }
 
     }

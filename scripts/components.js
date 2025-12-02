@@ -49,7 +49,7 @@ export function createTableRow(object, keysToInclude = []) {
     return tr
 }
 
-export function createButton(label, onClick, classStyle = "StyledButton") {
+export function createButton(label, onClick = null, classStyle = "StyledButton") {
     let button = document.createElement("button")
     button.innerText = label || "button"
     button.classList.add(classStyle)
