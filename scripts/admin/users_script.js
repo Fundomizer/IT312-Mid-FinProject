@@ -1,33 +1,31 @@
 import { setupPopup } from "../utilities"
 
+const popupContainer = document.getElementById("AddPopup")
 const addUserButton = document.getElementById("AddUserButton")
 const userForm = document.getElementById("UserForm")
+const exit = document.getElementById("EkisButton")
+const roleSelect = document.getElementById("UserRole")
 
-addUserButton.addEventListener("click", () => {
-    setupPopup("AddPopup", "AddUserButton", "EkisButton")
+setupPopup(popupContainer, addUserButton, exit)
 
-    const roleSelect = document.getElementById("UserRole")
+roleSelect.addEventListener("change", function () {
+    const osaForm = document.getElementById("OsaForm")
+    const orgForm = document.getElementById("OrgForm")
 
-    roleSelect.addEventListener("change", function () {
-        const osaForm = document.getElementById("OsaForm")
-        const orgForm = document.getElementById("OrgForm")
-
-        osaForm.classList.add("Hidden");
-        orgForm.classList.add("Hidden");
-        osaForm.required = false
-        orgForm.required = false
+    osaForm.classList.add("Hidden");
+    orgForm.classList.add("Hidden");
+    osaForm.required = false
+    orgForm.required = false
 
 
-        if (this.value === "OSA") {
-            osaForm.classList.remove("Hidden");
-            osaForm.required = true
-        } else if (this.value === "ORG") {
-            orgForm.classList.remove("Hidden");
-            orgForm.required = true
-        }
-    });
-
-})
+    if (this.value === "OSA") {
+        osaForm.classList.remove("Hidden");
+        osaForm.required = true
+    } else if (this.value === "ORG") {
+        orgForm.classList.remove("Hidden");
+        orgForm.required = true
+    }
+});
 
 userForm.addEventListener('submit', (e) => {
     console.log("Adding user");

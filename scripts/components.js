@@ -48,3 +48,11 @@ export function createTableRow(object, keysToInclude = []) {
 
     return tr
 }
+
+export function createButton(label, onClick, classStyle = "StyledButton") {
+    let button = document.createElement("button")
+    button.innerText = label || "button"
+    button.classList.add(classStyle)
+    if (typeof onClick === "function") { button.addEventListener('click', onClick) }
+    return button
+}

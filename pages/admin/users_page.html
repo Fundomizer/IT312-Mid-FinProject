@@ -45,6 +45,47 @@
                 </form>
             </div>
         </div>
+        <div class="PopUp" id="DetailsPopup">
+            <div class="PopUpContent" id="DetailsPopupContent">
+                <button id="XButton"><img src="../../assets/images/org_icons/close.png"></button>
+                <form id="DetailsForm">
+                    <label for="role">User role:</label>
+                    <select name="role" id="AssignedRole" disabled>
+                        <option value="Admin">Admin</option>
+                        <option value="OSA">Office of student affair</option>
+                        <option value="ORG">Student organization</option>
+                    </select>
+                    <br />
+
+                    <label for="DetailsName">Name</label>
+                    <input type="text" id="name" name="name" disabled>
+                    <br />
+
+                    <label for="DetailsEmail">Email</label>
+                    <input type="email" id="email" name="email" disabled>
+                    <br />
+
+                    <label for="DetailsPassword">Password</label>
+                    <input type="password" id="password" name="password" disabled>
+                    <br />
+
+                    <div id="DetailsOrgForm" class="Hidden">
+                        <label for="DetailsOrganization">Organization</label>
+                        <input type="text" id="organization" name="organization" disabled>
+                    </div>
+
+                    <div id="DetailsOsaForm" class="Hidden">
+                        <label for="DetailsDepartment">Department</label>
+                        <input type="text" id="DetailsDepartment" name="department" disabled>
+                    </div>
+
+                    <div id="DetailsActions">
+                        <button type="button" id="EditButton">Edit</button>
+                        <button type="submit" id="SaveButton" class="Hidden">Save</button>
+                    </div>
+
+            </div>
+        </div>
         <div>
             <h1>User management</h1>
             <p>Manage user accounts</p>

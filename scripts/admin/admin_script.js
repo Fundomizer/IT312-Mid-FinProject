@@ -1,9 +1,11 @@
-import { loadPage, fetchCollection } from "../utilities.js"
-import { createTableRow } from "../components.js"
+import { loadPage, fetchCollection, setupPopup } from "../utilities.js"
+import { createButton, createTableRow } from "../components.js"
 
-const dashboard = document.getElementById("dashboardButton")
-const users = document.getElementById("usersButton")
-const logs = document.getElementById("activityLogButton")
+const dashbaordNavBut = document.getElementById("dashboardButton")
+const usersNavBut = document.getElementById("usersButton")
+const logsNavBut = document.getElementById("activityLogButton")
+let users = []
+let logs = []
 
 async function loadDashboardPage() {
 
@@ -31,11 +33,80 @@ async function loadUsersPage() {
         const userTableView = document.getElementById("AccountsTableView")
 
         list.forEach(item => {
-            userTableView.appendChild(createTableRow(item, ["name", "email", "role", "date_created"]))
+            let tr = createTableRow(item, ["name", "email", "role", "date_created"])
+            let container = document.createElement("td")
+            let viewButton = createButton("View", "")
+            let deleteButton = createButton("Delete", deleteFunction)
+
+            container.appendChild(viewButton)
+            container.appendChild(deleteButton)
+            tr.appendChild(container)
+
+            userTableView.appendChild(tr)
+            viewFunction(viewButton, item)
         });
 
-    }
+        function viewFunction(openBtn, details) {
+            let popup = document.getElementById("DetailsPopup")
+            let xButton = document.getElementById("XButton")
+            setupPopup(popup, openBtn, xButton, onOpen, onClose)
 
+            function onOpen() {
+                Object.entries(details).forEach(([key, value]) => {
+                    const element = document.querySelector(`#DetailsForm #${key}`)
+                    if (element) {
+                        element.value = value != null ? value : "";
+                    }
+                })
+
+                const roleSelect = document.getElementById('AssignedRole');
+                if (roleSelect) {
+                    let role = details['role']
+                    switch (role.toLowerCase()) {
+                        case 'osa':
+                            roleSelect.value = "OSA"
+                            break
+                        case 'admin':
+                            roleSelect.value = "Admin"
+                            break
+                        case 'student organization user':
+                            roleSelect.value = "ORG"
+                            break
+                    }
+
+                }
+
+                const osaForm = document.getElementById("DetailsOsaForm");
+                const orgForm = document.getElementById("DetailsOrgForm");
+
+                if (details['department']) {
+                    osaForm.classList.remove("Hidden");
+                    orgForm.classList.add("Hidden");
+                } else if (details['organization']) {
+                    orgForm.classList.remove("Hidden");
+                    osaForm.classList.add("Hidden");
+                } else {
+                    osaForm.classList.add("Hidden");
+                    orgForm.classList.add("Hidden");
+                }
+            }
+
+            function onClose() {
+                let elementIds = ['name', 'email', 'password', 'department', 'organization']
+                elementIds.forEach(id => {
+                    const element = document.querySelector(`#DetailsForm #${id}`)
+                    if (element) {
+                        element.innerHTML = ""
+                    }
+                });
+            }
+        }
+
+        function deleteFunction() {
+            
+        }
+
+    }
 }
 
 async function loadLogsPage() {
@@ -60,10 +131,10 @@ async function loadLogsPage() {
 
 }
 
-dashboard.addEventListener('click', loadDashboardPage)
+dashbaordNavBut.addEventListener('click', loadDashboardPage)
 
-users.addEventListener('click', loadUsersPage)
+usersNavBut.addEventListener('click', loadUsersPage)
 
-logs.addEventListener('click', loadLogsPage)
+logsNavBut.addEventListener('click', loadLogsPage)
 
 loadDashboardPage()
