@@ -21,14 +21,17 @@ export function loadPage(role, page, style, script, loadInto = "Content") {
       const mainContent = html.querySelector("#PageContent");
       document.getElementById(loadInto).innerHTML = mainContent.innerHTML;
 
+
       // Load CSS and Script into assigned to that page
       if (style) loadCSS(pathToStyle);
       if (script) loadScript(pathToScript);
     });
 
+
   function loadScript(src) {
     const existingScript = document.querySelector(`script[src="${src}"]`);
     if (existingScript) existingScript.remove();
+
 
     const script = document.createElement("script");
     script.src = `${src}?v=${Date.now()}`; // cache busting to ensure latest version is loaded
@@ -36,6 +39,7 @@ export function loadPage(role, page, style, script, loadInto = "Content") {
     script.defer = true;
     document.body.appendChild(script);
   }
+
 
   function loadCSS(href) {
     if (!document.querySelector(`link[href="${href}"]`)) {
@@ -70,14 +74,18 @@ document.addEventListener("click", (event) => {
   }
 });
 
+
 document.addEventListener("click", async (event) => {
   if (event.target && event.target.id === "submitFormBtn") {
     event.preventDefault();
 
+
     const requirement_name = document.getElementById("formTitle").value.trim();
     const description = document.getElementById("formDescription").value.trim();
 
+
     if (!requirement_name) return alert("Please enter a form title.");
+
 
     const fields = [...document.querySelectorAll(".form-field")].map((field) => {
       const question = field.querySelector(".field-title").value.trim();
@@ -86,9 +94,11 @@ document.addEventListener("click", async (event) => {
       return { question, field_type, required };
     });
 
+
     const tags = [...document.querySelectorAll(".tag-item")].map(tag => {
       return tag.textContent.replace("×", "").trim();
     });
+
 
     const formData = {
       requirement_name,
@@ -96,6 +106,7 @@ document.addEventListener("click", async (event) => {
       fields,
       tags
     };
+
 
     try {
       const HOST = window.location.origin;
@@ -108,11 +119,15 @@ document.addEventListener("click", async (event) => {
         }
       );
 
+
       const result = await response.json();
+
 
       if (result.success) {
         alert("Form successfully saved!");
         console.log("Inserted ID:", result.inserted_id);
+
+
 
 
         document.getElementById("formTitle").value = "";
@@ -130,75 +145,6 @@ document.addEventListener("click", async (event) => {
   }
 });
 
-document.addEventListener("click", async (event) => {
-  if (event.target && event.target.classList.contains("delete-form-btn")) {
-    const formItem = event.target.closest(".form-item");
-    const formName = formItem.querySelector(".form-header").textContent.trim();
-    const HOST = window.location.origin;
-
-    if (!formName) {
-      return alert("Form name not found. Cannot delete.");
-    }
-
-    if (confirm(`Are you sure you want to delete "${formName}"?`)) {
-      try {
-        const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/forms.php`, {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ requirement_name: formName })
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-          if (result.deleted_count > 0) {
-            alert(`Form "${formName}" deleted successfully.`);
-          } else {
-            alert(`No form found with the name "${formName}".`);
-          }
-          loadPage("osa", "forms_page.html", "osa_forms_style.css", "forms_script.js");
-        } else {
-          alert("Error deleting form: " + (result.error || "Unknown error"));
-        }
-      } catch (err) {
-        console.error(err);
-        alert("Error deleting form. Check console for details.");
-      }
-    }
-  }
-});
-
-
-document.addEventListener("click", async (event) => {
-  if (event.target && event.target.classList.contains("update-form-btn")) {
-    const formItem = event.target.closest(".form-item");
-    const formId = formItem.dataset.id;
-    const currentName = formItem.querySelector(".form-header").textContent.trim();
-
-    const newName = prompt("Enter new form name:", currentName);
-    if (!newName) return;
-
-    try {
-      const HOST = window.location.origin;
-      const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/forms.php`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ requirement_name: newName })
-      });
-      const result = await response.json();
-      if (result.success) {
-        alert("Form updated successfully.");
-        loadPage("osa", "forms_page.html", "osa_forms_style.css", "forms_script.js");
-      } else {
-        alert("Error updating form: " + (result.error || "Unknown error"));
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Error updating form.");
-    }
-  }
-});
-
 /**
  * Fetches data from an endpoint.
  * NOTE: This function is specifically for fetching from the Node server and not PHP server
@@ -208,15 +154,18 @@ document.addEventListener("click", async (event) => {
  */
 export async function fetchCollection(collection, URI = "", Port = 8123) {
 
+
   const HOST = window.location.origin; // Host machine's IP
   const endpoint =
     URI ||
     `${HOST}:${Port}/api/${collection}`;
 
+
   return fetch(endpoint)
     .then((request) => request.json())
     .then((data) => data);
 }
+
 
 /**
  * @param {HTMLElement} popup The popup container element.
@@ -232,12 +181,14 @@ export function setupPopup(popup, openBtn, closeBtn, onOpen = null, onClose = nu
     });
   }
 
+
   if (closeBtn) {
     closeBtn.addEventListener("click", () => {
       popup.style.display = "none";
       if (typeof onOpen === "function") onClose();
     });
   }
+
 
   window.addEventListener("click", (event) => {
     if (event.target === popup) {
@@ -246,5 +197,6 @@ export function setupPopup(popup, openBtn, closeBtn, onOpen = null, onClose = nu
     }
   });
 }
+
 
 

@@ -1,51 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
-    <title>Forms</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forms</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
-
 <body>
+  <section id="PageContent">
+    <div>
+      <h2>Form Builder</h2>
+      <p>Create custom forms and assign them to organizations for structured requirement submissions</p>
+    </div>
 
 
-    <section id="PageContent">
-
-      <div>
-        <h2>Form Builder</h2>
-        <p>Create custom forms and assign them to organizations for structured requirement submissions</p>
-      </div>
     <div class="form-builder-section">
-        <div class="form-header-row">
-
+      <div class="form-header-row">
         <div>
           <h3>Form Builder</h3>
           <p>Create custom forms and assign them to organizations for structured requirement submissions</p>
         </div>
         <button id="create-form-btn">+ Create Form</button>
       </div>
-        <div class="form-container" id="forms-list">
-         
-        <div class="form-item" id ="forms-list">
-                <div class="form-header">Sample form name  <div class="form-tag">tag 1</div></div>
-                <div class="form-description">This is a sample form description</div>
-               
-                <div class="form-field-count"> 0 </div>
 
 
-        </div>
-       
-        </div>
-
-
+      <div class="form-container" id="forms-list"></div>
     </div>
-    </section>
 
+
+  <div id="form-modal">
+    <div class="modal-content">
+      <span id="modal-close">&times;</span>
+      <h3 id="modal-title">Update Form</h3>
+      <div>
+        <label>Requirement Name:</label>
+        <input type="text" id="modal-requirement-name">
+      </div>
+      <div>
+        <label>Description:</label>
+        <textarea id="modal-description"></textarea>
+      </div>
+      <div>
+        <label>Tags (comma separated):</label>
+        <input type="text" id="modal-tags">
+      </div>
+      <div class="modal-buttons">
+        <button id="modal-update-btn">Update</button>
+        <button id="modal-delete-btn">Delete</button>
+      </div>
+    </div>
+  </div>
+  </section>
 
 </body>
 </html>

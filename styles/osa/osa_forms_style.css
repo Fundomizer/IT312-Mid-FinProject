@@ -1,11 +1,26 @@
-  #PageContent {
+:root {
+  --text: #fff;
+  --muted: #aaa;
+  --accent: #6d28d9;
+  --surface: #1e1e2f;
+}
+
+
+body {
+  font-family: Arial, sans-serif;
+  background: #0b0d1a;
+  margin: 0;
+  color: var(--text);
+}
+
+
+#PageContent {
   flex: 1;
   padding: 28px 40px;
   overflow: auto;
-  
 }
 
-/* Form Builder Section (Card Style) */
+
 .form-builder-section {
   background: linear-gradient(180deg, #081226 0%, #071021 100%);
   border-radius: 12px;
@@ -13,18 +28,16 @@
   box-shadow: 0 6px 24px rgba(2, 6, 23, 0.6);
   padding: 24px;
   margin-bottom: 24px;
-  color: var(--text);
 }
 
-/* Section title */
+
 .form-builder-section h3 {
   margin: 0 0 20px 0;
   font-size: 20px;
   font-weight: 600;
-  color: var(--text);
 }
 
-/* Each form item */
+
 .form-builder-section .form-item {
   margin-bottom: 16px;
   border: 1px solid rgba(255, 255, 255, 0.05);
@@ -34,31 +47,31 @@
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
+
 .form-builder-section .form-item:hover {
   border-color: var(--accent);
   background-color: rgba(255, 255, 255, 0.05);
 }
 
-/* Header row inside each form */
-.form-builder-section .form-header {
+
+.form-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
   font-size: 16px;
   font-weight: 600;
-  color: var(--text);
 }
 
-/* Description / metadata */
-.form-builder-section .form-description {
+
+.form-description {
   font-size: 13px;
   color: var(--muted);
   margin-bottom: 6px;
 }
 
-/* Tag inside header */
-.form-builder-section .form-tag {
+
+.form-tag {
   display: inline-block;
   background: var(--surface);
   color: var(--muted);
@@ -69,12 +82,14 @@
   margin-left: 8px;
 }
 
-/* Field count */
-.form-builder-section .form-field-count {
+
+.form-field-count {
   font-size: 12px;
   color: var(--muted);
   text-align: right;
 }
+
+
 .form-fields-container {
   margin-top: 10px;
   padding: 10px;
@@ -83,11 +98,14 @@
   font-size: 13px;
   color: var(--muted);
 }
+
+
 .form-buttons {
   margin-top: 10px;
   display: flex;
   gap: 8px;
 }
+
 
 .form-action-btn {
   padding: 6px 12px;
@@ -100,49 +118,26 @@
   color: var(--text);
 }
 
+
 .form-action-btn:hover {
   border-color: var(--accent);
   color: var(--accent);
 }
 
-/* Status badges */
-.form-status {
-  display: inline-block;
-  padding: 3px 10px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
-}
-.form-status.active {
-  background: linear-gradient(180deg, #10b981, #059669);
-  color: #fff;
-}
-.form-status.draft {
-  background: linear-gradient(180deg, #f59e0b, #d97706);
-  color: #111;
-}
 
-/* Header row for section */
 .form-header-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
 }
-.form-header-row h3 {
-  margin: 0;
-  font-size: 18px;
-  color: var(--text);
-}
-.form-header-row p {
-  color: var(--muted);
-  margin: 0;
-  font-size: 13px;
-}
 
-/* Buttons */
-#create-form-btn,
-.form-action-btn {
+
+#create-form-btn {
+  background: linear-gradient(180deg, var(--accent), #5b21b6);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
   padding: 8px 14px;
   border-radius: 8px;
   cursor: pointer;
@@ -150,24 +145,74 @@
   transition: background-color 0.2s ease, transform 0.15s ease;
 }
 
-#create-form-btn {
-  background: linear-gradient(180deg, var(--accent), #5b21b6);
-  color: #fff;
-  border: none;
-  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
-}
+
 #create-form-btn:hover {
   background: linear-gradient(180deg, #6d28d9, #4c1d95);
   transform: translateY(-2px);
 }
 
-.form-action-btn {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: var(--text);
-  margin-left: 6px;
+
+/* Modal */
+#form-modal {
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.5);
+  justify-content:center;
+  align-items:center;
+  z-index:100;
 }
-.form-action-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+
+
+#form-modal .modal-content {
+  background:#111;
+  padding:20px;
+  border-radius:12px;
+  width:400px;
+  color:#fff;
+  position:relative;
+}
+
+
+#modal-close {
+  position:absolute;
+  top:10px;
+  right:15px;
+  cursor:pointer;
+}
+
+
+#form-modal input, #form-modal textarea {
+  width:100%;
+  padding:6px;
+  margin-top:4px;
+  border-radius:6px;
+  border:none;
+  background:#222;
+  color:#fff;
+}
+
+
+#form-modal button {
+  padding:6px 12px;
+  border-radius:6px;
+  cursor:pointer;
+  border:none;
+}
+
+
+#modal-delete-btn {
+  background:#b91c1c;
+  color:#fff;
+}
+
+
+#form-modal .modal-buttons {
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  margin-top:10px;
 }
