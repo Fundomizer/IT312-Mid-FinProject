@@ -181,7 +181,6 @@ select#filterLocation {
   font-size: 13px;
 }
 
-/* Submissions + Organizations */
 
 .recent-submissions-section,
 .active-organizations-section {
@@ -215,8 +214,7 @@ select#filterLocation {
   margin: 30px 0 30px;
 }
 
-.submission-item,
-.organization-item {
+.submission-item {
   border-radius: var(--border-rad);
   padding: 14px 16px;
   margin-bottom: 12px;
@@ -297,4 +295,79 @@ select#filterLocation {
   gap: 8px;
   align-items: center;
   margin-bottom: 6px;
+}
+/* Collapsible organization card */
+.organization-item {
+  background: #1a1f2e;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.05);
+  margin-bottom: 16px;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.organization-item:hover {
+  border-color: rgba(255,255,255,0.15);
+}
+
+.org-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  cursor: pointer;
+  background: #1a1f2e;
+  color: white;
+}
+
+.org-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.org-title .name {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.org-title .short {
+  font-size: 0.85rem;
+  color: #9aa3b2;
+}
+
+/* Toggle arrow */
+.org-toggle {
+  transition: transform 0.25s ease;
+  font-size: 1.2rem;
+}
+
+.organization-item.open .org-toggle {
+  transform: rotate(90deg);
+}
+
+/* Collapsible content */
+.org-dropdown {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+  background: #14151b;
+  color: #cfd6de;
+  padding: 0 16px;
+}
+
+.organization-item.open .org-dropdown {
+  padding: 16px;
+}
+
+/* Requirement entry */
+.requirement-entry {
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  background: #181a23;
+}
+
+.requirement-entry .type {
+  font-weight: 600;
+  color: white;
 }

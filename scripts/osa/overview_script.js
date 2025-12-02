@@ -1,50 +1,92 @@
 const HOST = window.location.origin
 
 async function loadOrganizations() {
+  try {
+    const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`);
+    const data = await response.json();
 
-  const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`)
+    const orgContainer = document.getElementById("organizations-list");
 
-  const data = await response.json();
-  const orgContainer = document.getElementById("organizations-list");
-  const subContainer = document.getElementById("submissions-list");
+    // Keep header
+    const orgHeader = orgContainer.querySelector("h3");
+    orgContainer.innerHTML = "";
+    orgContainer.appendChild(orgHeader);
 
+    data.forEach(org => {
+      const reqObj = org.requirements || {};
+      const reqCount = Object.keys(reqObj).length;
 
-  const orgHeader = orgContainer.querySelector("h3");
-  orgContainer.innerHTML = "";
-  orgContainer.appendChild(orgHeader);
-  const subHeader = subContainer.querySelector("h3");
-  subContainer.innerHTML = "";
-  subContainer.appendChild(subHeader);
-  data.forEach(org => {
-    orgContainer.innerHTML += `
-      <div class="organization-item">
-        <div class="org-item-header">
-          <div class="organization-name">${org.org_name}</div>
-          <div class="organization-shortname">${org.short_name}</div>
+      // Create card
+      const card = document.createElement('div');
+      card.className = 'organization-item';
+
+      // Header
+      const header = document.createElement('div');
+      header.className = 'org-header';
+      header.innerHTML = `
+        <div class="org-title">
+          <span class="name">${org.org_name}</span>
+          <span class="short">${org.short_name} — ${org.school}</span>
         </div>
-        <div class="school">${org.school}</div>
-        <div class="requirement-count">${Object.keys(org.requirements || {}).length}</div>
-        <div class="status">active</div>
-      </div>`;
+        <div class="org-toggle">▶</div>
+      `;
 
-    if (org.requirements) {
-      for (const [reqType, reqData] of Object.entries(org.requirements)) {
-        subContainer.innerHTML += `
-          <div class="submission-item">
-            <div class="sub-header">
-              <div class="submission-name">${reqType.replace(/_/g, " ")}</div>
-              <div class="submission-tag">${(reqData.tags || []).join(", ")}</div>
-            </div>
-            <div class="sub-details">
-              <div class="submission-org-name">${org.org_name}</div>
-              <div class="submission-org-shortname">${org.short_name}</div>
-              <div class="submission-date">${reqData.last_updated}</div>
-            </div>
-          </div>`;
+      // Dropdown
+      const dropdown = document.createElement('div');
+      dropdown.className = 'org-dropdown';
+
+      // Info section
+      const infoDiv = document.createElement('div');
+      infoDiv.innerHTML = `
+        <p><b>School:</b> ${org.school || 'N/A'}</p>
+        <p><b>Type:</b> ${org.org_type || 'N/A'}</p>
+        ${org.adviser?.name ? `<p><b>Adviser:</b> ${org.adviser.name}</p>` : ''}
+        ${org.officers?.length ? `<p><b>Officers:</b></p>
+          <ul>${org.officers.map(o => `<li>${o.position}: ${o.name}</li>`).join('')}</ul>` : ''}
+        <h4>Submitted Requirements (${reqCount})</h4>
+      `;
+      dropdown.appendChild(infoDiv);
+
+      // Add requirements
+      if (reqCount === 0) {
+        const none = document.createElement('p');
+        none.textContent = 'No submitted requirements.';
+        dropdown.appendChild(none);
+      } else {
+        Object.entries(reqObj).forEach(([type, info]) => {
+          const entry = document.createElement('div');
+          entry.className = 'requirement-entry';
+          entry.innerHTML = `
+            <div class="type">${type.replace(/_/g,' ')}</div>
+            <div>Tags: ${(info.tags || []).join(', ') || '—'}</div>
+            <div>Last Updated: ${info.last_updated || 'N/A'}</div>
+          `;
+          dropdown.appendChild(entry);
+        });
       }
-    }
-  });
+
+      // Append header + dropdown
+      card.appendChild(header);
+      card.appendChild(dropdown);
+      orgContainer.appendChild(card);
+
+      // Toggle behavior
+      header.addEventListener('click', () => {
+        const isOpen = card.classList.toggle('open');
+        if (isOpen) {
+          dropdown.style.maxHeight = dropdown.scrollHeight + 'px';
+        } else {
+          dropdown.style.maxHeight = '0px';
+        }
+      });
+    });
+
+  } catch (err) {
+    console.error('Error loading organizations:', err);
+  }
 }
+
+
 
 async function loadDashboard() {
 

@@ -75,7 +75,6 @@ addFieldBtn.addEventListener("click", () => {
 
 
 }
-// MULTI TAG SYSTEM
 const tagInput = document.getElementById("tagInput");
 const tagsList = document.getElementById("tagsList");
 
@@ -104,6 +103,19 @@ function renderTags() {
     });
   });
 }
+document.querySelectorAll('.organization-item .org-header').forEach(header => {
+  header.addEventListener('click', () => {
+    const card = header.parentElement;
+    const dropdown = card.querySelector('.org-dropdown');
+
+    card.classList.toggle('open');
+    if (card.classList.contains('open')) {
+      dropdown.style.maxHeight = dropdown.scrollHeight + 'px';
+    } else {
+      dropdown.style.maxHeight = '0px';
+    }
+  });
+});
 
 
 tagInput.addEventListener("keypress", (e) => {
