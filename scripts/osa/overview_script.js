@@ -158,5 +158,76 @@ async function updateProgressBars() {
             <div class="progress" style="width: 100%;"></div>
         </div>`;
 }
+async function loadRecentSubmissions() {
+    try {
+        const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`);
+        const orgs = await response.json();
 
-loadDashboard().then(() => loadOrganizations().then(updateProgressBars));
+        const submissionsContainer = document.getElementById("submissions-list");
+        const header = submissionsContainer.querySelector("h3");
+        submissionsContainer.innerHTML = "";
+        submissionsContainer.appendChild(header);
+
+        let allRequirements = [];
+
+        orgs.forEach(org => {
+            const reqs = org.requirements || {};
+            Object.entries(reqs).forEach(([type, info]) => {
+                allRequirements.push({
+                    org_name: org.org_name,
+                    org_short: org.short_name,
+                    type: type.replace(/_/g,' '),
+                    last_updated: info.last_updated || 'N/A',
+                    tags: info.tags || [],
+                });
+            });
+        });
+
+        allRequirements.sort((a, b) => {
+            const dateA = new Date(a.last_updated);
+            const dateB = new Date(b.last_updated);
+            return dateB - dateA;
+        });
+
+        allRequirements.forEach(req => {
+            const item = document.createElement("div");
+            item.className = "submission-item";
+
+            const subHeader = document.createElement("div");
+            subHeader.className = "sub-header";
+            subHeader.innerHTML = `
+                <div class="submission-name">${req.type}</div>
+                <div class="submission-tag">${req.tags.join(', ') || '—'}</div>
+            `;
+
+            const subDetails = document.createElement("div");
+            subDetails.className = "sub-details";
+            subDetails.innerHTML = `
+                <div class="submission-org-name">${req.org_name}</div>
+                <div class="submission-org-shortname">${req.org_short}</div>
+                <div class="submission-date">${req.last_updated}</div>
+            `;
+
+            // Collapsible
+            subDetails.style.display = "none";
+            subHeader.addEventListener("click", () => {
+                subDetails.style.display = subDetails.style.display === "none" ? "flex" : "none";
+            });
+
+            item.appendChild(subHeader);
+            item.appendChild(subDetails);
+            submissionsContainer.appendChild(item);
+        });
+
+    } catch (err) {
+        console.error("Error loading recent submissions:", err);
+    }
+}
+
+
+loadDashboard()
+  .then(() => loadOrganizations())
+  .then(() => {
+      updateProgressBars();
+      loadRecentSubmissions();
+  });
