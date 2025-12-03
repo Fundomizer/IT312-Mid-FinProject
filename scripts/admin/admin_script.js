@@ -231,10 +231,26 @@ async function loadUsersPage() {
 }
 
 async function loadLogsPage() {
+    let searchInput = document.getElementById('SearchInput')
+    console.log(searchInput);
+    let dateFilter = document.getElementById('DateFilter')
+    console.log(dateFilter);
+    let alphaFilter = document.getElementById('AlphaFilter')
+    console.log(alphaFilter);
+    let startDateFilter = document.getElementById('StartDate')
+    console.log(startDateFilter);
+    let endDateFilter = document.getElementById('EndDate')
+    console.log(endDateFilter);
+
+    logs = await fetchCollection('log')
+    searchInput.addEventListener('input', () => handleFilter())
+    dateFilter.addEventListener('change', () => handleFilter())
+    alphaFilter.addEventListener('change', () => handleFilter())
+    startDate.addEventListener('change', () => handleFilter())
+    endDate.addEventListener('change', () => handleFilter())
 
     loadPage("admin", "logs_page.html")
 
-    logs = await fetchCollection('log')
 
     displayLog(logs)
 
@@ -250,6 +266,24 @@ async function loadLogsPage() {
         });
     }
 
+    function handleFilter() {
+
+        const term = searchInput.value.toLowerCase();
+        const dateSort = dateFilter.value
+        const alphaSort = alphaFilter.value
+        const startDate = startDateFilter.value
+        const endDate = endDateFilter.value
+
+
+        let filtered = logs
+
+        filtered = users.filter(user =>
+            user['name']?.toLowerCase().includes(term) ||
+            user['action']?.toLowerCase().includes(term) ||
+            user['activity']?.toLowerCase().includes(term)
+        );
+
+    }
 }
 
 dashbaordNavBut.addEventListener('click', loadDashboardPage)
