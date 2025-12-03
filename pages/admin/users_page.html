@@ -13,8 +13,8 @@
             <div class="PopUpContent" id="AddPopupContent">
                 <button id="EkisButton"><img src="../../assets/images/org_icons/close.png"></button>
                 <form id="UserForm" method="post">
-                    <label for="UserRole">User role:</label>
-                    <select name="UserRole" id="UserRole">
+                    <label for="role">User role:</label>
+                    <select name="role" id="UserRole">
                         <option value="Admin">Admin</option>
                         <option value="OSA">Office of student affair</option>
                         <option value="ORG">Student organization</option>
@@ -91,9 +91,32 @@
             <p>Manage user accounts</p>
         </div>
 
-        <div class="SearchBar">
-            <img src="../../assets/images/icons/magnify_icon.png" alt="Magnify icon">
-            <input id="SearchInput" type="text" placeholder="Search for users">
+        <div>
+            <div class="SearchBar">
+                <img src="../../assets/images/icons/magnify_icon.png" alt="Magnify icon">
+                <input id="SearchInput" type="text" placeholder="Search for users">
+            </div>
+            <select name="RolesFilter" id="RolesFilter">
+                <option value="All">All roles</option>
+                <option value="Admin">Admin</option>
+                <option value="OSA">Office of student affair</option>
+                <option value="Student Organization User">Student organization</option>
+            </select>
+
+            <select name="DateFilter" id="DateFilter">
+                <option value="oldest">Oldest</option>
+                <option value="newest">Newest</option>
+            </select>
+
+            <select name="AlphaFilter" id="AlphaFilter">
+                <option value="descending">Descending</option>
+                <option value="ascending">Ascending</option>
+            </select>
+
+            <div>
+                <label>From: <input type="date" id="StartDate"></label>
+                <label>To: <input type="date" id="EndDate"></label>
+            </div>
         </div>
 
         <div class="Card" id="AccountsView">

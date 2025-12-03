@@ -22,19 +22,35 @@ async function loadDashboardPage() {
 }
 
 async function loadUsersPage() {
-    console.log("Loading users page");
+
     loadPage("admin", "users_page.html", "", "users_script.js")
 
-    let users = await fetchCollection('users')
+    users = await fetchCollection('users')
 
     displayUsers(users)
 
+    // Hook functions to filtering stuff
+    document.getElementById('SearchInput').addEventListener('input', () => handleFilter())
+    document.getElementById('RolesFilter').addEventListener('change', () => handleFilter())
+    document.getElementById('DateFilter').addEventListener('change', () => handleFilter())
+    document.getElementById('AlphaFilter').addEventListener('change', () => handleFilter())
+    document.getElementById('StartDate').addEventListener('change', () => handleFilter())
+    document.getElementById('EndDate').addEventListener('change', () => handleFilter())
+
+
     function displayUsers(list) {
         const userTableView = document.getElementById("AccountsTableView")
-
         let editButton = document.getElementById("EditButton")
         let saveButton = document.getElementById("SaveButton")
         let form = document.getElementById('DetailsForm')
+
+        userTableView.innerHTML = `<tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Created</th>
+                        <th>Action</th>
+                    </tr>`;
 
         editButton.addEventListener('click', handleEdit)
         form.addEventListener('submit', (e) => handleSave(e))
@@ -45,9 +61,11 @@ async function loadUsersPage() {
             let viewButton = createButton("View")
             let deleteButton = createButton("Delete")
 
-            // Attach the MongoDB _id to the buttons
+
+
             viewButton.dataset.userId = item._id;
             deleteButton.dataset.userId = item._id;
+            handleView(viewButton, item)
             deleteButton.addEventListener('click', (event) => handleDelete(event.currentTarget))
 
             container.appendChild(viewButton)
@@ -55,7 +73,6 @@ async function loadUsersPage() {
             tr.appendChild(container)
 
             userTableView.appendChild(tr)
-            handleView(viewButton, item)
         });
 
         function handleView(openBtn, details) {
@@ -131,7 +148,6 @@ async function loadUsersPage() {
             e.preventDefault();
             const userId = form.dataset.userId;
             const data = Object.fromEntries(new FormData(form).entries());
-            console.log("User ID ", userId);
 
             const HOST = window.location.origin;
             fetch(`${HOST}:8123/api/users/${userId}`, {
@@ -152,7 +168,7 @@ async function loadUsersPage() {
             }
 
             let userId = button.dataset.userId
-            console.log("Deleting ", userId);
+
 
             const HOST = window.location.origin;
             fetch(`${HOST}:8123/api/users/${userId}`, {
@@ -163,13 +179,62 @@ async function loadUsersPage() {
         }
 
     }
+
+    function handleFilter() {
+        const term = document.getElementById('SearchInput').value.toLowerCase();
+        const role = document.getElementById('RolesFilter').value
+        const dateSort = document.getElementById('DateFilter').value
+        const alphaSort = document.getElementById('AlphaFilter').value
+        const startDate = document.getElementById('StartDate').value
+        const endDate = document.getElementById('EndDate').value
+
+        let filtered = users;
+
+        filtered = users.filter(user =>
+            user['name']?.toLowerCase().includes(term) ||
+            user['email']?.toLowerCase().includes(term) ||
+            user['organization']?.toLowerCase().includes(term) ||
+            user['department']?.toLowerCase().includes(term)
+        );
+
+        // Role filter
+        if (role && role !== "All") {
+            filtered = filtered.filter(user => {
+                console.log("User role: ", user['role'])
+                return user['role'] === role
+            });
+        }
+
+        if (startDate && endDate) {
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            filtered = filtered.filter(user => {
+                const userDate = new Date(user.date_created);
+                return userDate >= start && userDate <= end;
+            });
+        }
+
+        if (dateSort === "newest") {
+            filtered.sort((a, b) => new Date(b.date_created) - new Date(a.date_created));
+        } else if (dateSort === "oldest") {
+            filtered.sort((a, b) => new Date(a.date_created) - new Date(b.date_created));
+        }
+
+        if (alphaSort === "asc") {
+            filtered.sort((a, b) => a.name.localeCompare(b.name));
+        } else if (alphaSort === "desc") {
+            filtered.sort((a, b) => b.name.localeCompare(a.name));
+        }
+
+        displayUsers(filtered)
+    }
 }
 
 async function loadLogsPage() {
-    console.log("Loading activity logs");
+
     loadPage("admin", "logs_page.html")
 
-    let logs = await fetchCollection('log')
+    logs = await fetchCollection('log')
 
     displayLog(logs)
 
