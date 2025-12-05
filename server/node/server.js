@@ -1,4 +1,5 @@
 const express = require('express');
+const session = require('express-session')
 const cors = require('cors');
 const connectToDB = require('./database/connect');
 
@@ -8,6 +9,14 @@ const app = express();
 app.use(express.json());
 app.set("json spaces", 4) // Pretty print 
 app.use(cors())
+app.use(session({
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: (1000 * 60 * 60),
+        httpOnly: true
+    }
+}))
 
 async function startServer() {
     const db = await connectToDB()
@@ -28,6 +37,7 @@ async function startServer() {
     })
 
     app.use('/api/users', require('./routes/admin'))
+    app.use('/api/auth', require('./routes/auth'))
 
     app.listen(port, "0.0.0.0", () => {
         console.log(`Node server running on port ${port}`);
