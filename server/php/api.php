@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 try {
     // --- MongoDB connection ---
-    $uri = "mongodb://localhost:27017/";
+    $uri = "mongodb+srv://testuser:test321@cluster0.lbsrw5e.mongodb.net/"; //change to local later
     $client = new MongoDB\Client($uri);
     $db = $client->OrganizationManagementDatabase;
 
