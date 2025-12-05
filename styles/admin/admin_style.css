@@ -73,7 +73,8 @@
     flex: 1;
 }
 
-#AccountsTableView {
+#AccountsTableView,
+#LogsTableView {
     padding: 10px;
     border-radius: 5px;
     width: 100%;
@@ -84,14 +85,14 @@
     overflow: auto;
 }
 
-#AccountsTableView td,
-#AccountsTableView th {
+table td,
+table th {
     border-bottom: 1px solid var(--outline-color);
     padding-bottom: 2rem;
     word-wrap: break-word;
 }
 
-#AccountsTableView th {
+table th {
     text-align: left;
     font-weight: normal;
 }
