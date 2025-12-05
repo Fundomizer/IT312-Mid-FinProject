@@ -52,37 +52,74 @@ async function loadItems() {
 
 function filterResults() {
   const searchQuery = searchInput.value.toLowerCase().trim();
-  const selectedLocation = filterLocation.value;
+  const selectedLocation = filterLocation.value.trim().toLowerCase();
+  const tagFilter = document.getElementById("tagFilterInput").value.toLowerCase().split(",").map(t => t.trim()).filter(t => t);
+  const dateFrom = document.getElementById("dateFrom").value;
+  const dateTo = document.getElementById("dateTo").value;
+
+
   let visibleCount = 0;
+
 
   allItems.forEach(item => {
     const name = item.querySelector(".submission-name")?.textContent.toLowerCase() || "";
     const org = item.querySelector(".submission-org-name")?.textContent.toLowerCase() || "";
-    const tag = item.querySelector(".submission-tag")?.textContent.toLowerCase() || "";
-    const location = item.getAttribute("data-location").toLowerCase() || "";
+    const tagText = item.querySelector(".submission-tag")?.textContent.toLowerCase() || "";
+    const location = item.getAttribute("data-location")?.toLowerCase() || "";
+    const date = item.querySelector(".submission-date")?.textContent || "";
+
 
     const matchesSearch =
       name.includes(searchQuery) ||
       org.includes(searchQuery) ||
-      tag.includes(searchQuery);
+      tagText.includes(searchQuery);
 
-    const matchesLocation = !selectedLocation || location === selectedLocation.toLowerCase();
 
-    const isVisible = matchesSearch && matchesLocation;
+    const matchesLocation =
+      !selectedLocation || location === selectedLocation;
+
+
+    const matchesTags =
+      tagFilter.length === 0 ||
+      tagFilter.some(t => tagText.includes(t));
+
+
+    let matchesDate = true;
+    if (dateFrom && date < dateFrom) matchesDate = false;
+    if (dateTo && date > dateTo) matchesDate = false;
+
+
+    const isVisible = matchesSearch && matchesLocation && matchesTags && matchesDate;
+
+
     item.style.display = isVisible ? "block" : "none";
     if (isVisible) visibleCount++;
   });
 
+
   shownCount.textContent = visibleCount;
 }
 
+
+
+
+
+
+document.getElementById("tagFilterInput").addEventListener("input", filterResults);
+document.getElementById("dateFrom").addEventListener("change", filterResults);
+document.getElementById("dateTo").addEventListener("change", filterResults);
 searchInput.addEventListener("input", filterResults);
 filterLocation.addEventListener("change", filterResults);
 clearFiltersBtn.addEventListener("click", () => {
   searchInput.value = "";
   filterLocation.value = "";
+  document.getElementById("tagFilterInput").value = "";
+  document.getElementById("dateFrom").value = "";
+  document.getElementById("dateTo").value = "";
   filterResults();
 });
 
+
 loadItems();
+
 
