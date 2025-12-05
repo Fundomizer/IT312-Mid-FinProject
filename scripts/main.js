@@ -16,12 +16,13 @@ loginForm.addEventListener('submit', (e) => {
     fetch(`${HOST}:8123/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(data)
     }).then(res => res.json())
         .then(auth => {
             console.log(auth);
             if (auth.success) {
-                window.location.href = `${HOST}/IT312-Mid-Finproject${auth.redirect}`
+                window.location.href = `${HOST}/IT312-Mid-FinProject${auth.redirect}`
             } else {
                 alert('Invalid credentials')
             }
