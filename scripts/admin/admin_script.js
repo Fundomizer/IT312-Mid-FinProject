@@ -30,12 +30,12 @@ async function loadUsersPage() {
     displayUsers(users)
 
     // Hook functions to filtering stuff
-    document.getElementById('SearchInput').addEventListener('input', () => handleFilter())
-    document.getElementById('RolesFilter').addEventListener('change', () => handleFilter())
-    document.getElementById('DateFilter').addEventListener('change', () => handleFilter())
-    document.getElementById('AlphaFilter').addEventListener('change', () => handleFilter())
-    document.getElementById('StartDate').addEventListener('change', () => handleFilter())
-    document.getElementById('EndDate').addEventListener('change', () => handleFilter())
+    document.getElementById('SearchInput').addEventListener('input', handleFilter)
+    document.getElementById('RolesFilter').addEventListener('change', handleFilter)
+    document.getElementById('DateFilter').addEventListener('change', handleFilter)
+    document.getElementById('AlphaFilter').addEventListener('change', handleFilter)
+    document.getElementById('StartDate').addEventListener('change', handleFilter)
+    document.getElementById('EndDate').addEventListener('change', handleFilter)
 
 
     function displayUsers(list) {
@@ -200,7 +200,7 @@ async function loadUsersPage() {
         // Role filter
         if (role && role !== "All") {
             filtered = filtered.filter(user => {
-                console.log("User role: ", user['role'])
+
                 return user['role'] === role
             });
         }
@@ -231,26 +231,22 @@ async function loadUsersPage() {
 }
 
 async function loadLogsPage() {
-    let searchInput = document.getElementById('SearchInput')
-    console.log(searchInput);
-    let dateFilter = document.getElementById('DateFilter')
-    console.log(dateFilter);
-    let alphaFilter = document.getElementById('AlphaFilter')
-    console.log(alphaFilter);
-    let startDateFilter = document.getElementById('StartDate')
-    console.log(startDateFilter);
-    let endDateFilter = document.getElementById('EndDate')
-    console.log(endDateFilter);
-
-    logs = await fetchCollection('log')
-    searchInput.addEventListener('input', () => handleFilter())
-    dateFilter.addEventListener('change', () => handleFilter())
-    alphaFilter.addEventListener('change', () => handleFilter())
-    startDate.addEventListener('change', () => handleFilter())
-    endDate.addEventListener('change', () => handleFilter())
 
     loadPage("admin", "logs_page.html")
 
+    logs = await fetchCollection('log')
+
+    let searchInput = document.getElementById('SearchInput')
+    let dateFilter = document.getElementById('DateFilter')
+    let alphaFilter = document.getElementById('AlphaFilter')
+    let startDateFilter = document.getElementById('StartDate')
+    let endDateFilter = document.getElementById('EndDate')
+
+    searchInput.addEventListener('input', handleFilter)
+    dateFilter.addEventListener('change', handleFilter)
+    alphaFilter.addEventListener('change', handleFilter)
+    startDateFilter.addEventListener('change', handleFilter)
+    endDateFilter.addEventListener('change', handleFilter)
 
     displayLog(logs)
 
@@ -259,7 +255,15 @@ async function loadLogsPage() {
      * @param {JSON} logs 
      */
     function displayLog(logs) {
-        const logsDisplay = document.getElementById("AccountsTableView")
+        const logsDisplay = document.getElementById("LogsTableView")
+
+        logsDisplay.innerHTML = `<tr>
+                        <th>Action</th>
+                        <th>User</th>
+                        <th>Activity</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                    </tr>`
 
         logs.forEach(item => {
             logsDisplay.appendChild(createTableRow(item, ["action", "name", "activity", "date", "time"]))
@@ -268,21 +272,49 @@ async function loadLogsPage() {
 
     function handleFilter() {
 
+        console.log("Filtering");
+
         const term = searchInput.value.toLowerCase();
         const dateSort = dateFilter.value
         const alphaSort = alphaFilter.value
         const startDate = startDateFilter.value
         const endDate = endDateFilter.value
 
-
         let filtered = logs
 
-        filtered = users.filter(user =>
-            user['name']?.toLowerCase().includes(term) ||
-            user['action']?.toLowerCase().includes(term) ||
-            user['activity']?.toLowerCase().includes(term)
-        );
+        if (term) {
+            filtered = filtered.filter(log =>
+                log["name"]?.toLowerCase().includes(term) ||
+                log["action"]?.toLowerCase().includes(term) ||
+                log['activity']?.toLowerCase().includes(term) ||
+                log['date']?.toLowerCase().includes(term) ||
+                log['time']?.toLowerCase().includes(term)
+            );
+        }
 
+        if (startDate && endDate) {
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+
+            filtered = filtered.filter(log => {
+                const logDate = new Date(log['date']); // assumes YYYY-MM-DD
+                return logDate >= start && logDate <= end;
+            });
+        }
+
+        if (dateSort === "newest") {
+            filtered.sort((a, b) => new Date(b['date']) - new Date(a['date']));
+        } else if (dateSort === "oldest") {
+            filtered.sort((a, b) => new Date(a['date']) - new Date(b['date']));
+        }
+
+        if (alphaSort === "asc") {
+            filtered.sort((a, b) => a['name'].localeCompare(b['name']));
+        } else if (alphaSort === "desc") {
+            filtered.sort((a, b) => b['name'].localeCompare(a['name']));
+        }
+
+        displayLog(filtered)
     }
 }
 

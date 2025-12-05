@@ -19,15 +19,15 @@
                 <img src="../../assets/images/icons/magnify_icon.png" alt="Magnify icon">
                 <input id="SearchInput" type="text" placeholder="Search for users">
             </div>
-
+            <p>Filter logs by: </p>
             <select name="DateFilter" id="DateFilter">
                 <option value="oldest">Oldest</option>
                 <option value="newest">Newest</option>
             </select>
 
             <select name="AlphaFilter" id="AlphaFilter">
-                <option value="descending">Descending</option>
-                <option value="ascending">Ascending</option>
+                <option value="desc">Descending</option>
+                <option value="asc">Ascending</option>
             </select>
 
             <div>
@@ -35,7 +35,6 @@
                 <label>To: <input type="date" id="EndDate"></label>
             </div>
         </div>
->
         <div class="Card" id="LogsView">
             <div class="Header">
                 <div>
@@ -44,10 +43,10 @@
                 </div>
             </div>
             <div>
-                <table id="AccountsTableView">
+                <table id="LogsTableView">
                     <tr>
                         <th>Action</th>
-                        <th>Name</th>
+                        <th>User</th>
                         <th>Activity</th>
                         <th>Date</th>
                         <th>Time</th>
