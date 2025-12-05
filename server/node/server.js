@@ -10,6 +10,7 @@ app.use(express.json());
 app.set("json spaces", 4) // Pretty print 
 app.use(cors())
 app.use(session({
+    secret: "KeepThisSecretToYourself",
     resave: false,
     saveUninitialized: false,
     cookie: {

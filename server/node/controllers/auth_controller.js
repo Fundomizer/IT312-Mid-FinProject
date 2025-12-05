@@ -1,9 +1,13 @@
-const { ObjectId } = require('mongodb')
-const sanitiseObject = require('../utilities')
+const connectToDB = require('../database/connect.js')
+const { sanitizeObject } = require('../utilities.js')
+
+let db;
+
+(async () => {
+    db = await connectToDB();
+})();
 
 exports.login = async (req, res) => {
-    const db = req.app.locals.db;
-
     const users = db.collection("users");
 
     const { email, password } = sanitizeObject(req.body);
@@ -24,7 +28,19 @@ exports.login = async (req, res) => {
         req.session.userId = user._id.toString();
         req.session.role = user.role;
 
-        res.json({ message: "Login successful", status: true });
+        let role = user.role.toLowerCase()
+        let redirect = ""
+        if (role === 'admin') {
+            redirect = '/pages/admin/admin_page.html'
+        } else if (role === 'student organization user') {
+            redirect = '/pages/org/org_page.html'
+        } else if (role === 'osa') {
+            redirect = '/pages/osa/osa_page.html'
+        } else {
+            res.status(500).json({ message: "Server error", status: false });
+        }
+
+        res.json({ message: "Login successful", success: true, redirect: redirect });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "Server error", status: false });

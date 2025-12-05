@@ -3,8 +3,33 @@ const idInput = document.getElementById("IdInput");
 const passwordInput = document.getElementById("PasswordInput");
 const loginButton = document.getElementById("LoginButton");
 const googleLogButton = document.getElementById("GoogleLogin");
+const loginForm = document.getElementById('LoginForm')
+
+loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(loginForm).entries());
+
+    console.log("Raw ", data);
+    console.log("Stringify ", JSON.stringify(data));
+
+    const HOST = window.location.origin;
+    fetch(`${HOST}:8123/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    }).then(res => res.json())
+        .then(auth => {
+            console.log(auth);
+            if (auth.success) {
+                window.location.href = `${HOST}/IT312-Mid-Finproject${auth.redirect}`
+            } else {
+                alert('Invalid credentials')
+            }
+        })
+        .catch(err => alert("Login has hit an unexpected error"));
+})
 
 googleLogButton.addEventListener("click", () => {
     // Add google login through here
-    console.log("Under construction!");
+    alert("Under construction!");
 });
