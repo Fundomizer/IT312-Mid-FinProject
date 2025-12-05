@@ -272,8 +272,6 @@ async function loadLogsPage() {
 
     function handleFilter() {
 
-        console.log("Filtering");
-
         const term = searchInput.value.toLowerCase();
         const dateSort = dateFilter.value
         const alphaSort = alphaFilter.value
