@@ -8,7 +8,10 @@ const app = express();
 
 app.use(express.json());
 app.set("json spaces", 4) // Pretty print 
-app.use(cors())
+app.use(cors({
+    origin: "http://localhost",
+    credentials: true
+}))
 app.use(session({
     secret: "KeepThisSecretToYourself",
     resave: false,

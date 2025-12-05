@@ -47,11 +47,24 @@ exports.login = async (req, res) => {
     }
 }
 
+exports.getProfile = (req, res) => {
+    if (!req.session.userId) {
+        return res.status(401).json({ message: "Not logged in" });
+    }
+
+    res.json({
+        loggedIn: true,
+        userId: req.session.userId,
+        role: req.session.role
+    });
+};
+
+
 exports.logout = (req, res) => {
     req.session.destroy(err => {
         if (err) {
-            return res.status(500).json({ message: "Logout failed", status: false });
+            return res.status(500).json({ message: "Logout failed", success: false });
         }
-        res.json({ message: "Logged out successfully", status: true });
+        res.json({ message: "Logged out successfully", success: true });
     });
 };
