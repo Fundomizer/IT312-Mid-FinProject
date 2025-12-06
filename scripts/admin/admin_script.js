@@ -1,5 +1,6 @@
 import { loadPage, fetchCollection, setupPopup } from "../utilities.js"
 import { createButton, createTableRow } from "../components.js"
+import { HOST, API_BASE_URL } from "../config.js"
 
 const dashbaordNavBut = document.getElementById("dashboardButton")
 const usersNavBut = document.getElementById("usersButton")
@@ -149,8 +150,8 @@ async function loadUsersPage() {
             const userId = form.dataset.userId;
             const data = Object.fromEntries(new FormData(form).entries());
 
-            const HOST = window.location.origin;
-            fetch(`${HOST}:8123/api/users/${userId}`, {
+
+            fetch(`${API_BASE_URL}/api/users/${userId}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data)
@@ -170,8 +171,8 @@ async function loadUsersPage() {
             let userId = button.dataset.userId
 
 
-            const HOST = window.location.origin;
-            fetch(`${HOST}:8123/api/users/${userId}`, {
+
+            fetch(`${API_BASE_URL}/api/users/${userId}`, {
                 method: "DELETE"
             }).then(response => response.json())
                 .then(result => alert(result['message']))

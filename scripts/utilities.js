@@ -1,3 +1,5 @@
+import { HOST } from "./config";
+
 /**
  * Dynamically loads and injects a HTML file into the container, "Content". Provide the file name for the style and script if you intend to use a different file for them.
  *
@@ -11,7 +13,7 @@ export function loadPage(role, page, style, script, loadInto = "Content") {
   let pathToPage = `../../pages/${role}/${page}`;
   let pathToScript = `../../scripts/${role}/${script}`;
   let pathToStyle = `../../styles/${role}/${style}`;
-  const HOST = window.location.origin;
+
   fetch(pathToPage)
     .then((result) => result.text()) // Convert into html text
     .then((htmlText) => {
@@ -109,7 +111,7 @@ document.addEventListener("click", async (event) => {
 
 
     try {
-      const HOST = window.location.origin;
+
       const response = await fetch(
         `${HOST}/IT312-Mid-FinProject/server/php/forms.php`,
         {
@@ -152,13 +154,13 @@ document.addEventListener("click", async (event) => {
  * @param {String} URI
  * @returns
  */
-export async function fetchCollection(collection, URI = "", Port = 8123) {
+export async function fetchCollection(collection, URI = "") {
 
 
-  const HOST = window.location.origin; // Host machine's IP
+  // Host machine's IP
   const endpoint =
     URI ||
-    `${HOST}:${Port}/api/${collection}`;
+    `${API_BASE_URL}/api/${collection}`;
 
 
   return fetch(endpoint)

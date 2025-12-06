@@ -1,4 +1,4 @@
-const HOST = window.location.origin
+import { HOST } from "../config";
 
 async function loadOrganizations() {
   try {
@@ -111,7 +111,6 @@ async function loadDashboard() {
   document.getElementById('active_form_count').textContent = activeForms;
 }
 async function updateProgressBars() {
-    const HOST = window.location.origin;
 
     const orgResponse = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`);
     const orgs = await orgResponse.json();

@@ -1,3 +1,5 @@
+import { HOST, API_BASE_URL } from "./config";
+
 // Element selectors
 const idInput = document.getElementById("IdInput");
 const passwordInput = document.getElementById("PasswordInput");
@@ -12,8 +14,7 @@ loginForm.addEventListener('submit', (e) => {
     console.log("Raw ", data);
     console.log("Stringify ", JSON.stringify(data));
 
-    const HOST = window.location.origin;
-    fetch(`${HOST}:8123/api/auth/login`, {
+    fetch(`${API_BASE_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
