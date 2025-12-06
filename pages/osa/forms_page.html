@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Forms</title>
   <link rel="stylesheet" href="style.css">
+  <script type="module" src="../../scripts/auth.js"></script>
 </head>
+
 <body>
   <section id="PageContent">
     <div>
@@ -28,29 +31,30 @@
     </div>
 
 
-  <div id="form-modal">
-    <div class="modal-content">
-      <span id="modal-close">&times;</span>
-      <h3 id="modal-title">Update Form</h3>
-      <div>
-        <label>Requirement Name:</label>
-        <input type="text" id="modal-requirement-name">
-      </div>
-      <div>
-        <label>Description:</label>
-        <textarea id="modal-description"></textarea>
-      </div>
-      <div>
-        <label>Tags (comma separated):</label>
-        <input type="text" id="modal-tags">
-      </div>
-      <div class="modal-buttons">
-        <button id="modal-update-btn">Update</button>
-        <button id="modal-delete-btn">Delete</button>
+    <div id="form-modal">
+      <div class="modal-content">
+        <span id="modal-close">&times;</span>
+        <h3 id="modal-title">Update Form</h3>
+        <div>
+          <label>Requirement Name:</label>
+          <input type="text" id="modal-requirement-name">
+        </div>
+        <div>
+          <label>Description:</label>
+          <textarea id="modal-description"></textarea>
+        </div>
+        <div>
+          <label>Tags (comma separated):</label>
+          <input type="text" id="modal-tags">
+        </div>
+        <div class="modal-buttons">
+          <button id="modal-update-btn">Update</button>
+          <button id="modal-delete-btn">Delete</button>
+        </div>
       </div>
     </div>
-  </div>
   </section>
 
 </body>
+
 </html>

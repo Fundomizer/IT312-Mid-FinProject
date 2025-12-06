@@ -5,59 +5,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="module" src="../../scripts/auth.js"></script>
   <title>Repository</title>
 </head>
 
 
 <body>
-   <main id="PageContent" role="main">
+  <main id="PageContent" role="main">
     <h2>Welcome to the repository</h2>
     <p>Search and filter all organization requirements.</p>
 
 
-<div class="topbar">
-  <div class="search">
-    <input id="searchInput" placeholder="Search requirements, title, or description..." />
+    <div class="topbar">
+      <div class="search">
+        <input id="searchInput" placeholder="Search requirements, title, or description..." />
 
 
-    <div class="filters">
-      <div class="filter-block">
-        <div class="filter-title">Tags</div>
-        <input type="text" id="tagFilterInput" placeholder="Enter tags separated by commas" />
-      </div>
+        <div class="filters">
+          <div class="filter-block">
+            <div class="filter-title">Tags</div>
+            <input type="text" id="tagFilterInput" placeholder="Enter tags separated by commas" />
+          </div>
 
 
-      <div class="filter-block">
-        <div class="filter-title">Organization</div>
-        <select id="filterLocation">
-          <option value="">All Orgs</option>
-          <option value="GCS">GCS</option>
-          <option value="Debate Soc">Debate Soc</option>
-          <option value="Math Club">Math Club</option>
-          <option value="Culture Club">Culture Club</option>
-        </select>
-      </div>
+          <div class="filter-block">
+            <div class="filter-title">Organization</div>
+            <select id="filterLocation">
+              <option value="">All Orgs</option>
+              <option value="GCS">GCS</option>
+              <option value="Debate Soc">Debate Soc</option>
+              <option value="Math Club">Math Club</option>
+              <option value="Culture Club">Culture Club</option>
+            </select>
+          </div>
 
 
-      <div class="filter-block">
-        <div class="filter-title">Date</div>
-        <div class="date-row">
-          <input type="date" id="dateFrom">
-          <span>to</span>
-          <input type="date" id="dateTo">
+          <div class="filter-block">
+            <div class="filter-title">Date</div>
+            <div class="date-row">
+              <input type="date" id="dateFrom">
+              <span>to</span>
+              <input type="date" id="dateTo">
+            </div>
+          </div>
+
+
+          <button class="btn" id="clearFilters">Clear</button>
         </div>
       </div>
 
 
-      <button class="btn" id="clearFilters">Clear</button>
+      <div style="display:flex;gap:12px;align-items:center">
+        <div class="muted">Showing <span id="shownCount">5</span> of <span id="totalCount">5</span> results</div>
+      </div>
     </div>
-  </div>
-
-
-  <div style="display:flex;gap:12px;align-items:center">
-    <div class="muted">Showing <span id="shownCount">5</span> of <span id="totalCount">5</span> results</div>
-  </div>
-</div>
 
 
 
@@ -90,5 +91,5 @@
     </section>
   </main>
 </body>
-</html>
 
+</html>
