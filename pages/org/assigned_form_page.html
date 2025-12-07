@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../../styles/common.css">
     <script src="../../scripts/navigation_bar.js" defer></script>
     <script type="module" src="../../scripts/org/org_script.js" defer></script>
+    <script type="module" src="../../scripts/org/org_popup_script.js" defer></script>
     <title>Assigned Forms</title>
 </head>
 
@@ -20,10 +21,45 @@
             <h1 id="Associated-Org-Name">Association for Computing Machinery (ACM)</h1>
             <p>Submit and manage your organization's requirements</p>
         </div>
-        <div class="SearchBar">
-            <img src="../../assets/images/icons/magnify_icon.png" alt="Magnify icon">
-            <input id="SearchInput" type="text" placeholder="Search for assigned forms">
+
+        <div class="SearchFilterContainer">
+            <div class="SearchBar">
+                <img src="../../assets/images/icons/magnify_icon.png" alt="Magnify icon">
+                <input id="SearchInput" type="text" placeholder="Search for assigned forms">
+            </div>
+            <button class="FilterButton">
+                <img src="../../assets/images/org_icons/filter.png" alt="Filter">
+                 Filter
+            </button>
         </div>
+
+        <div class="FilterPanel" id="Filter">
+            <div class="FilterContent">
+                <div id="GroupedFilter">
+                    <label><h3>Ordered by:</h3></label>
+                    <select id="FilterDropdown">
+                        <option value="Asc">Ascending</option>
+                        <option value="Desc">Descending</option>
+                    </select>
+                </div>
+                <label><h3>Tags:</h3></label>
+                <div class="TagsContainer" id="TagsContainer"> <!-- Populate Tags -->
+                    <input type="checkbox" id="TagsButton1">
+                    <label for="TagsButton1">Tag</label>
+                    <input type="checkbox" id="TagsButton2">
+                    <label for="TagsButton2">Tag</label>
+                    <input type="checkbox" id="TagsButton3">
+                    <label for="TagsButton3">Tag</label>
+                    <input type="checkbox" id="TagsButton4">
+                    <label for="TagsButton4">Tag</label>   
+                </div>
+                <div class="FilterActionButtons">
+                    <button id="ClearFilterButton">Clear Filter</button>
+                    <button id="ApplyFilterButton">Apply Filter</button>
+                </div>
+            </div>
+        </div>
+        
         <div class="Card">
             <div>
                 <h4>Forms Assigned to Your organization</h4>
@@ -35,69 +71,17 @@
             </div>
             <div class="PopupForm">
                 <button id="EkisButton"><img src="../../assets/images/org_icons/close.png"></button>
-                <h3>Form Title</h2>
-                    <p>Form Description</p>
-                    <div id="Alert">
-                        <p>All information you enter in this form will be searchable by OSA. Please be thorough and
-                            accurate</p>
-                    </div>
-                    <div class="FormFields">
-                        <span>Planning Period</span>
-                        <input>
-                        <p>Specify the time period this plan covers</p>
-                    </div>
-                    <div class="FormFields">
-                        <span>Vision Statement</span>
-                        <input type="text" placeholder="">
-                        <p>Your organization's long-term aspirations</p>
-                    </div>
-                    <div class="FormFields">
-                        <span>Mission Statement</span>
-                        <input type="text" placeholder="">
-                        <p>Your organization's purpose and how you will achieve your vision</p>
-                    </div>
-                    <div class="FormFields">
-                        <span>Key Objectives</span>
-                        <input type="text" placeholder="">
-                        <p>Specific, measurable objectives you aim to achieve</p>
-                    </div>
-                    <div class="FormTags">
-                        <span>Target SDGs</span>
-                        <div class="TagsContainer">
-                            <input type="checkbox" id="TagsButton1">
-                            <label for="TagsButton1">Tag</label>
-                            <input type="checkbox" id="TagsButton2">
-                            <label for="TagsButton2">Tag</label>
-                            <input type="checkbox" id="TagsButton3">
-                            <label for="TagsButton3">Tag</label>
-                            <input type="checkbox" id="TagsButton4">
-                            <label for="TagsButton4">Tag</label>
-                            <input type="checkbox" id="TagsButton5">
-                            <label for="TagsButton5">Tag</label>
-                            <input type="checkbox" id="TagsButton6">
-                            <label for="TagsButton6">Tag</label>
-                            <input type="checkbox" id="TagsButton7">
-                            <label for="TagsButton7">Tag</label>
-                            <input type="checkbox" id="TagsButton8">
-                            <label for="TagsButton8">Tag</label>
-                            <input type="checkbox" id="TagsButton9">
-                            <label for="TagsButton9">Tag</label>
-                            <input type="checkbox" id="TagsButton10">
-                            <label for="TagsButton10">Tag</label>
-                            <input type="checkbox" id="TagsButton11">
-                            <label for="TagsButton11">Tag</label>
-                            <input type="checkbox" id="TagsButton12">
-                            <label for="TagsButton12">Tag</label>
-                            <input type="checkbox" id="TagsButton13">
-                            <label for="TagsButton13">Tag</label>
 
-                        </div>
-                        <p>Select all relevant UN Sustainable Development Goals</p>
+                <form class="Form">
+                    <label for="FormTitle"><h3>(Form Title)</h3></label><br>
+                    <label>(Form Description)</label><br>
+                    <div class="FormFields">
+                        <label for="Field"><span>(Field)</span></label>
+                        <input type="text" id="FormAssigned">
                     </div>
                     <div class="FormFields">
-                        <span>Planned Activities Summary</span>
-                        <input type="text" placeholder="">
-                        <p>Overview of activities planned for this period</p>
+                        <label for="Field"><span>(Field)</span></label>
+                        <input type="text" id="FormAssigned">
                     </div>
                     <div class="FormUpload">
                         <span>Supporting Documents</span>
@@ -108,14 +92,13 @@
                         <button id="CancelForm">Cancel</button>
                         <button type="submit" id="SubmitForm">Submit Form</button>
                     </div>
+                </form>
+
             </div>
             <div id="Forms">
 
             </div>
-           
         </div>
-
     </section>
 </body>
-
 </html>
