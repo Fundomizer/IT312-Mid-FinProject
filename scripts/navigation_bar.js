@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "./config";
+import { API_BASE_URL } from "./config.js";
 
 const sideNavButton = document.getElementById("ToggleSideNavButton");
 const sideNav = document.getElementById("SideNav");

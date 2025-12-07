@@ -1,0 +1,113 @@
+.SearchFilterContainer{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+}
+
+.FilterPanel{
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, margin-top 0.3s ease-out;
+}
+.FilterPanel.Expand{
+    max-height: 500px;
+    margin-top: 1vh;
+}
+.FilterContent{
+    background: #081226;
+    border-radius: 8px;
+    padding: 20px;
+}
+#GroupedFilter{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+#FilterDropdown{
+    background: #252938;
+    border: 1px solid #373f68;
+    border-radius: 5px;
+    padding: .5rem;
+    color: #fff;
+    font-size: 15px;
+    cursor: pointer;
+}
+.TagsContainer{
+    border-style: solid;
+    border-color: #2c2b47;
+    border-radius: .5rem;
+    background-color: #27253f;
+    padding: 1rem 1rem 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 1vh;
+    column-gap: 1vw;
+}
+.TagsContainer label {
+    display: inline-block;
+    padding: .5vh .5vw .5vh;
+    background-color: #e0e0e0;
+    color: #333;
+    border: solid #ccc;
+    border-radius: .5rem;
+    font-size: medium;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+.TagsContainer label:hover {
+    background-color: #d0d0d0;
+    border-color: #bbb;
+}
+.TagsContainer input[type="checkbox"] {
+    display: none;
+}
+
+.TagsContainer input[type="checkbox"]:checked + label {
+    background-color: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+#TagsButton {
+    display: none;
+}
+#TagsButton:checked + label {
+    background-color: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+.FilterActionButtons{
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+#ClearFilterButton, #ApplyFilterButton{
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+#ClearFilterButton{
+    background: #fff;
+    border: 2px solid #363a4f;
+    color: #8b92b2;
+}
+#ClearFilterButton:hover {
+    border-color: #6364a7;
+    color: #6366f1;
+}
+#ApplyFilterButton{
+    background: #6366f1;
+    border: none;
+    color: #fff;
+}
+#ApplyFilterButton:hover {
+    background: #5558e3;
+}

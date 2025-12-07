@@ -23,21 +23,101 @@ async function loadDashboard() {
     totalAssForms.textContent = assignedForms.length;
 }
 
+// For the apply and clear filter buttons to work
+let filters = null;
+
 async function loadForms() {
     loadPage('org', 'assigned_form_page.html')
 
     let forms = await fetchCollection('forms')
 
+    document.getElementById('SearchInput').addEventListener('input', handleFilter)
+
+    const selectedTags = new Set();
+    let currentSortOrder = 'none';
+
+    createTags()
     displayForm(forms)
 
-    function displayForm(forms) {
-        const formDisplay = document.getElementById('Forms')
+    filters = {
+        updateFilters: updateFilters,
+        clearFilters: clearFormFilters
+    };
 
-        forms.forEach(item => {
-            formDisplay.appendChild(createForm(item))
+    function displayForm(formsToDisplay) {
+        const formDisplay = document.getElementById('Forms');
+        formDisplay.innerHTML = '';
+
+        if (formsToDisplay.length === 0) {
+            const noResults = document.createElement('div');
+            noResults.className = 'NoResults';
+            noResults.innerHTML = '<p>No forms found matching your filters</p>';
+            formDisplay.appendChild(noResults);
+            return;
+        }
+
+        formsToDisplay.forEach(item => {
+            formDisplay.appendChild(createForm(item));
         });
     }
 
+    function createTags() {
+        const tagsSet = new Set();
+        forms.forEach(form => {
+            if (form.tags) {
+                form.tags.forEach(tag => tagsSet.add(tag));
+            }
+        });
+
+        const Container = document.getElementById('TagsContainer');
+        const allTag = Array.from(tagsSet).sort();
+
+        Container.innerHTML = '';
+
+        allTag.forEach((tag, index) => {
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = `TagsButton${index}`;
+            checkbox.dataset.tag = tag;
+                
+            const label = document.createElement('label');
+            label.htmlFor = `TagsButton${index}`;
+            label.textContent = tag;
+                
+            Container.appendChild(checkbox);
+            Container.appendChild(label);
+        });
+    }
+
+    function updateFilters() {
+        // Update selected tags
+        selectedTags.clear();
+        document.querySelectorAll('.TagsContainer input[type="checkbox"]:checked').forEach(checkbox => {
+            selectedTags.add(checkbox.dataset.tag);
+        });
+        
+        // Update sort order from dropdown
+        const sortDropdown = document.getElementById('FilterDropdown');
+        if (sortDropdown) {
+            currentSortOrder = sortDropdown.value.toLowerCase();
+        }
+        
+        handleFilter();
+    }
+
+    function clearFormFilters() {
+        selectedTags.clear();
+        currentSortOrder = 'none';
+        document.querySelectorAll('.TagsContainer input[type="checkbox"]').forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        const sortDropdown = document.getElementById('FilterDropdown');
+        if (sortDropdown) {
+            sortDropdown.value = 'None';
+        }
+        handleFilter();
+    }
+    
     function createForm(form) {
         // Parent wrapper
         const wrapper = document.createElement("div");
@@ -134,7 +214,37 @@ async function loadForms() {
         }
     }
 
+    function handleFilter() {
+        const term = document.getElementById('SearchInput').value.toLowerCase();
 
+        let filtered = forms;
+
+        // Search filter
+        if (term) {
+            filtered = filtered.filter(form =>
+                form.requirement_name?.toLowerCase().includes(term) ||
+                form.description?.toLowerCase().includes(term) ||
+                (form.tags && form.tags.some(tag => tag.toLowerCase().includes(term)))
+            );
+        }
+
+        // Tag filter
+        if (selectedTags.size > 0) {
+            filtered = filtered.filter(form => {
+                if (!form.tags) return false;
+                return form.tags.some(tag => selectedTags.has(tag));
+            });
+        }
+
+        // Sort by name
+        if (currentSortOrder === 'asc') {
+            filtered.sort((a, b) => a.requirement_name.localeCompare(b.requirement_name));
+        } else if (currentSortOrder === 'desc') {
+            filtered.sort((a, b) => b.requirement_name.localeCompare(a.requirement_name));
+        }
+
+        displayForm(filtered);
+    }
 }
 
 // this fucntion is currently reading all requirements from
@@ -256,12 +366,36 @@ function closeForm() {
     }
 }
 
+function toggleFilter() {
+    const panel = document.getElementById("Filter");
+    panel.classList.toggle('Expand');
+}
+
+function clearFilters() {
+    const dropdown = document.querySelectorAll('#FilterDropdown');
+    dropdown.forEach(select => select.selectedIndex = 0);
+    
+    if (filters && filters.clearFilters) {
+        filters.clearFilters();
+    } else {
+        document.querySelectorAll('.TagsContainer input[type="checkbox"]').forEach(checkbox => {
+            checkbox.checked = false;
+        });
+    }
+}
+
+function applyFilter() {
+    if (filters && filters.updateFilters) {
+        filters.updateFilters();
+    }
+}
+
 // Assign event handlers for navigation
 if (dashboard) dashboard.addEventListener('click', loadDashboard)
 if (forms) forms.addEventListener('click', loadForms)
 if (history) history.addEventListener('click', loadHistory)
 
-// EventHandlers for popup forms
+// EventHandlers for the forms
 document.addEventListener("click", (e) => {
     if (e.target.closest(".StyledButton")) {
         openForm();
@@ -271,6 +405,16 @@ document.addEventListener("click", (e) => {
     }
     if (e.target.closest("#EkisButton")) {
         closeForm();
+    }
+    if (e.target.closest(".FilterButton")) {
+        toggleFilter();
+    }
+    if (e.target.id === "ApplyFilterButton") {
+        toggleFilter();
+        applyFilter();
+    }
+    if (e.target.id === "ClearFilterButton") {
+        clearFilters();
     }
 });
 
