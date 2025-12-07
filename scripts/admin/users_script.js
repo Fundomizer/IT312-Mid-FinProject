@@ -1,5 +1,5 @@
 import { setupPopup } from "../utilities"
-import { API_BASE_URL } from "../config"
+import { API_BASE_URL } from "../config.js"
 const popupContainer = document.getElementById("AddPopup")
 const addUserButton = document.getElementById("AddUserButton")
 const userForm = document.getElementById("UserForm")

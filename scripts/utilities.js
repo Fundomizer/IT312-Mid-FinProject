@@ -1,4 +1,4 @@
-import { HOST, API_BASE_URL } from "./config";
+import { HOST, API_BASE_URL } from "./config.js";
 
 /**
  * Dynamically loads and injects a HTML file into the container, "Content". Provide the file name for the style and script if you intend to use a different file for them.

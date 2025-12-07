@@ -1,4 +1,4 @@
-import { HOST, API_BASE_URL } from "./config";
+import { HOST, API_BASE_URL } from "./config.js";
 
 // Element selectors
 const idInput = document.getElementById("IdInput");

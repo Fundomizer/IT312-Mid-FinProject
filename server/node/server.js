@@ -9,15 +9,28 @@ const app = express();
 app.use(express.json());
 app.set("json spaces", 4) // Pretty print 
 app.use(cors({
-    origin: "http://localhost",
+    origin: function (origin, callback) {
+        // allow requests with no origin (like curl or mobile apps)
+        if (!origin) return callback(null, true);
+
+        // allow LAN IPs: 192.168.x.x or 10.x.x.x
+        if (/^http:\/\/192\.168\.\d+\.\d+(:\d+)?$/.test(origin) ||
+            /^http:\/\/10\.\d+\.\d+\.\d+(:\d+)?$/.test(origin) ||
+            origin === "http://localhost" ||
+            origin === "http://127.0.0.1") {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
     credentials: true
 }))
 app.use(session({
-    secret: "KeepThisSecretToYourself",
+    secret: "KeepThisSecretToYourself", // Secret :P
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: (1000 * 60 * 60),
+        maxAge: (1000 * 60 * 60), // How long the cookie will be saved, btw this is in millisecond
         httpOnly: true
     }
 }))
