@@ -1,5 +1,5 @@
 :root {
-    --nav-bars-bg-color: #131824;
+    --nav-bars-bg-color: #1f2635;
 }
 
 * {
@@ -15,7 +15,6 @@ button {
 
 .Main {
     width: 100vw;
-    height: 100vh;
     height: auto;
 }
 
@@ -25,19 +24,17 @@ button {
     outline: 1px solid var(--outline-color);
 }
 
-/* Overlay hidden by default */
 #Overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-  z-index: 999; /* below SideNav, above content */
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 999;
 }
 
-/*SIDE NAVIGATION BAR*/
 #SideNav {
     position: fixed;
     background-color: #0F1420;
@@ -53,24 +50,20 @@ button {
     z-index: 1000;
 }
 
-/* Expanded state */
 #SideNav.expanded {
     width: 16rem;
 }
 
-/* When nav is open, show overlay */
 body.nav-open #Overlay {
-  opacity: 1;
-  pointer-events: auto;
+    opacity: 1;
+    pointer-events: auto;
 }
 
-/* Remove margin shifts */
 #SideNav.expanded ~ .Main #Content,
 #SideNav.expanded ~ .Main #TopNav {
-  margin-left: 4rem !important;
+    margin-left: 4rem !important;
 }
 
-/* Toggle button */
 #ToggleSideNavButton {
     color: white;
     align-self: center;
@@ -89,51 +82,46 @@ body.nav-open #Overlay {
     background-color: #34495e;
 }
 
-/* Icon stays fixed size */
 #ToggleSideNavButton .hamburger-icon {
-  width: 2.5rem;
-  height: auto;
-  flex-shrink: 0;
+    width: 2.5rem;
+    height: auto;
+    flex-shrink: 0;
 }
 
-/* Text container stacks vertically */
 #ToggleSideNavButton .toggle-text {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-left: 0.75rem;
-  line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 0.75rem;
+    line-height: 1.5;
 }
 
-/* Label hidden by default */
 #ToggleSideNavButton .toggle-label {
-  font-size: 1rem;
-  font-weight: 600;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  white-space: nowrap;
+    font-size: 1rem;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    white-space: nowrap;
 }
 
-/* Sub-label */
 #ToggleSideNavButton .toggle-sublabel {
-  font-size: 0.8rem;
-  font-weight: 400;
-  color: #aaa;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  white-space: nowrap;
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: #aaa;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    white-space: nowrap;
 }
 
-/* Expanded state: button fills nav width, label shows */
 #SideNav.expanded #ToggleSideNavButton {
-  width: 100%;
-  justify-content: flex-start; /* keep icon at left */
+    width: 100%;
+    justify-content: flex-start;
 }
 
 #SideNav.expanded #ToggleSideNavButton .toggle-label,
 #SideNav.expanded #ToggleSideNavButton .toggle-sublabel {
-  display: inline;
-  opacity: 1;
+    display: inline;
+    opacity: 1;
 }
 
 .SideNavContent {
@@ -149,7 +137,6 @@ body.nav-open #Overlay {
     margin: 0;
 }
 
-/*SideNav Contents*/
 .NavItems {
     display: flex;
     align-items: center;
@@ -193,17 +180,14 @@ body.nav-open #Overlay {
 }
 
 body.nav-open::after {
-  content: "";
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.4);
-  z-index: 999; /* just below the nav */
+    content: "";
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.4);
+    z-index: 999;
 }
 
-
-
-/*TOP NAV BAR*/
 #TopNav {
     top: 0;
     left: 0;
@@ -229,6 +213,10 @@ body.nav-open::after {
     text-overflow: ellipsis;
 }
 
+.TopNavContents img {
+    filter: brightness(100);
+}
+
 #TopNav .TopNavContents {
     display: flex;
     align-items: center;
@@ -246,22 +234,22 @@ body.nav-open::after {
     gap: 0.4rem;
 
     padding: 0.25rem 1rem 0.25rem;
-    border: 1px solid #2c3e50;
+    border: 1px solid var(--nav-bars-bg-color);
     border-radius: 10px;
-    background-color: transparent;
+    background-color: var(--accent-color);
     color: white;
     font-size: 0.9rem;
     cursor: pointer;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    height: 3rem;
 }
 
 .TopNavButton:hover {
     background-color: var(--accent-color);
 }
 
-/*constrain icons inside buttons */
 .TopNavButton .ButtonIcon {
     width: 1rem;
     height: 1rem;
@@ -287,12 +275,4 @@ body.nav-open::after {
 
 #SideNav.expanded~.Main #TopNav {
     margin-left: 12rem;
-}
-
-.UserProfile {
-    padding: 10px;
-    background-color: #1A1F2E;
-    border-radius: 10px;
-    
-    display: flex;
 }
