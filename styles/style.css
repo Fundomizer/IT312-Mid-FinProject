@@ -28,12 +28,13 @@ input {
     background-color: var(--search-bar-bg-color);
     border-width: 0px;
     color: var(--text-color);
+    padding: 10px;
 }
 
 #LoginButton {
     background-color: var(--accent-color);
-    border-width: 0px;
     color: white;
+    margin-top:4rem;
 }
 
 button:last-child {
@@ -56,11 +57,14 @@ button:last-child {
     flex-direction: column;
     flex-wrap: wrap;
     justify-content: center;
-    align-items: stretch;
-    width: min(90%, 480px);
-    width: 30%;
+    align-items: center;
+    width:75%;
     gap: 10px;
     padding: 50px 40px;
+}
+
+.Card {
+    background: linear-gradient(180deg, #2b3240 0%, #151e2f 100%);
 }
 
 .LoginForm>div,
@@ -70,15 +74,17 @@ button:last-child {
     gap: 10px;
 }
 
-#InputFields {
-    gap: 20px;
+#LoginForm > div:nth-child(-n+2) {
+    margin-bottom: 1rem;
 }
 
-.LoginForm> :nth-last-child(2) {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    width: 100%;
+#LoginForm label {
+   font-weight: bold;
+}
+
+#InputFields {
+    gap: 20px;
+    width: 80%;
 }
 
 .LoginForm input {

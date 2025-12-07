@@ -7,11 +7,12 @@
 /* Theme Variables */
 :root {
     --border-rad: 10px;
-    --main-bg-color: #0A0E1A;
-    --card-bg-color: #131824;
+    --main-bg-color: #efefef;
+    --card-bg-color: #2b3240;
     --subcard-bg-color: #131824;
     --outline-color: #232937;
     --text-color: #e6eef8;
+    --body-title-color: #131824;
     --muted-color: #98a0b3;
     --search-bar-bg-color: #0A0E1A;
     --accent-color: #6366F1;
@@ -33,8 +34,7 @@ body {
     border-radius: 12px;
     /* match gradient card design */
     border: 1px solid rgba(255, 255, 255, 0.05);
-    background: linear-gradient(180deg, #081226 0%, #071021 100%);
-    box-shadow: 0 6px 24px rgba(2, 6, 23, 0.6);
+        box-shadow: 0 6px 24px rgba(2, 6, 23, 0.6);
     transition: border-color 0.2s ease, transform 0.2s ease;
     min-width: fit-content;
     width: 100%;
@@ -44,6 +44,7 @@ body {
 /* Main Card */
 .Card {
     padding: 2rem;
+    background-color: var(--card-bg-color);
 }
 
 /* SubCard (lighter variant, but same gradient shell) */
@@ -57,6 +58,23 @@ body {
 
 
 /* Search Bar */
+#SearchContainer {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+#SearchContainer .SubCard{
+    flex-wrap: wrap;
+    display: inline-flex;
+    background-color: var(--card-bg-color);
+    gap: 1rem;
+    width: fit-content;
+}
+
 .SearchBar {
     margin: 5px;
     padding: 5px 15px;
@@ -81,12 +99,43 @@ body {
     box-sizing: border-box;
 }
 
+/* RolesFilter dropdown */
+#SearchContainer select,
+#SearchContainer input[type="date"] {
+  padding: 0.5rem 0.5rem;
+  border-radius: var(--border-rad);
+  border: 1px solid var(--outline-color);
+  background-color: var(--search-bar-bg-color);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hover/focus effect */
+#SearchContainer select:hover,
+#SearchContainer select:focus,
+#SearchContainer input[type="date"]:hover,
+#SearchContainer input[type="date"]:focus {
+  border-color: var(--accent-color);
+  outline: none;
+}
+
+/* Label styling */
+#SearchContainer label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--muted-color);
+}
+
+
 /* Buttons */
 .StyledButton {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 10px;
-    padding: 6px 14px;
+    padding: 0.5rem 1rem;
+    margin: 0.5rem;
     background-color: var(--accent-color);
     border: none;
     border-radius: var(--border-rad);
@@ -130,4 +179,28 @@ body {
 
 .Hidden {
   display: none;
+}
+
+th, td {
+    text-align: center;
+    border-bottom: 1px solid var(--outline-color);
+    border-spacing: 0;
+    padding: 1rem;
+    margin: 0;
+}
+
+/* Apply to header cells */
+th:nth-child(odd) {
+  background-color: var(--subcard-bg-color);
+}
+th:nth-child(even) {
+  background-color: var(--card-bg-color);
+}
+
+/* Apply to table body cells */
+td:nth-child(odd) {
+  background-color: #1c2230; /* darker shade */
+}
+td:nth-child(even) {
+  background-color: #2b3240; /* lighter shade */
 }

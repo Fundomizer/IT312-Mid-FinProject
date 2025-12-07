@@ -1,5 +1,4 @@
 /* Dashboard styling */
-
 .Main>div:last-child>p {
     font-size: 3rem;
     margin: 10px 0px;
@@ -9,15 +8,28 @@
     min-width: min-content;
     display: flex;
     flex-direction: column;
+    align-items: center;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 2rem;
+
 }
 
-.AdminDashboard>div {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 2rem;
+.AdminDashboard h1 {
+  align-self: flex-start;
+}
+
+.AdminDashboard > div {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  justify-content: center;
+  gap: 5rem;
+}
+
+#title {
+    color: var(--body-title-color);
+    font-weight: bold;
+    font-size: 1.5rem;
 }
 
 .SubCard {
@@ -75,28 +87,15 @@
 
 #AccountsTableView,
 #LogsTableView {
-    padding: 10px;
-    border-radius: 5px;
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 2rem;
     min-width: 100px;
     min-height: 100px;
     overflow: auto;
 }
 
-table td,
-table th {
-    border-bottom: 1px solid var(--outline-color);
-    padding-bottom: 2rem;
-    word-wrap: break-word;
+#LogsTableView td {
+    padding: 2rem;
 }
-
-table th {
-    text-align: left;
-    font-weight: normal;
-}
-
 
 /* Logs Page styling */
 

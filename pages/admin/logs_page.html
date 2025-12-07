@@ -10,32 +10,47 @@
 
 <body>
     <section id="PageContent">
-        <div>
+        <div id="title">
             <h1>Admin Dashboard</h1>
             <p>View system activity</p>
         </div>
 
-        <div>
+        <!-- Search + Filters Card -->
+        <div class="Card" id="SearchContainer">
             <div class="SearchBar">
                 <img src="../../assets/images/icons/magnify_icon.png" alt="Magnify icon">
-                <input id="SearchInput" type="text" placeholder="Search for users">
+                <input id="SearchInput" type="text" placeholder="Search logs">
             </div>
-            <p>Filter logs by: </p>
-            <select name="DateFilter" id="DateFilter">
-                <option value="oldest">Oldest</option>
-                <option value="newest">Newest</option>
-            </select>
 
-            <select name="AlphaFilter" id="AlphaFilter">
-                <option value="desc">Descending</option>
-                <option value="asc">Ascending</option>
-            </select>
+            <!-- Date filter -->
+            <label class="SubCard" for="DateFilter">
+                Date:
+                <select name="DateFilter" id="DateFilter">
+                    <option value="oldest">Oldest</option>
+                    <option value="newest">Newest</option>
+                </select>
+            </label>
 
-            <div>
-                <label>From: <input type="date" id="StartDate"></label>
-                <label>To: <input type="date" id="EndDate"></label>
+            <!-- Alphabetical filter -->
+            <label class="SubCard" for="AlphaFilter">
+                Alphabetical:
+                <select name="AlphaFilter" id="AlphaFilter">
+                    <option value="desc">Descending</option>
+                    <option value="asc">Ascending</option>
+                </select>
+            </label>
+
+            <!-- Unified Date Range block -->
+            <div class="SubCard DateRange">
+                <label for="StartDate">From:</label>
+                <input type="date" id="StartDate">
+
+                <label for="EndDate">To:</label>
+                <input type="date" id="EndDate">
             </div>
         </div>
+
+        <!-- Logs view -->
         <div class="Card" id="LogsView">
             <div class="Header">
                 <div>
