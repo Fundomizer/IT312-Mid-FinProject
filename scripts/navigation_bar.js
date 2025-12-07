@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "./config.js";
+
 const sideNavButton = document.getElementById("ToggleSideNavButton");
 const sideNav = document.getElementById("SideNav");
 const logoutButton = document.getElementById("Logout");
@@ -21,8 +23,7 @@ document.body.addEventListener("click", (e) => {
 
 // Logout button
 logoutButton.addEventListener("click", () => {
-  const HOST = window.location.origin;
-  fetch(`${HOST}:8123/api/auth/logout`, {
+  fetch(`${API_BASE_URL}/api/auth/logout`, {
     method: "POST",
     credentials: "include"
   })

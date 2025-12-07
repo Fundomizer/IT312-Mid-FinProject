@@ -5,32 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Create Form | OSA</title>
 </head>
-
 <body>
   <section id="PageContent">  
-
- 
     <div class="create-form-header">
       <button id="backBtn" class="back-button">← Back</button>
       <h2>Create New Form</h2>
       <p>Design and publish forms to student organizations for structured submissions.</p>
     </div>
 
+
     <div class="form-meta">
       <input type="text" id="formTitle" placeholder="Enter form title" required>
       <textarea id="formDescription" placeholder="Enter form description"></textarea>
     </div>
-<div class="tag-section">
-  <label>Tags</label>
-  <div class="tag-input-box">
-    <input id="tagInput" type="text" placeholder="Type and press Enter">
-  </div>
 
-  <div id="tagsList" class="tags-list"></div>
-</div>
 
-    <div class="form-fields" id="formFields">
+    <div class="tag-section">
+      <label>Tags</label>
+      <div class="tag-input-box">
+        <input id="tagInput" type="text" placeholder="Type tags separated by commas">
+      </div>
     </div>
+
+
+    <div class="org-assignment">
+      <label>Assign to Organizations</label>
+      <select id="orgSelect" multiple style="width:100%; padding:8px; margin-top:5px;">
+      </select>
+      <p>Hold Ctrl to select multiple organizations, or leave blank for all.</p>
+    </div>
+
+
+    <div class="form-fields" id="formFields"></div>
+
 
     <div class="add-field-controls">
       <select id="fieldType">
@@ -42,12 +49,8 @@
       <button id="addFieldBtn">+ Add Field</button>
     </div>
 
+
     <button class="submit-form-btn" id="submitFormBtn">Submit Form</button>
   </section>
-
-
 </body>
-
-
-
 </html>

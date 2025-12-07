@@ -1,6 +1,8 @@
+import { API_BASE_URL } from "./config.js";
+
 (async function protectPage() {
-    const HOST = window.location.origin;
-    const res = await fetch(`${HOST}:8123/api/auth/profile`, {
+
+    const res = await fetch(`${API_BASE_URL}/api/auth/profile`, {
         credentials: "include",
         method: "POST"
     });

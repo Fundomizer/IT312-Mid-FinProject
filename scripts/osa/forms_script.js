@@ -1,4 +1,5 @@
-const HOST = window.location.origin;
+import { HOST } from "../config";
+
 let selectedForm = null;
 async function loadActiveForms() {
   const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=forms`);

@@ -1,5 +1,5 @@
 import { setupPopup } from "../utilities"
-
+import { API_BASE_URL } from "../config.js"
 const popupContainer = document.getElementById("AddPopup")
 const addUserButton = document.getElementById("AddUserButton")
 const userForm = document.getElementById("UserForm")
@@ -37,8 +37,7 @@ userForm.addEventListener('submit', (e) => {
     const filtered = entries.filter(([key, value]) => value && value.trim() !== "");
     const obj = Object.fromEntries(filtered);
 
-    const HOST = window.location.origin;
-    fetch(`${HOST}:8123/api/users`, {
+    fetch(`${API_BASE_URL}/api/users`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(obj)

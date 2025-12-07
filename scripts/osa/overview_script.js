@@ -1,4 +1,4 @@
-const HOST = window.location.origin
+import { HOST } from "../config.js";
 
 async function loadOrganizations() {
   try {
@@ -57,7 +57,7 @@ async function loadOrganizations() {
           const entry = document.createElement('div');
           entry.className = 'requirement-entry';
           entry.innerHTML = `
-            <div class="type">${type.replace(/_/g,' ')}</div>
+            <div class="type">${type.replace(/_/g, ' ')}</div>
             <div>Tags: ${(info.tags || []).join(', ') || '—'}</div>
             <div>Last Updated: ${info.last_updated || 'N/A'}</div>
           `;
@@ -111,32 +111,31 @@ async function loadDashboard() {
   document.getElementById('active_form_count').textContent = activeForms;
 }
 async function updateProgressBars() {
-    const HOST = window.location.origin;
 
-    const orgResponse = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`);
-    const orgs = await orgResponse.json();
+  const orgResponse = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`);
+  const orgs = await orgResponse.json();
 
-    const typeCounts = {};
-    let totalRequirements = 0;
+  const typeCounts = {};
+  let totalRequirements = 0;
 
-    orgs.forEach(org => {
-        if (org.requirements) {
-            for (const [reqType, reqData] of Object.entries(org.requirements)) {
-                typeCounts[reqType] = (typeCounts[reqType] || 0) + 1;
-                totalRequirements++;
-            }
-        }
-    });
+  orgs.forEach(org => {
+    if (org.requirements) {
+      for (const [reqType, reqData] of Object.entries(org.requirements)) {
+        typeCounts[reqType] = (typeCounts[reqType] || 0) + 1;
+        totalRequirements++;
+      }
+    }
+  });
 
-    const topSubmissionContainer = document.querySelector('.charts-section .chart-container:first-child');
-    topSubmissionContainer.innerHTML = `<h3>Top Submissions</h3>
+  const topSubmissionContainer = document.querySelector('.charts-section .chart-container:first-child');
+  topSubmissionContainer.innerHTML = `<h3>Top Submissions</h3>
         <p class="chart-header">Most common requirement types</p>`;
 
-    const sortedTypes = Object.entries(typeCounts).sort((a,b) => b[1] - a[1]);
+  const sortedTypes = Object.entries(typeCounts).sort((a, b) => b[1] - a[1]);
 
-    sortedTypes.forEach(([type, count]) => {
-        const percent = Math.min(Math.round((count / Math.max(...Object.values(typeCounts))) * 100), 100);
-        topSubmissionContainer.innerHTML += `
+  sortedTypes.forEach(([type, count]) => {
+    const percent = Math.min(Math.round((count / Math.max(...Object.values(typeCounts))) * 100), 100);
+    topSubmissionContainer.innerHTML += `
         <div class="progress-header">
             <p>${type.replace(/_/g, " ")}</p>
             <div class="progress-label">${count}</div>
@@ -145,10 +144,10 @@ async function updateProgressBars() {
             <div class="progress" style="width: ${percent}%;"></div>
         </div>
         `;
-    });
+  });
 
-    const totalContainer = document.querySelector('.charts-section .chart-container:last-child');
-    totalContainer.innerHTML = `<h3>Total Requirements</h3>
+  const totalContainer = document.querySelector('.charts-section .chart-container:last-child');
+  totalContainer.innerHTML = `<h3>Total Requirements</h3>
         <p class="chart-header">All requirements across organizations</p>
         <div class="progress-header">
             <p>Total</p>
@@ -159,75 +158,75 @@ async function updateProgressBars() {
         </div>`;
 }
 async function loadRecentSubmissions() {
-    try {
-        const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`);
-        const orgs = await response.json();
+  try {
+    const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`);
+    const orgs = await response.json();
 
-        const submissionsContainer = document.getElementById("submissions-list");
-        const header = submissionsContainer.querySelector("h3");
-        submissionsContainer.innerHTML = "";
-        submissionsContainer.appendChild(header);
+    const submissionsContainer = document.getElementById("submissions-list");
+    const header = submissionsContainer.querySelector("h3");
+    submissionsContainer.innerHTML = "";
+    submissionsContainer.appendChild(header);
 
-        let allRequirements = [];
+    let allRequirements = [];
 
-        orgs.forEach(org => {
-            const reqs = org.requirements || {};
-            Object.entries(reqs).forEach(([type, info]) => {
-                allRequirements.push({
-                    org_name: org.org_name,
-                    org_short: org.short_name,
-                    type: type.replace(/_/g,' '),
-                    last_updated: info.last_updated || 'N/A',
-                    tags: info.tags || [],
-                });
-            });
+    orgs.forEach(org => {
+      const reqs = org.requirements || {};
+      Object.entries(reqs).forEach(([type, info]) => {
+        allRequirements.push({
+          org_name: org.org_name,
+          org_short: org.short_name,
+          type: type.replace(/_/g, ' '),
+          last_updated: info.last_updated || 'N/A',
+          tags: info.tags || [],
         });
+      });
+    });
 
-        allRequirements.sort((a, b) => {
-            const dateA = new Date(a.last_updated);
-            const dateB = new Date(b.last_updated);
-            return dateB - dateA;
-        });
+    allRequirements.sort((a, b) => {
+      const dateA = new Date(a.last_updated);
+      const dateB = new Date(b.last_updated);
+      return dateB - dateA;
+    });
 
-        allRequirements.forEach(req => {
-            const item = document.createElement("div");
-            item.className = "submission-item";
+    allRequirements.forEach(req => {
+      const item = document.createElement("div");
+      item.className = "submission-item";
 
-            const subHeader = document.createElement("div");
-            subHeader.className = "sub-header";
-            subHeader.innerHTML = `
+      const subHeader = document.createElement("div");
+      subHeader.className = "sub-header";
+      subHeader.innerHTML = `
                 <div class="submission-name">${req.type}</div>
                 <div class="submission-tag">${req.tags.join(', ') || '—'}</div>
             `;
 
-            const subDetails = document.createElement("div");
-            subDetails.className = "sub-details";
-            subDetails.innerHTML = `
+      const subDetails = document.createElement("div");
+      subDetails.className = "sub-details";
+      subDetails.innerHTML = `
                 <div class="submission-org-name">${req.org_name}</div>
                 <div class="submission-org-shortname">${req.org_short}</div>
                 <div class="submission-date">${req.last_updated}</div>
             `;
 
-            // Collapsible
-            subDetails.style.display = "none";
-            subHeader.addEventListener("click", () => {
-                subDetails.style.display = subDetails.style.display === "none" ? "flex" : "none";
-            });
+      // Collapsible
+      subDetails.style.display = "none";
+      subHeader.addEventListener("click", () => {
+        subDetails.style.display = subDetails.style.display === "none" ? "flex" : "none";
+      });
 
-            item.appendChild(subHeader);
-            item.appendChild(subDetails);
-            submissionsContainer.appendChild(item);
-        });
+      item.appendChild(subHeader);
+      item.appendChild(subDetails);
+      submissionsContainer.appendChild(item);
+    });
 
-    } catch (err) {
-        console.error("Error loading recent submissions:", err);
-    }
+  } catch (err) {
+    console.error("Error loading recent submissions:", err);
+  }
 }
 
 
 loadDashboard()
   .then(() => loadOrganizations())
   .then(() => {
-      updateProgressBars();
-      loadRecentSubmissions();
+    updateProgressBars();
+    loadRecentSubmissions();
   });
