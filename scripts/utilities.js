@@ -13,7 +13,7 @@ export function loadPage(role, page, style, script, loadInto = "Content") {
   let pathToPage = `../../pages/${role}/${page}`;
   let pathToScript = `../../scripts/${role}/${script}`;
   let pathToStyle = `../../styles/${role}/${style}`;
-
+  const HOST = window.location.origin;
   fetch(pathToPage)
     .then((result) => result.text()) // Convert into html text
     .then((htmlText) => {
@@ -24,15 +24,21 @@ export function loadPage(role, page, style, script, loadInto = "Content") {
       document.getElementById(loadInto).innerHTML = mainContent.innerHTML;
 
 
+
+
       // Load CSS and Script into assigned to that page
       if (style) loadCSS(pathToStyle);
       if (script) loadScript(pathToScript);
     });
 
 
+
+
   function loadScript(src) {
     const existingScript = document.querySelector(`script[src="${src}"]`);
     if (existingScript) existingScript.remove();
+
+
 
 
     const script = document.createElement("script");
@@ -41,6 +47,8 @@ export function loadPage(role, page, style, script, loadInto = "Content") {
     script.defer = true;
     document.body.appendChild(script);
   }
+
+
 
 
   function loadCSS(href) {
@@ -77,75 +85,9 @@ document.addEventListener("click", (event) => {
 });
 
 
-document.addEventListener("click", async (event) => {
-  if (event.target && event.target.id === "submitFormBtn") {
-    event.preventDefault();
-
-
-    const requirement_name = document.getElementById("formTitle").value.trim();
-    const description = document.getElementById("formDescription").value.trim();
-
-
-    if (!requirement_name) return alert("Please enter a form title.");
-
-
-    const fields = [...document.querySelectorAll(".form-field")].map((field) => {
-      const question = field.querySelector(".field-title").value.trim();
-      const field_type = field.dataset.type || "text";
-      const required = true;
-      return { question, field_type, required };
-    });
-
-
-    const tags = [...document.querySelectorAll(".tag-item")].map(tag => {
-      return tag.textContent.replace("×", "").trim();
-    });
-
-
-    const formData = {
-      requirement_name,
-      description,
-      fields,
-      tags
-    };
-
-
-    try {
-
-      const response = await fetch(
-        `${HOST}/IT312-Mid-FinProject/server/php/forms.php`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        }
-      );
-
-
-      const result = await response.json();
-
-
-      if (result.success) {
-        alert("Form successfully saved!");
-        console.log("Inserted ID:", result.inserted_id);
 
 
 
-
-        document.getElementById("formTitle").value = "";
-        document.getElementById("formDescription").value = "";
-        document.getElementById("formFields").innerHTML = "";
-        document.getElementById("tagsList").innerHTML = "";
-        tags.length = 0;
-      } else {
-        alert("Error saving form: " + (result.error || "Unknown error"));
-      }
-    } catch (err) {
-      console.error("Fetch error:", err);
-      alert("Failed to connect to the server.");
-    }
-  }
-});
 
 /**
  * Fetches data from an endpoint.
@@ -154,19 +96,25 @@ document.addEventListener("click", async (event) => {
  * @param {String} URI
  * @returns
  */
-export async function fetchCollection(collection, URI = "") {
+export async function fetchCollection(collection, URI = "", Port = 8123) {
 
 
-  // Host machine's IP
+
+
+  const HOST = window.location.origin; // Host machine's IP
   const endpoint =
     URI ||
-    `${API_BASE_URL}/api/${collection}`;
+    `${HOST}:${Port}/api/${collection}`;
+
+
 
 
   return fetch(endpoint)
     .then((request) => request.json())
     .then((data) => data);
 }
+
+
 
 
 /**
@@ -184,12 +132,16 @@ export function setupPopup(popup, openBtn, closeBtn, onOpen = null, onClose = nu
   }
 
 
+
+
   if (closeBtn) {
     closeBtn.addEventListener("click", () => {
       popup.style.display = "none";
       if (typeof onOpen === "function") onClose();
     });
   }
+
+
 
 
   window.addEventListener("click", (event) => {
@@ -199,6 +151,3 @@ export function setupPopup(popup, openBtn, closeBtn, onOpen = null, onClose = nu
     }
   });
 }
-
-
-

@@ -1,136 +1,176 @@
+// -------------------- Load Organizations --------------------
+async function loadOrganizations() {
+  const orgSelect = document.getElementById("orgSelect");
+  const HOST = window.location.origin;
 
 
-function loadFormCreation() {
+  try {
+    const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`);
+    const orgs = await response.json();
 
-const formFields = document.getElementById("formFields");
-const addFieldBtn = document.getElementById("addFieldBtn");
-const fieldTypeSelect = document.getElementById("fieldType");
-const submitFormBtn = document.getElementById("submitFormBtn");
 
-let fieldCounter = 0;
-
-addFieldBtn.addEventListener("click", () => {
-  const fieldType = fieldTypeSelect.value;
-  fieldCounter++;
-
-  const field = document.createElement("div");
-  field.classList.add("form-field");
-
-  let fieldHTML = `
-    <label>Question ${fieldCounter}</label>
-    <input type="text" placeholder="Enter question title" class="field-title">
-  `;
-
-  if (fieldType === "textarea") {
-    fieldHTML += `<textarea disabled placeholder="Paragraph answer"></textarea>`;
-  } else if (fieldType === "checkbox" || fieldType === "radio") {
-    fieldHTML += `
-      <div class="options-container">
-        <div class="option-item">
-          <input type="${fieldType}" disabled>
-          <input type="text" class="option-text" placeholder="Option 1">
-          <button type="button" class="remove-option-btn">×</button>
-        </div>
-      </div>
-      <button type="button" class="add-option-btn">+ Add Option</button>
-    `;
-  } else {
-    fieldHTML += `<input type="text" disabled placeholder="Short answer">`;
+    orgs.forEach(org => {
+      const option = document.createElement("option");
+      option.value = org.short_name;
+      option.textContent = org.org_name;
+      orgSelect.appendChild(option);
+    });
+  } catch (err) {
+    console.error("Error loading organizations:", err);
   }
+}
 
-  fieldHTML += `<button class="remove-field-btn">Remove Question</button>`;
 
-  field.innerHTML = fieldHTML;
-  formFields.appendChild(field);
+loadOrganizations();
 
-  field.querySelector(".remove-field-btn").addEventListener("click", () => field.remove());
 
-  if (fieldType === "checkbox" || fieldType === "radio") {
-    const optionsContainer = field.querySelector(".options-container");
-    const addOptionBtn = field.querySelector(".add-option-btn");
+// -------------------- Dynamic Form Fields --------------------
+function loadFormCreation() {
+  const formFields = document.getElementById("formFields");
+  const addFieldBtn = document.getElementById("addFieldBtn");
+  const fieldTypeSelect = document.getElementById("fieldType");
+  let fieldCounter = 0;
 
-    addOptionBtn.addEventListener("click", () => {
-      const optionCount = optionsContainer.children.length + 1;
-      const optionItem = document.createElement("div");
-      optionItem.classList.add("option-item");
 
-      optionItem.innerHTML = `
-        <input type="${fieldType}" disabled>
-        <input type="text" class="option-text" placeholder="Option ${optionCount}">
-        <button type="button" class="remove-option-btn">×</button>
+  addFieldBtn.addEventListener("click", () => {
+    const fieldType = fieldTypeSelect.value;
+    fieldCounter++;
+
+
+    const field = document.createElement("div");
+    field.classList.add("form-field");
+    field.dataset.type = fieldType;
+
+
+    let fieldHTML = `<label>Question ${fieldCounter}</label>
+      <input type="text" placeholder="Enter question title" class="field-title" required>`;
+
+
+    if (fieldType === "textarea") {
+      fieldHTML += `<textarea disabled placeholder="Paragraph answer"></textarea>`;
+    } else if (fieldType === "checkbox" || fieldType === "radio") {
+      fieldHTML += `
+        <div class="options-container">
+          <div class="option-item">
+            <input type="${fieldType}" disabled>
+            <input type="text" class="option-text" placeholder="Option 1">
+            <button type="button" class="remove-option-btn">×</button>
+          </div>
+        </div>
+        <button type="button" class="add-option-btn">+ Add Option</button>
       `;
+    } else {
+      fieldHTML += `<input type="text" disabled placeholder="Short answer">`;
+    }
 
-      optionItem.querySelector(".remove-option-btn").addEventListener("click", () => {
-        optionItem.remove();
+
+    fieldHTML += `<button class="remove-field-btn">Remove Question</button>`;
+    field.innerHTML = fieldHTML;
+    formFields.appendChild(field);
+
+
+    field.querySelector(".remove-field-btn").addEventListener("click", () => field.remove());
+
+
+    if (fieldType === "checkbox" || fieldType === "radio") {
+      const optionsContainer = field.querySelector(".options-container");
+      const addOptionBtn = field.querySelector(".add-option-btn");
+
+
+      addOptionBtn.addEventListener("click", () => {
+        const optionCount = optionsContainer.children.length + 1;
+        const optionItem = document.createElement("div");
+        optionItem.classList.add("option-item");
+
+
+        optionItem.innerHTML = `
+          <input type="${fieldType}" disabled>
+          <input type="text" class="option-text" placeholder="Option ${optionCount}">
+          <button type="button" class="remove-option-btn">×</button>
+        `;
+        optionItem.querySelector(".remove-option-btn").addEventListener("click", () => optionItem.remove());
+        optionsContainer.appendChild(optionItem);
       });
 
-      optionsContainer.appendChild(optionItem);
-    });
 
-    field.querySelector(".remove-option-btn").addEventListener("click", (e) => {
-      e.target.parentElement.remove();
-    });
-  }
-});
-
-
-}
-const tagInput = document.getElementById("tagInput");
-const tagsList = document.getElementById("tagsList");
-
-let tags = [];
-
-function renderTags() {
-  tagsList.innerHTML = "";
-  tags.forEach((tag, index) => {
-    const tagEl = document.createElement("div");
-    tagEl.classList.add("tag-item");
-
-    tagEl.innerHTML = `
-      ${tag}
-      <button type="button" class="remove-tag-btn" data-index="${index}">×</button>
-    `;
-
-    tagsList.appendChild(tagEl);
-  });
-
-
-  document.querySelectorAll(".remove-tag-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const index = btn.getAttribute("data-index");
-      tags.splice(index, 1);
-      renderTags();
-    });
-  });
-}
-document.querySelectorAll('.organization-item .org-header').forEach(header => {
-  header.addEventListener('click', () => {
-    const card = header.parentElement;
-    const dropdown = card.querySelector('.org-dropdown');
-
-    card.classList.toggle('open');
-    if (card.classList.contains('open')) {
-      dropdown.style.maxHeight = dropdown.scrollHeight + 'px';
-    } else {
-      dropdown.style.maxHeight = '0px';
+      field.querySelector(".remove-option-btn").addEventListener("click", (e) => e.target.parentElement.remove());
     }
   });
-});
+}
 
-
-tagInput.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
-    const val = tagInput.value.trim();
-    if (val === "") return;
-
-    if (!tags.includes(val)) {
-      tags.push(val);
-      renderTags();
-    }
-
-    tagInput.value = "";
-    e.preventDefault();
-  }
-});
 
 loadFormCreation();
+
+
+document.getElementById("submitFormBtn").addEventListener("click", async (event) => {
+  event.preventDefault();
+
+
+  const requirement_name = document.getElementById("formTitle").value.trim();
+  const description = document.getElementById("formDescription").value.trim();
+
+
+  if (!requirement_name) return alert("Please enter a form title.");
+
+
+
+
+    const formFieldsElements = [...document.querySelectorAll(".form-field")];
+
+
+    if (formFieldsElements.length === 0) {
+      return alert("Please add at least one question.");
+    }
+  const fields = [...document.querySelectorAll(".form-field")].map((field) => {
+    const question = field.querySelector(".field-title").value.trim();
+    const field_type = field.dataset.type || "text";
+    const required = true;
+    return { question, field_type, required };
+  });
+
+
+  const tags = document.getElementById("tagInput").value
+    .split(",")
+    .map(tag => tag.trim())
+    .filter(tag => tag);
+
+
+  const selectedOrgOptions = [...document.getElementById("orgSelect").selectedOptions];
+  const assigned_to = selectedOrgOptions.length > 0
+                      ? selectedOrgOptions.map(opt => opt.value)
+                      : ["all"];
+
+
+  const formData = { requirement_name, description, fields, tags, assigned_to,
+  };
+
+
+  try {
+    const HOST = window.location.origin;
+    const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/forms.php`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+
+
+    const result = await response.json();
+
+
+    if (result.success) {
+      alert("Form successfully saved!");
+
+
+      document.getElementById("formTitle").value = "";
+      document.getElementById("formDescription").value = "";
+      document.getElementById("formFields").innerHTML = "";
+      document.getElementById("tagInput").value = "";
+      document.getElementById("orgSelect").selectedIndex = -1;
+    } else {
+      alert("Error saving form: " + (result.error || "Unknown error"));
+    }
+  } catch (err) {
+    console.error("Fetch error:", err);
+    alert("Failed to connect to the server.");
+  }
+});
