@@ -270,7 +270,7 @@ body {
 
 th, td {
     text-align: center;
-    border-bottom: 1px solid var(--outline-color);
+    border-bottom: 3px solid var(--outline-color);
     border-spacing: 0;
     padding: 1rem;
     margin: 0;
