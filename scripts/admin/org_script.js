@@ -38,6 +38,7 @@ export async function renderOrgs() {
         )
     })
     document.getElementById('AddOrgForm').addEventListener('submit', (e) => handleAddOrg(e))
+    document.getElementById('UserForm').addEventListener('submit', (e) => handleSaveEditOrg(e))
 }
 
 function makeActionButtons(item) {
@@ -53,9 +54,6 @@ function makeActionButtons(item) {
 
     // Assign functions
     viewButton.addEventListener('click', (e) => {
-        let xButton = document.getElementById("XPopup")
-        let popup = document.getElementById("OrgsPopup")
-        setupPopup(popup, e.currentTarget, xButton)
         handleView(e.currentTarget)
     })
     deleteButton.addEventListener('click', (e) => handleDelete(e.currentTarget))
@@ -77,6 +75,12 @@ function handleView(button) {
 
     // Load data into form
     populateOrgForm(org);
+    let xButton = document.getElementById("XPopup")
+    let popup = document.getElementById("EditOrgPopup")
+
+    popup.dataset.orgId = orgId
+
+    setupPopup(popup, button, xButton, '', onClose)
 
 }
 
@@ -165,7 +169,7 @@ async function handleAddOrg(e) {
 }
 
 function handleDelete(button) {
-    console.log(button);
+    deleteOrganization(button.dataset.orgId)
 }
 
 function handleEdit() {
@@ -173,5 +177,107 @@ function handleEdit() {
         .forEach(el => el.disabled = false);
 
     document.getElementById("SaveButton").classList.remove("Hidden");
-    document.getElementById("AddOfficerButton").classList.remove("Hidden");
+}
+
+function onClose() {
+    console.log("Closing popup");
+
+    document.querySelectorAll("#UserForm input, #UserForm textarea")
+        .forEach(el => {
+            console.log("Disabling:", el);
+            el.disabled = true;
+        });
+
+    document.getElementById("EditButton").classList.remove("Hidden");
+    document.getElementById("SaveButton").classList.add("Hidden");
+}
+
+async function handleSaveEditOrg(e) {
+    e.preventDefault();
+
+    const orgId = document.getElementById("EditOrgPopup").dataset.orgId;
+
+    const payload = {
+        org_name: document.getElementById("OrgName").value.trim(),
+        short_name: document.getElementById("ShortName").value.trim(),
+        school: document.getElementById("School").value.trim(),
+        official_email: document.getElementById("OfficialEmail").value.trim(),
+        org_type: document.getElementById("OrgType").value.trim(),
+        description: document.getElementById("Description").value.trim(),
+
+        adviser: {
+            name: document.getElementById("AdviserName").value.trim(),
+            email: document.getElementById("AdviserEmail").value.trim()
+        },
+
+        officers: [
+            {
+                name: document.getElementById("Officer1Name").value.trim(),
+                position: document.getElementById("Officer1Position").value.trim()
+            },
+            {
+                name: document.getElementById("Officer2Name").value.trim(),
+                position: document.getElementById("Officer2Position").value.trim()
+            }
+        ]
+    };
+
+    try {
+        const res = await fetch(`${API_BASE_URL}/api/orgs/${orgId}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify(payload)
+        });
+
+        const result = await res.json();
+
+        if (result.success) {
+            alert("Organization updated successfully");
+
+            // Optional: refresh your org list
+            // loadOrgs();
+
+            // Close popup
+            document.getElementById("EditOrgPopup").style.display = "none";
+
+            // Reset fields to disabled
+            document.querySelectorAll("#UserForm input, #UserForm textarea")
+                .forEach(el => el.disabled = true);
+
+            document.getElementById("EditButton").classList.remove("Hidden");
+            document.getElementById("SaveButton").classList.add("Hidden");
+
+        } else {
+            alert(result.message || "Failed to update organization");
+        }
+
+    } catch (err) {
+        console.error(err);
+        alert("Unexpected error while updating organization");
+    }
+}
+
+function deleteOrganization(id) {
+    console.log(id);
+
+    const confirmed = window.confirm("Are you sure you want to delete this organization?");
+    if (!confirmed) return;
+
+    fetch(`${API_BASE_URL}/api/orgs/${id}`, {
+        method: 'DELETE'
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert("Organization deleted successfully!");
+                // Optionally refresh the list or redirect
+            } else {
+                alert("Error: " + data.message);
+            }
+        })
+        .catch(err => {
+            console.error("Delete error:", err);
+            alert("Server error occurred.");
+        });
 }
