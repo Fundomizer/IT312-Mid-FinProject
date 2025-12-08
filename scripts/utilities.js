@@ -13,7 +13,7 @@ export function loadPage(role, page, style, script, loadInto = "Content") {
   let pathToPage = `../../pages/${role}/${page}`;
   let pathToScript = `../../scripts/${role}/${script}`;
   let pathToStyle = `../../styles/${role}/${style}`;
-  const HOST = window.location.origin;
+
   fetch(pathToPage)
     .then((result) => result.text()) // Convert into html text
     .then((htmlText) => {
@@ -23,23 +23,14 @@ export function loadPage(role, page, style, script, loadInto = "Content") {
       const mainContent = html.querySelector("#PageContent");
       document.getElementById(loadInto).innerHTML = mainContent.innerHTML;
 
-
-
-
       // Load CSS and Script into assigned to that page
       if (style) loadCSS(pathToStyle);
       if (script) loadScript(pathToScript);
     });
 
-
-
-
   function loadScript(src) {
     const existingScript = document.querySelector(`script[src="${src}"]`);
     if (existingScript) existingScript.remove();
-
-
-
 
     const script = document.createElement("script");
     script.src = `${src}?v=${Date.now()}`; // cache busting to ensure latest version is loaded
@@ -47,9 +38,6 @@ export function loadPage(role, page, style, script, loadInto = "Content") {
     script.defer = true;
     document.body.appendChild(script);
   }
-
-
-
 
   function loadCSS(href) {
     if (!document.querySelector(`link[href="${href}"]`)) {
@@ -131,23 +119,17 @@ export function setupPopup(popup, openBtn, closeBtn, onOpen = null, onClose = nu
     });
   }
 
-
-
-
   if (closeBtn) {
     closeBtn.addEventListener("click", () => {
       popup.style.display = "none";
-      if (typeof onOpen === "function") onClose();
+      if (typeof onClose === "function") onClose();
     });
   }
-
-
-
 
   window.addEventListener("click", (event) => {
     if (event.target === popup) {
       popup.style.display = "none";
-      if (typeof onOpen === "function") onClose();
+      if (typeof onClose === "function") onClose();
     }
   });
 }

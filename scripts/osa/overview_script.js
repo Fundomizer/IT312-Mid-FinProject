@@ -1,4 +1,4 @@
-import { HOST } from "../config.js";
+  const HOST = window.location.origin;
 
 async function loadOrganizations() {
   try {

@@ -26,6 +26,9 @@ async function loadDashboard() {
 // For the apply and clear filter buttons to work
 let filters = null;
 
+// Store reference to form module
+let formModule = null;
+
 async function loadForms() {
     loadPage('org', 'assigned_form_page.html')
 
@@ -107,7 +110,7 @@ async function loadForms() {
 
     function clearFormFilters() {
         selectedTags.clear();
-        currentSortOrder = 'none';
+        currentSortOrder = 'asc';
         document.querySelectorAll('.TagsContainer input[type="checkbox"]').forEach(checkbox => {
             checkbox.checked = false;
         });
@@ -118,6 +121,38 @@ async function loadForms() {
         handleFilter();
     }
     
+    function handleFilter() {
+        const term = document.getElementById('SearchInput').value.toLowerCase();
+
+        let filtered = forms;
+
+        // Search filter
+        if (term) {
+            filtered = filtered.filter(form =>
+                form.requirement_name?.toLowerCase().includes(term) ||
+                form.description?.toLowerCase().includes(term) ||
+                (form.tags && form.tags.some(tag => tag.toLowerCase().includes(term)))
+            );
+        }
+
+        // Tag filter
+        if (selectedTags.size > 0) {
+            filtered = filtered.filter(form => {
+                if (!form.tags) return false;
+                return form.tags.some(tag => selectedTags.has(tag));
+            });
+        }
+
+        // Sort by name
+        if (currentSortOrder === 'asc') {
+            filtered.sort((a, b) => a.requirement_name.localeCompare(b.requirement_name));
+        } else if (currentSortOrder === 'desc') {
+            filtered.sort((a, b) => b.requirement_name.localeCompare(a.requirement_name));
+        }
+
+        displayForm(filtered);
+    }
+
     function createForm(form) {
         // Parent wrapper
         const wrapper = document.createElement("div");
@@ -196,6 +231,7 @@ async function loadForms() {
 
             const button = document.createElement("button");
             button.className = "StyledButton";
+            button.dataset.formId = form._id;
 
             const iconSpan = document.createElement("span");
             const formIcon = document.createElement("img");
@@ -214,37 +250,115 @@ async function loadForms() {
         }
     }
 
-    function handleFilter() {
-        const term = document.getElementById('SearchInput').value.toLowerCase();
+    return {
+        populatePopupForm: function(form) {
+            const popup = document.querySelector(".PopupForm");
+            if (!popup) return;
 
-        let filtered = forms;
+            // Set form ID as data attribute
+            popup.dataset.formId = form._id;
 
-        // Search filter
-        if (term) {
-            filtered = filtered.filter(form =>
-                form.requirement_name?.toLowerCase().includes(term) ||
-                form.description?.toLowerCase().includes(term) ||
-                (form.tags && form.tags.some(tag => tag.toLowerCase().includes(term)))
-            );
-        }
+            // Find the form element inside popup
+            const formElement = popup.querySelector(".Form");
+            if (!formElement) return;
 
-        // Tag filter
-        if (selectedTags.size > 0) {
-            filtered = filtered.filter(form => {
-                if (!form.tags) return false;
-                return form.tags.some(tag => selectedTags.has(tag));
+            // Clear existing content
+            formElement.innerHTML = '';
+
+            // Create title
+            const titleLabel = document.createElement("label");
+            titleLabel.htmlFor = "FormTitle";
+            const titleH3 = document.createElement("h3");
+            titleH3.textContent = form.requirement_name;
+            titleLabel.appendChild(titleH3);
+            formElement.appendChild(titleLabel);
+            formElement.appendChild(document.createElement("br"));
+
+            // Create description
+            const descLabel = document.createElement("label");
+            descLabel.textContent = form.description;
+            formElement.appendChild(descLabel);
+            formElement.appendChild(document.createElement("br"));
+
+            // Create fields dynamically
+            form.fields.forEach((field, index) => {
+                const formFields = document.createElement("div");
+                formFields.className = "FormFields";
+
+                const fieldLabel = document.createElement("label");
+                fieldLabel.htmlFor = `field_${index}`;
+                const fieldSpan = document.createElement("span");
+                fieldSpan.textContent = field.question;
+                if (field.required) {
+                    fieldSpan.textContent += " *";
+                }
+                fieldLabel.appendChild(fieldSpan);
+
+                let inputElement;
+                
+                // Create appropriate input based on field_type
+                switch(field.field_type) {
+                    case 'number':
+                        inputElement = document.createElement("input");
+                        inputElement.type = "number";
+                        inputElement.id = `field_${index}`;
+                        inputElement.required = field.required;
+                        break;
+                    case 'date':
+                        inputElement = document.createElement("input");
+                        inputElement.type = "date";
+                        inputElement.id = `field_${index}`;
+                        inputElement.required = field.required;
+                        break;
+                    case 'array':
+                        inputElement = document.createElement("textarea");
+                        inputElement.id = `field_${index}`;
+                        inputElement.required = field.required;
+                        inputElement.placeholder = "Enter items separated by commas";
+                        break;
+                    case 'object':
+                        inputElement = document.createElement("textarea");
+                        inputElement.id = `field_${index}`;
+                        inputElement.required = field.required;
+                        inputElement.placeholder = "Enter JSON object";
+                        break;
+                    case 'text':
+                    default:
+                        inputElement = document.createElement("input");
+                        inputElement.type = "text";
+                        inputElement.id = `field_${index}`;
+                        inputElement.required = field.required;
+                        break;
+                }
+
+                formFields.appendChild(fieldLabel);
+                formFields.appendChild(inputElement);
+                formElement.appendChild(formFields);
             });
-        }
 
-        // Sort by name
-        if (currentSortOrder === 'asc') {
-            filtered.sort((a, b) => a.requirement_name.localeCompare(b.requirement_name));
-        } else if (currentSortOrder === 'desc') {
-            filtered.sort((a, b) => b.requirement_name.localeCompare(a.requirement_name));
-        }
+            // Add file upload section
+            const uploadDiv = document.createElement("div");
+            uploadDiv.className = "FormUpload";
 
-        displayForm(filtered);
-    }
+            const uploadSpan = document.createElement("span");
+            uploadSpan.textContent = "Supporting Documents";
+
+            const uploadLabel = document.createElement("label");
+            uploadLabel.htmlFor = "UploadButton";
+            uploadLabel.textContent = "Upload File";
+
+            const uploadInput = document.createElement("input");
+            uploadInput.type = "file";
+            uploadInput.id = "UploadButton";
+            uploadInput.multiple = true;
+
+            uploadDiv.appendChild(uploadSpan);
+            uploadDiv.appendChild(uploadLabel);
+            uploadDiv.appendChild(uploadInput);
+            formElement.appendChild(uploadDiv);
+        },
+        forms: forms
+    };
 }
 
 // this fucntion is currently reading all requirements from
@@ -350,7 +464,7 @@ async function loadHistory() {
 
 
 
-function openForm() {
+function openForm(formId) {
     const popup = document.querySelector(".PopupForm");
     const overlay = document.getElementById("PopupOverlay");
     if (popup && overlay) {
@@ -404,13 +518,25 @@ function applyFilter() {
 
 // Assign event handlers for navigation
 if (dashboard) dashboard.addEventListener('click', loadDashboard)
-if (forms) forms.addEventListener('click', loadForms)
+if (forms) forms.addEventListener('click', async () => {formModule = await loadForms();})
 if (history) history.addEventListener('click', loadHistory)
 
 // EventHandlers for the forms
 document.addEventListener("click", (e) => {
     if (e.target.closest(".StyledButton")) {
-        openForm();
+        const button = e.target.closest(".StyledButton");
+        const formId = button.dataset.formId;
+        
+        if (formId && formModule) {
+            // Find the form in the cached forms data
+            const selectedForm = formModule.forms.find(f => f._id === formId);
+            
+            if (selectedForm) {
+                formModule.populatePopupForm(selectedForm);
+            }
+        }
+
+        openForm(formId);
     }
     if (e.target.id === "CancelForm") {
         closeForm();
@@ -427,6 +553,11 @@ document.addEventListener("click", (e) => {
     }
     if (e.target.id === "ClearFilterButton") {
         clearFilters();
+    }
+    if (e.target.id === "SubmitForm") {
+        closeForm();
+        // Submit form data to database
+        // Remove form card from assigned forms
     }
 });
 

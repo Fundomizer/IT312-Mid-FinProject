@@ -1,9 +1,11 @@
+  const HOST = window.location.origin;
+
 const searchInput = document.getElementById("searchInput");
 const filterLocation = document.getElementById("filterLocation");
 const clearFiltersBtn = document.getElementById("clearFilters");
 const totalCount = document.getElementById("totalCount");
 const shownCount = document.getElementById("shownCount");
-const HOST = window.location.origin;
+
 let allItems = [];
 
 async function loadItems() {

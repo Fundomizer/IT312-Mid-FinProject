@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "./config.js";
+import {HOST, API_BASE_URL } from "./config.js";
 
 const sideNavButton = document.getElementById("ToggleSideNavButton");
 const sideNav = document.getElementById("SideNav");
@@ -28,12 +28,17 @@ logoutButton.addEventListener("click", () => {
     credentials: "include"
   })
     .then(res => res.json())
-    .then(data => {
+    .then(async data => {
       console.log(data);
       if (data.success) {
+        
+        await fetch(`${HOST}/IT312-Mid-FinProject/server/php/logout.php`, {
+          method: "POST",
+          credentials: "include"
+        });
+
         window.location.href = "/IT312-Mid-FinProject/index.html";
       } else {
-
         alert("Logout failed");
       }
     })

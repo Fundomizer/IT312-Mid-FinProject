@@ -5,12 +5,12 @@ const idInput = document.getElementById("IdInput");
 const passwordInput = document.getElementById("PasswordInput");
 const loginButton = document.getElementById("LoginButton");
 const googleLogButton = document.getElementById("GoogleLogin");
-const loginForm = document.getElementById('LoginForm')
+const loginForm = document.getElementById('LoginForm');
 
 loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(loginForm).entries());
-
+    
     console.log("Raw ", data);
     console.log("Stringify ", JSON.stringify(data));
 
@@ -19,17 +19,38 @@ loginForm.addEventListener('submit', (e) => {
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify(data)
-    }).then(res => res.json())
-        .then(auth => {
-            console.log(auth);
-            if (auth.success) {
-                window.location.href = `${HOST}/IT312-Mid-FinProject${auth.redirect}`
-            } else {
-                alert('Invalid credentials')
-            }
-        })
-        .catch(err => alert("Login has hit an unexpected error"));
-})
+    })
+    .then(res => res.json())
+    .then(auth => {
+        console.log(auth);
+
+        if (!auth.success) {
+            alert('Invalid credentials');
+            return;
+        }
+
+
+        if (auth.role === 'osa') {
+            console.log("Starting PHP session for OSA");
+            fetch(`${HOST}/IT312-Mid-FinProject/server/php/start_session.php`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include", 
+                body: JSON.stringify({ email: data.email })
+            })
+            .then(() => {
+                window.location.href = `${HOST}/IT312-Mid-FinProject${auth.redirect}`;
+            })
+            .catch(err => {
+                console.error("Failed to start PHP session:", err);
+                alert("Failed to start session.");
+            });
+        } else {
+            window.location.href = `${HOST}/IT312-Mid-FinProject${auth.redirect}`;
+        }
+    })
+    .catch(err => alert("Login has hit an unexpected error"));
+});
 
 googleLogButton.addEventListener("click", () => {
     // Add google login through here

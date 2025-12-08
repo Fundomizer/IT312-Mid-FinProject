@@ -62,41 +62,41 @@
                 </div>
             </div>
         </div>
-        
+        <div id="PopupOverlay"></div>
+        <div class="PopupForm"> <!-- Populate Form -->
+            <button id="EkisButton"><img src="../../assets/images/org_icons/close.png"></button>
+
+            <form class="Form">
+                <label for="FormTitle"><h3>(Form Title)</h3></label><br>
+                <label>(Form Description)</label><br>
+                <div class="FormFields">
+                    <label for="Field"><span>(Field)</span></label>
+                    <input type="text" id="FormAssigned">
+                </div>
+                <div class="FormFields">
+                    <label for="Field"><span>(Field)</span></label>
+                    <input type="text" id="FormAssigned">
+                </div>
+                <div class="FormUpload">
+                    <span>Supporting Documents</span>
+                    <label for="UploadButton">Upload File</label>
+                    <input type="file" id="UploadButton">
+                </div>
+            </form>
+            <div class="FormButtons">
+                <button type="button" id="CancelForm">Cancel</button>
+                <button type="submit" id="SubmitForm">Submit Form</button>
+            </div>
+        </div>
+
         <div class="Card">
             <div>
-                <h2>Forms Assigned to Your organization</h2>
+                <h4>Forms Assigned to Your organization</h4>
                 <p>
                     Fill out these structured forms to submit requirements. Forms ensure all necessary information is
                     captured
                     for easy searching by OSA
                 </p>
-            </div>
-            <div id="PopupOverlay"></div>
-            <div class="PopupForm">
-                <button id="EkisButton"><img src="../../assets/images/org_icons/close.png"></button>
-
-                <form class="Form">
-                    <label for="FormTitle"><h3>(Form Title)</h3></label><br>
-                    <label>(Form Description)</label><br>
-                    <div class="FormFields">
-                        <label for="Field"><span>(Field)</span></label>
-                        <input type="text" id="FormAssigned">
-                    </div>
-                    <div class="FormFields">
-                        <label for="Field"><span>(Field)</span></label>
-                        <input type="text" id="FormAssigned">
-                    </div>
-                    <div class="FormUpload">
-                        <span>Supporting Documents</span>
-                        <label for="UploadButton">Upload File</label>
-                        <input type="file" id="UploadButton">
-                    </div>
-                    <div class="FormButtons">
-                        <button type="button" id="CancelForm">Cancel</button>
-                        <button type="submit" id="SubmitForm">Submit Form</button>
-                    </div>
-                </form>
             </div>
             <div id="Forms">
 
