@@ -1,4 +1,4 @@
-import { HOST } from "../config";
+  const HOST = window.location.origin;
 
 let selectedForm = null;
 async function loadActiveForms() {
