@@ -45,14 +45,6 @@
                 </div>
                 <label><h3>Tags:</h3></label>
                 <div class="TagsContainer" id="TagsContainer"> <!-- Populate Tags -->
-                    <input type="checkbox" id="TagsButton1">
-                    <label for="TagsButton1">Tag</label>
-                    <input type="checkbox" id="TagsButton2">
-                    <label for="TagsButton2">Tag</label>
-                    <input type="checkbox" id="TagsButton3">
-                    <label for="TagsButton3">Tag</label>
-                    <input type="checkbox" id="TagsButton4">
-                    <label for="TagsButton4">Tag</label>   
                 </div>
                 <div class="FilterActionButtons">
                     <button id="ClearFilterButton">Clear Filter</button>
@@ -61,6 +53,32 @@
             </div>
         </div>
         
+        <div class="PopupForm"> <!-- Populate Form -->
+            <button id="EkisButton"><img src="../../assets/images/org_icons/close.png"></button>
+
+            <form class="Form">
+                <label for="FormTitle"><h3>(Form Title)</h3></label><br>
+                <label>(Form Description)</label><br>
+                <div class="FormFields">
+                    <label for="Field"><span>(Field)</span></label>
+                    <input type="text" id="FormAssigned">
+                </div>
+                <div class="FormFields">
+                    <label for="Field"><span>(Field)</span></label>
+                    <input type="text" id="FormAssigned">
+                </div>
+                <div class="FormUpload">
+                    <span>Supporting Documents</span>
+                    <label for="UploadButton">Upload File</label>
+                    <input type="file" id="UploadButton">
+                </div>
+            </form>
+            <div class="FormButtons">
+                <button id="CancelForm">Cancel</button>
+                <button type="submit" id="SubmitForm">Submit Form</button>
+            </div>
+        </div>
+
         <div class="Card">
             <div>
                 <h4>Forms Assigned to Your organization</h4>
@@ -70,32 +88,7 @@
                     for easy searching by OSA
                 </p>
             </div>
-            <div class="PopupForm">
-                <button id="EkisButton"><img src="../../assets/images/org_icons/close.png"></button>
 
-                <form class="Form">
-                    <label for="FormTitle"><h3>(Form Title)</h3></label><br>
-                    <label>(Form Description)</label><br>
-                    <div class="FormFields">
-                        <label for="Field"><span>(Field)</span></label>
-                        <input type="text" id="FormAssigned">
-                    </div>
-                    <div class="FormFields">
-                        <label for="Field"><span>(Field)</span></label>
-                        <input type="text" id="FormAssigned">
-                    </div>
-                    <div class="FormUpload">
-                        <span>Supporting Documents</span>
-                        <label for="UploadButton">Upload File</label>
-                        <input type="file" id="UploadButton">
-                    </div>
-                    <div class="FormButtons">
-                        <button id="CancelForm">Cancel</button>
-                        <button type="submit" id="SubmitForm">Submit Form</button>
-                    </div>
-                </form>
-
-            </div>
             <div id="Forms">
 
             </div>
