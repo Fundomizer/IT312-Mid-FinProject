@@ -1,12 +1,15 @@
 import { loadPage, fetchCollection, setupPopup } from "../utilities.js"
 import { createButton, createTableRow } from "../components.js"
 import { HOST, API_BASE_URL } from "../config.js"
+import { renderOrgs } from "./org_script.js"
 
 const dashbaordNavBut = document.getElementById("dashboardButton")
 const usersNavBut = document.getElementById("usersButton")
 const logsNavBut = document.getElementById("activityLogButton")
+const orgsBut = document.getElementById("orgsButton")
 let users = []
 let logs = []
+let orgs = []
 
 async function loadDashboardPage() {
 
@@ -61,8 +64,6 @@ async function loadUsersPage() {
             let container = document.createElement("td")
             let viewButton = createButton("View")
             let deleteButton = createButton("Delete")
-
-
 
             viewButton.dataset.userId = item._id;
             deleteButton.dataset.userId = item._id;
@@ -169,8 +170,6 @@ async function loadUsersPage() {
             }
 
             let userId = button.dataset.userId
-
-
 
             fetch(`${API_BASE_URL}/api/users/${userId}`, {
                 method: "DELETE"
@@ -317,10 +316,20 @@ async function loadLogsPage() {
     }
 }
 
+async function loadOrgsPage() {
+
+    loadPage("admin", "student_org_page.html", "", "")
+
+    renderOrgs()
+
+}
+
 dashbaordNavBut.addEventListener('click', loadDashboardPage)
 
 usersNavBut.addEventListener('click', loadUsersPage)
 
 logsNavBut.addEventListener('click', loadLogsPage)
+
+orgsBut.addEventListener('click', loadOrgsPage)
 
 loadDashboardPage()

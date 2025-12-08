@@ -1,0 +1,177 @@
+import { fetchCollection, setupPopup } from "../utilities";
+import { createTableRow, createButton } from "../components";
+import { API_BASE_URL } from "../config";
+
+let orgs = []
+
+export async function renderOrgs() {
+    orgs = await fetchCollection("student_organization")
+    const table = document.getElementById('OrgsTableView')
+
+    console.log(table);
+
+    table.innerHTML = `
+                        <tr>
+                        <th>Organization name</th>
+                        <th>Official email</th>
+                        <th>School</th>
+                        <th>Description</th>
+                        </tr>
+                    `
+
+    orgs.forEach(item => {
+        let tr = createTableRow(item, ["org_name", "official_email", "school", "description"])
+
+        let action = makeActionButtons(item)
+
+        tr.appendChild(action)
+        table.appendChild(tr)
+    });
+
+    // Assign events
+    document.getElementById("EditButton").addEventListener("click", handleEdit);
+    document.getElementById('AddOrgButton').addEventListener('click', (e) => {
+        setupPopup(
+            document.getElementById('AddOrgPopup'),
+            e.currentTarget,
+            document.getElementById('XAddOrgPopup'),
+        )
+    })
+    document.getElementById('AddOrgForm').addEventListener('submit', (e) => handleAddOrg(e))
+}
+
+function makeActionButtons(item) {
+    let viewButton = createButton("View")
+    let deleteButton = createButton("Delete")
+    let td = document.createElement('td')
+
+    viewButton.dataset.orgId = item._id
+    deleteButton.dataset.orgId = item._id
+
+    td.appendChild(viewButton)
+    td.appendChild(deleteButton)
+
+    // Assign functions
+    viewButton.addEventListener('click', (e) => {
+        let xButton = document.getElementById("XPopup")
+        let popup = document.getElementById("OrgsPopup")
+        setupPopup(popup, e.currentTarget, xButton)
+        handleView(e.currentTarget)
+    })
+    deleteButton.addEventListener('click', (e) => handleDelete(e.currentTarget))
+
+    return td
+}
+
+function handleView(button) {
+
+    const orgId = button.dataset.orgId;
+
+    // Find the org object from the stored list
+    const org = orgs.find(o => o._id === orgId);
+
+    if (!org) {
+        console.error("Org not found:", orgId);
+        return;
+    }
+
+    // Load data into form
+    populateOrgForm(org);
+
+}
+
+function populateOrgForm(org) {
+    // Organization info
+    document.getElementById("OrgName").value = org.org_name || "";
+    document.getElementById("ShortName").value = org.short_name || "";
+    document.getElementById("School").value = org.school || "";
+    document.getElementById("OfficialEmail").value = org.official_email || "";
+    document.getElementById("OrgType").value = org.org_type || "";
+    document.getElementById("Description").value = org.description || "";
+
+    // Adviser info
+    document.getElementById("AdviserName").value = org.adviser?.name || "";
+    document.getElementById("AdviserEmail").value = org.adviser?.email || "";
+
+    // Officers (fixed 2)
+    const officer1 = org.officers?.[0] || {};
+    const officer2 = org.officers?.[1] || {};
+
+    document.getElementById("Officer1Name").value = officer1.name || "";
+    document.getElementById("Officer1Position").value = officer1.position || "";
+
+    document.getElementById("Officer2Name").value = officer2.name || "";
+    document.getElementById("Officer2Position").value = officer2.position || "";
+}
+
+async function handleAddOrg(e) {
+    e.preventDefault();
+    const form = document.getElementById("AddOrgForm");
+    const formData = new FormData(form);
+
+    // Convert FormData → plain object
+    const data = Object.fromEntries(formData.entries());
+
+    // Build adviser object
+    const adviser = {
+        name: data.adviser_name,
+        email: data.adviser_email
+    };
+
+    // Build officers array
+    const officers = [
+        {
+            name: data.officer1_name,
+            position: data.officer1_position
+        },
+        {
+            name: data.officer2_name,
+            position: data.officer2_position
+        }
+    ];
+
+    // Final payload
+    const payload = {
+        org_name: data.org_name,
+        short_name: data.short_name,
+        school: data.school,
+        official_email: data.official_email,
+        org_type: data.org_type,
+        description: data.description,
+        adviser,
+        officers
+    };
+
+    try {
+        const res = await fetch(`${API_BASE_URL}/api/orgs`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify(payload)
+        });
+
+        const result = await res.json();
+
+        if (result.success) {
+            alert("Organization created successfully");
+        } else {
+            alert(result.message || "Failed to create organization");
+        }
+
+    } catch (err) {
+        console.error(err);
+        alert("Unexpected error while creating organization");
+    }
+}
+
+function handleDelete(button) {
+    console.log(button);
+}
+
+function handleEdit() {
+    document.querySelectorAll("#UserForm input, #UserForm textarea")
+        .forEach(el => el.disabled = false);
+
+    document.getElementById("SaveButton").classList.remove("Hidden");
+    document.getElementById("AddOfficerButton").classList.remove("Hidden");
+}
