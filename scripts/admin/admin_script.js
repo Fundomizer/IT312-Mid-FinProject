@@ -1,7 +1,7 @@
 import { loadPage, fetchCollection, setupPopup } from "../utilities.js"
 import { createButton, createTableRow } from "../components.js"
 import { HOST, API_BASE_URL } from "../config.js"
-import { renderOrgs } from "./org_script.js"
+import { displayOrgs } from "./org_script.js"
 
 const dashbaordNavBut = document.getElementById("dashboardButton")
 const usersNavBut = document.getElementById("usersButton")
@@ -9,7 +9,6 @@ const logsNavBut = document.getElementById("activityLogButton")
 const orgsBut = document.getElementById("orgsButton")
 let users = []
 let logs = []
-let orgs = []
 
 async function loadDashboardPage() {
 
@@ -320,7 +319,7 @@ async function loadOrgsPage() {
 
     loadPage("admin", "student_org_page.html", "", "")
 
-    renderOrgs()
+    displayOrgs()
 
 }
 

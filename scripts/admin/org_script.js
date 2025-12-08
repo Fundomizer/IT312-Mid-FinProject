@@ -4,11 +4,13 @@ import { API_BASE_URL } from "../config";
 
 let orgs = []
 
-export async function renderOrgs() {
+export async function displayOrgs() {
     orgs = await fetchCollection("student_organization")
-    const table = document.getElementById('OrgsTableView')
+    renderOrgs(orgs)
+}
 
-    console.log(table);
+function renderOrgs(orgs) {
+    const table = document.getElementById('OrgsTableView')
 
     table.innerHTML = `
                         <tr>
@@ -16,6 +18,7 @@ export async function renderOrgs() {
                         <th>Official email</th>
                         <th>School</th>
                         <th>Description</th>
+                        <th>Action</th>
                         </tr>
                     `
 
@@ -39,6 +42,10 @@ export async function renderOrgs() {
     })
     document.getElementById('AddOrgForm').addEventListener('submit', (e) => handleAddOrg(e))
     document.getElementById('UserForm').addEventListener('submit', (e) => handleSaveEditOrg(e))
+    document.getElementById('SearchInput').addEventListener('input', handleFilter)
+    document.getElementById('AlphaFilter').addEventListener('change', handleFilter)
+    document.getElementById('SchoolFilter').addEventListener('change', handleFilter)
+    document.getElementById('OrgTypeFilter').addEventListener('change', handleFilter)
 }
 
 function makeActionButtons(item) {
@@ -173,7 +180,7 @@ function handleDelete(button) {
 }
 
 function handleEdit() {
-    document.querySelectorAll("#UserForm input, #UserForm textarea")
+    document.querySelectorAll("#UserForm input, #UserForm textarea, #UserForm select")
         .forEach(el => el.disabled = false);
 
     document.getElementById("SaveButton").classList.remove("Hidden");
@@ -182,7 +189,7 @@ function handleEdit() {
 function onClose() {
     console.log("Closing popup");
 
-    document.querySelectorAll("#UserForm input, #UserForm textarea")
+    document.querySelectorAll("#UserForm input, #UserForm textarea, #UserForm select")
         .forEach(el => {
             console.log("Disabling:", el);
             el.disabled = true;
@@ -242,7 +249,7 @@ async function handleSaveEditOrg(e) {
             document.getElementById("EditOrgPopup").style.display = "none";
 
             // Reset fields to disabled
-            document.querySelectorAll("#UserForm input, #UserForm textarea")
+            document.querySelectorAll("#UserForm input, #UserForm textarea, #UserForm select")
                 .forEach(el => el.disabled = true);
 
             document.getElementById("EditButton").classList.remove("Hidden");
@@ -280,4 +287,42 @@ function deleteOrganization(id) {
             console.error("Delete error:", err);
             alert("Server error occurred.");
         });
+}
+
+async function handleFilter() {
+    const term = document.getElementById('SearchInput').value.toLowerCase();
+    const alphaSort = document.getElementById('AlphaFilter').value.toLowerCase()
+    const school = document.getElementById('SchoolFilter').value.toLowerCase()
+    const orgType = document.getElementById('OrgTypeFilter').value.toLowerCase()
+
+    let filtered = orgs
+
+    filtered = orgs.filter(org =>
+        org['org_name']?.toLowerCase().includes(term) ||
+        org['short_name']?.toLowerCase().includes(term) ||
+        org['official_email']?.toLowerCase().includes(term) ||
+        org['description']?.toLowerCase().includes(term)
+    );
+
+    if (school !== 'all') {
+        filtered = filtered.filter(org =>
+            org['school']?.toLowerCase() === school
+        );
+    }
+
+    if (orgType !== 'all') {
+        filtered = filtered.filter(org =>
+            org['org_type']?.toLowerCase() === orgType
+        );
+    }
+
+    if (alphaSort === "asc") {
+        filtered.sort((a, b) => a['org_name'].localeCompare(b['org_name']));
+    } else if (alphaSort === "desc") {
+        filtered.sort((a, b) => b['org_name'].localeCompare(a['org_name']));
+    }
+
+    console.log("Filtered: ", filtered);
+
+    renderOrgs(filtered)
 }

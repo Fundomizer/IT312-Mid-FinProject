@@ -28,13 +28,22 @@
                         <input type="text" id="ShortName" class="OrgInput" disabled />
 
                         <label for="School">School</label>
-                        <input type="text" id="School" class="OrgInput" disabled />
+                        <select id="AddSchool" name="school" class="OrgInput" required>
+                            <option value="SAMCIS">SAMCIS</option>
+                            <option value="SEA">SEA</option>
+                            <option value="STELA">STELA</option>
+                            <option value="SONAHBS">SONAHBS</option>
+                        </select>
 
                         <label for="OfficialEmail">Official Email</label>
                         <input type="email" id="OfficialEmail" class="OrgInput" disabled />
 
                         <label for="OrgType">Organization Type</label>
-                        <input type="text" id="OrgType" class="OrgInput" disabled />
+                        <select name="org_type" id="AddOrgType" disabled>
+                            <option value="extra">Extra-Curricular</option>
+                            <option value="cult">Cultural</option>
+                            <option value="acad">Academic</option>
+                        </select>
 
                         <label for="Description">Description</label>
                         <textarea id="Description" class="OrgTextarea" rows="3" disabled></textarea>
@@ -145,6 +154,7 @@
                     </fieldset>
 
                     <div>
+                        <button type="reset">Clear</button>
                         <button type="submit" id="CreateOrgButton">Create Organization</button>
                     </div>
 
@@ -158,21 +168,28 @@
                 <img src="../../assets/images/icons/magnify_icon.png" alt="Magnify icon">
                 <input id="SearchInput" type="text" placeholder="Search for users">
             </div>
-            <p>Filter logs by: </p>
-            <select name="DateFilter" id="DateFilter">
-                <option value="oldest">Oldest</option>
-                <option value="newest">Newest</option>
-            </select>
 
+            <label for="AlphaFilter">Order by: </label>
             <select name="AlphaFilter" id="AlphaFilter">
                 <option value="desc">Descending</option>
                 <option value="asc">Ascending</option>
             </select>
+            <label for="SchoolFilter">Order by: </label>
+            <select name="SchoolFilter" id="SchoolFilter">
+                <option value="All">All schools</option>
+                <option value="SAMCIS">SAMCIS</option>
+                <option value="SEA">SEA</option>
+                <option value="STELA">STELA</option>
+                <option value="SONAHBS">SONAHBS</option>
+            </select>
+            <label for="OrgTypeFilter"></label>
+            <select name="OrgTypeFilter" id="OrgTypeFilter">
+                <option value="All">All types</option>
+                <option value="Extra-Curricular">Extra-Curricular</option>
+                <option value="Cultural">Cultural</option>
+                <option value="Academic">Academic</option>
+            </select>
 
-            <div>
-                <label>From: <input type="date" id="StartDate"></label>
-                <label>To: <input type="date" id="EndDate"></label>
-            </div>
         </div>
         <div class="Card" id="LogsView">
             <div class="Header">
