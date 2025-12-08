@@ -244,10 +244,13 @@ body.nav-open::after {
     overflow: hidden;
     text-overflow: ellipsis;
     height: 3rem;
+    transition: background-color 0.5s ease;
+
 }
 
 .TopNavButton:hover {
-    background-color: var(--accent-color);
+    background-color: var(--hover-accent-color);
+
 }
 
 .TopNavButton .ButtonIcon {

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <section id="PageContent">
+
+        <div class="PopUp" id="EditOrgPopup">
+            <div class="PopUpContent" id="Details">
+                <button id="XPopup">
+                    <img src="../../assets/images/org_icons/close.png">
+                </button>
+
+                <form id="UserForm">
+
+                    <fieldset class="OrgSection">
+                        <legend class="OrgSectionTitle">Organization Information</legend>
+
+                        <label for="OrgName">Organization Name</label>
+                        <input type="text" id="OrgName" class="OrgInput" disabled />
+
+                        <label for="ShortName">Short Name</label>
+                        <input type="text" id="ShortName" class="OrgInput" disabled />
+
+                        <label for="School">School</label>
+                        <input type="text" id="School" class="OrgInput" disabled />
+
+                        <label for="OfficialEmail">Official Email</label>
+                        <input type="email" id="OfficialEmail" class="OrgInput" disabled />
+
+                        <label for="OrgType">Organization Type</label>
+                        <input type="text" id="OrgType" class="OrgInput" disabled />
+
+                        <label for="Description">Description</label>
+                        <textarea id="Description" class="OrgTextarea" rows="3" disabled></textarea>
+                    </fieldset>
+
+                    <fieldset class="OrgSection">
+                        <legend class="OrgSectionTitle">Adviser Information</legend>
+
+                        <label for="AdviserName">Adviser Name</label>
+                        <input type="text" id="AdviserName" class="OrgInput" disabled />
+
+                        <label for="AdviserEmail">Adviser Email</label>
+                        <input type="email" id="AdviserEmail" class="OrgInput" disabled />
+                    </fieldset>
+
+                    <fieldset class="OrgSection">
+                        <legend class="OrgSectionTitle">Officers</legend>
+
+                        <label for="Officer1Name">Officer 1 Name</label>
+                        <input type="text" id="Officer1Name" class="OrgInput" disabled />
+
+                        <label for="Officer1Position">Officer 1 Position</label>
+                        <input type="text" id="Officer1Position" class="OrgInput" disabled />
+
+                        <label for="Officer2Name">Officer 2 Name</label>
+                        <input type="text" id="Officer2Name" class="OrgInput" disabled />
+
+                        <label for="Officer2Position">Officer 2 Position</label>
+                        <input type="text" id="Officer2Position" class="OrgInput" disabled />
+                    </fieldset>
+
+                    <div>
+                        <button type="button" id="EditButton">Edit</button>
+                        <button type="submit" id="SaveButton" class="Hidden">Save</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+
+        <div class="PopUp" id="AddOrgPopup">
+            <div class="PopUpContent" id="AddOrgDetails">
+                <button id="XAddOrgPopup">
+                    <img src="../../assets/images/org_icons/close.png">
+                </button>
+
+                <form id="AddOrgForm">
+
+                    <fieldset class="OrgSection">
+                        <legend class="OrgSectionTitle">Organization Information</legend>
+
+                        <label for="AddOrgName">Organization Name</label>
+                        <input type="text" id="AddOrgName" name="org_name" class="OrgInput" required />
+
+                        <label for="AddShortName">Short Name</label>
+                        <input type="text" id="AddShortName" name="short_name" class="OrgInput" required />
+
+                        <label for="AddSchool">School</label>
+                        <select id="AddSchool" name="school" class="OrgInput" required>
+                            <option value="SAMCIS">SAMCIS</option>
+                            <option value="SEA">SEA</option>
+                            <option value="STELA">STELA</option>
+                            <option value="SONAHBS">SONAHBS</option>
+                        </select>
+
+                        <label for="AddOfficialEmail">Official Email</label>
+                        <input type="email" id="AddOfficialEmail" name="official_email" class="OrgInput" required />
+
+                        <label for="AddOrgType">Organization Type</label>
+                        <select name="org_type" id="AddOrgType">
+                            <option value="extra">Extra-Curricular</option>
+                            <option value="cult">Cultural</option>
+                            <option value="acad">Academic</option>
+                        </select>
+
+                        <label for="AddDescription">Description</label>
+                        <textarea id="AddDescription" name="description" class="OrgTextarea" rows="3"
+                            required></textarea>
+                    </fieldset>
+
+                    <fieldset class="OrgSection">
+                        <legend class="OrgSectionTitle">Adviser Information</legend>
+
+                        <label for="AddAdviserName">Adviser Name</label>
+                        <input type="text" id="AddAdviserName" name="adviser_name" class="OrgInput" required />
+
+                        <label for="AddAdviserEmail">Adviser Email</label>
+                        <input type="email" id="AddAdviserEmail" name="adviser_email" class="OrgInput" required />
+                    </fieldset>
+
+                    <fieldset class="OrgSection">
+                        <legend class="OrgSectionTitle">Officers</legend>
+
+                        <label for="AddOfficer1Name">Officer 1 Name</label>
+                        <input type="text" id="AddOfficer1Name" name="officer1_name" class="OrgInput" required />
+
+                        <label for="AddOfficer1Position">Officer 1 Position</label>
+                        <input type="text" id="AddOfficer1Position" name="officer1_position" class="OrgInput"
+                            required />
+
+                        <label for="AddOfficer2Name">Officer 2 Name</label>
+                        <input type="text" id="AddOfficer2Name" name="officer2_name" class="OrgInput" required />
+
+                        <label for="AddOfficer2Position">Officer 2 Position</label>
+                        <input type="text" id="AddOfficer2Position" name="officer2_position" class="OrgInput"
+                            required />
+                    </fieldset>
+
+                    <div>
+                        <button type="submit" id="CreateOrgButton">Create Organization</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+
+        <div>
+            <div class="SearchBar">
+                <img src="../../assets/images/icons/magnify_icon.png" alt="Magnify icon">
+                <input id="SearchInput" type="text" placeholder="Search for users">
+            </div>
+            <p>Filter logs by: </p>
+            <select name="DateFilter" id="DateFilter">
+                <option value="oldest">Oldest</option>
+                <option value="newest">Newest</option>
+            </select>
+
+            <select name="AlphaFilter" id="AlphaFilter">
+                <option value="desc">Descending</option>
+                <option value="asc">Ascending</option>
+            </select>
+
+            <div>
+                <label>From: <input type="date" id="StartDate"></label>
+                <label>To: <input type="date" id="EndDate"></label>
+            </div>
+        </div>
+        <div class="Card" id="LogsView">
+            <div class="Header">
+                <div>
+                    <p><b>Registered organizations</b></p>
+                    <p>List of registered organizations</p>
+                </div>
+                <button class="StyledButton" id="AddOrgButton">Add organization</button>
+            </div>
+            <div>
+                <table id="OrgsTableView">
+                </table>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>

@@ -12,14 +12,13 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 2rem;
-
 }
 
 .AdminDashboard h1 {
-  align-self: flex-start;
+    align-self: flex-start;
 }
 
-.AdminDashboard > div {
+.AdminDashboard>div {
     display: grid;
     grid-template-columns: repeat(2, auto);
     justify-content: center;
@@ -86,14 +85,15 @@
 }
 
 #AccountsTableView,
-#LogsTableView {
+#LogsTableView,
+#OrgsTableView {
     width: 100%;
     min-width: 100px;
     min-height: 100px;
     overflow: auto;
 }
 
-#LogsTableView td {
+td {
     padding: 2rem;
 }
 
@@ -174,7 +174,7 @@
 
 #EditButton:hover,
 #SaveButton:hover {
-    background-color: #4f46e5;
+    background-color: var(--hover-accent-color);
     transform: scale(1.05);
 }
 

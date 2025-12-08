@@ -5,6 +5,14 @@
     align-items: center;
 }
 
+.SearchFilterContainer img{
+    filter: brightness(100);
+}
+
+#HistorySearchBar{
+    padding: 1rem;
+}
+
 .FilterPanel{
     max-height: 0;
     overflow: hidden;
@@ -15,7 +23,7 @@
     margin-top: 1vh;
 }
 .FilterContent{
-    background: #081226;
+    background: var(--card-bg-color);
     border-radius: 8px;
     padding: 20px;
 }
@@ -27,19 +35,20 @@
     margin-bottom: 1rem;
 }
 #FilterDropdown{
-    background: #252938;
-    border: 1px solid #373f68;
+    background: var(--subcard-bg-color);
+    border: 1px solid var(--outline-color);
     border-radius: 5px;
     padding: .5rem;
-    color: #fff;
+    color: var(--text-color);
     font-size: 15px;
     cursor: pointer;
 }
 .TagsContainer{
+    justify-content: space-evenly;
     border-style: solid;
-    border-color: #2c2b47;
+    border-color: var(--outline-color);
     border-radius: .5rem;
-    background-color: #27253f;
+    background: var(--subcard-bg-color);
     padding: 1rem 1rem 1rem;
     display: flex;
     flex-wrap: wrap;
@@ -49,9 +58,8 @@
 .TagsContainer label {
     display: inline-block;
     padding: .5vh .5vw .5vh;
-    background-color: #e0e0e0;
-    color: #333;
-    border: solid #ccc;
+    background-color: var(--clear-cancel-color);
+    color: var(--body-title-color);
     border-radius: .5rem;
     font-size: medium;
     cursor: pointer;
@@ -59,25 +67,24 @@
     user-select: none;
 }
 .TagsContainer label:hover {
-    background-color: #d0d0d0;
-    border-color: #bbb;
+    background-color: var(--clear-cancel-color);
 }
 .TagsContainer input[type="checkbox"] {
     display: none;
 }
 
 .TagsContainer input[type="checkbox"]:checked + label {
-    background-color: #667eea;
-    color: white;
-    border-color: #667eea;
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    border-color: var(--outline-color);
 }
 #TagsButton {
     display: none;
 }
 #TagsButton:checked + label {
-    background-color: #667eea;
-    color: white;
-    border-color: #667eea;
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    border-color: var(--outline-color);
 }
 
 .FilterActionButtons{
@@ -95,19 +102,18 @@
     transition: all 0.3s;
 }
 #ClearFilterButton{
-    background: #fff;
-    border: 2px solid #363a4f;
-    color: #8b92b2;
+    border: 2px solid var(--outline-color);
+    color: var(--body-title-color);
 }
 #ClearFilterButton:hover {
-    border-color: #6364a7;
-    color: #6366f1;
+    border-color: var(--accent-color);
+    color: var(--accent-color);
 }
 #ApplyFilterButton{
-    background: #6366f1;
+    background: var(--accent-color);
     border: none;
-    color: #fff;
+    color: var(--text-color);
 }
 #ApplyFilterButton:hover {
-    background: #5558e3;
+    background: var(--hover-accent-color);
 }

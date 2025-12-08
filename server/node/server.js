@@ -53,8 +53,10 @@ async function startServer() {
         });
     })
 
-    app.use('/api/users', require('./routes/admin'))
+    // Register routes
     app.use('/api/auth', require('./routes/auth'))
+    app.use('/api/users', require('./routes/users'))
+    app.use('/api/orgs', require('./routes/organization'))
 
     app.listen(port, "0.0.0.0", () => {
         console.log(`Node server running on port ${port}`);

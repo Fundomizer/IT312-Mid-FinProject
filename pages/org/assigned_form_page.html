@@ -18,12 +18,12 @@
 <body>
     <section id="PageContent">
 
-        <div>
+        <div id="HeadingPart">
             <h1 id="Associated-Org-Name">Association for Computing Machinery (ACM)</h1>
             <p>Submit and manage your organization's requirements</p>
         </div>
 
-        <div class="SearchFilterContainer">
+        <div class="Card SearchFilterContainer">
             <div class="SearchBar">
                 <img src="../../assets/images/icons/magnify_icon.png" alt="Magnify icon">
                 <input id="SearchInput" type="text" placeholder="Search for assigned forms">
@@ -43,8 +43,18 @@
                         <option value="Desc">Descending</option>
                     </select>
                 </div>
-                <label><h3>Tags:</h3></label>
-                <div class="TagsContainer" id="TagsContainer"> <!-- Populate Tags -->
+                <div id="TagFilter">
+                    <label><h3>Tags:</h3></label>
+                    <div class="TagsContainer" id="TagsContainer"> <!-- Populate Tags -->
+                        <input type="checkbox" id="TagsButton1">
+                        <label for="TagsButton1">Tag</label>
+                        <input type="checkbox" id="TagsButton2">
+                        <label for="TagsButton2">Tag</label>
+                        <input type="checkbox" id="TagsButton3">
+                        <label for="TagsButton3">Tag</label>
+                        <input type="checkbox" id="TagsButton4">
+                        <label for="TagsButton4">Tag</label>   
+                    </div>
                 </div>
                 <div class="FilterActionButtons">
                     <button id="ClearFilterButton">Clear Filter</button>
@@ -81,14 +91,13 @@
 
         <div class="Card">
             <div>
-                <h4>Forms Assigned to Your organization</h4>
+                <h2>Forms Assigned to Your organization</h2>
                 <p>
                     Fill out these structured forms to submit requirements. Forms ensure all necessary information is
                     captured
                     for easy searching by OSA
                 </p>
             </div>
-
             <div id="Forms">
 
             </div>

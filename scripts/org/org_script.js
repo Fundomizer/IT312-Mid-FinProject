@@ -463,19 +463,31 @@ async function loadHistory() {
 
 function openForm(formId) {
     const popup = document.querySelector(".PopupForm");
-    if (popup) {
+    const overlay = document.getElementById("PopupOverlay");
+    if (popup && overlay) {
         popup.style.display = "block";
-    } else {
-        console.error("Popup element not found");
+        overlay.classList.add("show");     // make overlay visible
+        document.body.classList.add("modal-open"); // optional: disable scroll
     }
 }
 
 function closeForm() {
     const popup = document.querySelector(".PopupForm");
-    if (popup) {
+    const overlay = document.getElementById("PopupOverlay");
+    if (popup && overlay) {
         popup.style.display = "none";
+        overlay.classList.remove("show");  // hide overlay
+        document.body.classList.remove("modal-open"); // optional: re-enable scroll
     }
 }
+
+// Optional: click the overlay to close
+document.addEventListener("DOMContentLoaded", () => {
+    const overlay = document.getElementById("PopupOverlay");
+    if (overlay) {
+        overlay.addEventListener("click", closeForm);
+    }
+});
 
 function toggleFilter() {
     const panel = document.getElementById("Filter");
