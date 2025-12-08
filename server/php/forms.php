@@ -1,21 +1,25 @@
 <?php
+session_start();
+
+if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] !== true || ($_SESSION['user']['role'] ?? '') !== 'OSA') {
+    http_response_code(403);
+    echo json_encode(["success" => false, "error" => "Unauthorized"]);
+    exit;
+}
+
 require './vendor/autoload.php';
-
-
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header('Content-Type: application/json');
-
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
 
-
 try {
-    $client = new MongoDB\Client("mongodb://localhost:27017/"); // currently using local for easier testing and deletinng
+    $client = new MongoDB\Client("mongodb+srv://testuser:test321@cluster0.lbsrw5e.mongodb.net/"); // currently using local for easier testing and deletinng
     $db = $client->OrganizationManagementDatabase;
     $collection = $db->forms;
 

@@ -1,64 +1,59 @@
 <?php
-// CORS & JSON headers
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
+session_start();
 header("Content-Type: application/json");
 
-// Respond to preflight and exit
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit;
-}
-
 require __DIR__ . '/vendor/autoload.php';
-
 use MongoDB\Client;
-// Get form fields from POST
-$email = $_POST['email'] ?? '';
-$password = $_POST['password'] ?? '';
 
-// Guard: missing credentials
+$input = file_get_contents("php://input");
+$data = json_decode($input, true);
+
+$email = $data["email"] ?? "";
+$password = $data["password"] ?? "";
+
 if (!$email || !$password) {
-    echo "Missing credentials";
+    echo json_encode(["success" => false, "error" => "Missing credentials"]);
     exit;
 }
 
 try {
-    $client = new Client("mongodb://localhost:27017");
+    $client = new Client("mongodb+srv://testuser:test321@cluster0.lbsrw5e.mongodb.net/");
     $collection = $client->OrganizationManagementDatabase->users;
 
-    // Find user by email
-    $user = $collection->findOne(['email' => $email]);
+    $user = $collection->findOne(["email" => $email]);
 
-    if ($user) {
-        if (isset($user['password']) && $user['password'] === $password) {
-
-            // Redirect based on role
-            switch ($user['role']) {
-                case 'admin':
-                    header("Location: ../../pages/admin/admin_page.html");
-                    exit;
-                case 'OSA':
-                    header("Location: ../../pages/osa/osa_page.html");
-                    exit;
-                case 'Student Organization User':
-                    header("Location: ../../pages/org/org_page.html");
-                    exit;
-                default:
-                    echo "Unknown role";
-                    exit;
-            }
-        }
-
-        echo "Invalid credentials";
-        exit;
-    } else {
-        echo "Invalid credentials";
+    if (!$user || $user["password"] !== $password) {
+        echo json_encode(["success" => false, "error" => "Invalid credentials"]);
         exit;
     }
+
+    $oldSessionId = $user['current_session_id'] ?? null;
+    if ($oldSessionId && $oldSessionId !== session_id()) {
+        session_write_close();
+        $oldSessionFile = session_save_path() . "/sess_$oldSessionId";
+        if (file_exists($oldSessionFile)) unlink($oldSessionFile);
+        session_start();
+    }
+
+    $_SESSION["loggedIn"] = true;
+    $_SESSION["user"] = [
+        "email" => $user["email"],
+        "role" => $user["role"],
+        "_id" => (string)$user["_id"]
+    ];
+
+    $collection->updateOne(
+        ['_id' => $user['_id']],
+        ['$set' => ['current_session_id' => session_id()]]
+    );
+
+    echo json_encode([
+        "success" => true,
+        "role" => $user["role"]
+    ]);
+
 } catch (Throwable $e) {
     error_log("Login error: " . $e->getMessage());
-    echo "Server error";
-    exit;
+    echo json_encode(["success" => false, "error" => "Server error"]);
 }
+?>
