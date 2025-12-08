@@ -2,7 +2,10 @@
 
 let selectedForm = null;
 async function loadActiveForms() {
-  const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=forms`);
+  
+  const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=forms`, {
+   credentials: "include",
+  });
   const forms = await response.json();
 
   const formsContainer = document.getElementById("forms-list");
@@ -108,6 +111,7 @@ document.getElementById("modal-update-btn").addEventListener("click", async () =
 
   const res = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=forms&id=${selectedForm._id.$oid}`, {
     method: "PUT",
+     credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(updatedForm)
   });
@@ -126,7 +130,8 @@ document.getElementById("modal-delete-btn").addEventListener("click", async () =
   if (!confirm("Are you sure you want to delete this form?")) return;
 
   const res = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=forms&id=${selectedForm._id.$oid}`, {
-    method: "DELETE"
+    method: "DELETE",
+     credentials: "include",
   });
 
   if (res.ok) {

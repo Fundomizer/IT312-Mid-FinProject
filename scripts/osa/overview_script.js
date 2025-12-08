@@ -1,13 +1,14 @@
   const HOST = window.location.origin;
 
 async function loadOrganizations() {
-  try {
-    const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`);
+   try {
+    const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`, {
+      credentials: "include" 
+    });
     const data = await response.json();
 
     const orgContainer = document.getElementById("organizations-list");
 
-    // Keep header
     const orgHeader = orgContainer.querySelector("h2");
     orgContainer.innerHTML = "";
     orgContainer.appendChild(orgHeader);

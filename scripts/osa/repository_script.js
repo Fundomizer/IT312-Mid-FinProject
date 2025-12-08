@@ -9,9 +9,11 @@ const shownCount = document.getElementById("shownCount");
 let allItems = [];
 
 async function loadItems() {
-  try {
-    const res = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`);
-    const data = await res.json();
+   try {
+    const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`, {
+      credentials: "include" 
+    });
+    const data = await response.json();
     console.log("Fetched data:", data);
 
     const tbody = document.querySelector("#submissions-table tbody");
