@@ -26,6 +26,9 @@ async function loadDashboard() {
 // For the apply and clear filter buttons to work
 let filters = null;
 
+// Store reference to form module
+let formModule = null;
+
 async function loadForms() {
     loadPage('org', 'assigned_form_page.html')
 
@@ -517,8 +520,6 @@ function applyFilter() {
 if (dashboard) dashboard.addEventListener('click', loadDashboard)
 if (forms) forms.addEventListener('click', async () => {formModule = await loadForms();})
 if (history) history.addEventListener('click', loadHistory)
-
-let formModule = null;
 
 // EventHandlers for the forms
 document.addEventListener("click", (e) => {
