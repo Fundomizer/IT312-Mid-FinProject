@@ -5,20 +5,17 @@ async function loadActiveForms() {
   const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=forms`);
   const forms = await response.json();
 
-
   const formsContainer = document.getElementById("forms-list");
   formsContainer.innerHTML = "";
 
-
   forms.forEach(form => {
     const formItem = document.createElement("div");
+    formItem.classList.add("SubCard");
     formItem.classList.add("form-item");
-
 
     const fieldsContainer = document.createElement("div");
     fieldsContainer.classList.add("form-fields-container");
     fieldsContainer.style.display = "none";
-
 
     if (form.fields && form.fields.length > 0) {
       form.fields.forEach((field, index) => {
@@ -29,7 +26,6 @@ async function loadActiveForms() {
     } else {
       fieldsContainer.innerHTML = "<em>No fields available.</em>";
     }
-
 
     formItem.innerHTML = `
       <div class="form-header">
@@ -49,10 +45,8 @@ async function loadActiveForms() {
       </div>
     `;
 
-
     formItem.appendChild(fieldsContainer);
     formsContainer.appendChild(formItem);
-
 
     formItem.querySelector(".view-fields-btn").addEventListener("click", () => {
       if (fieldsContainer.style.display === "none") {
@@ -64,7 +58,6 @@ async function loadActiveForms() {
       }
     });
 
-
     formItem.querySelector(".update-form-btn").addEventListener("click", () => openModal(form));
     formItem.querySelector(".delete-form-btn").addEventListener("click", () => {
       selectedForm = form;
@@ -73,26 +66,38 @@ async function loadActiveForms() {
   });
 }
 
-
 function openModal(form) {
-  selectedForm = form;
   const modal = document.getElementById("form-modal");
   modal.style.display = "flex";
+
   document.getElementById("modal-title").textContent = "Update Form";
   document.getElementById("modal-requirement-name").value = form.requirement_name || "";
-  document.getElementById("modal-description").value = form.description || "";
+
+  const desc = document.getElementById("modal-description");
+  desc.value = form.description || "";
+  desc.style.height = "auto";
+  desc.style.height = desc.scrollHeight + "px";
+  
   document.getElementById("modal-tags").value = (form.tags || []).join(", ");
 }
-
 
 document.getElementById("modal-close").addEventListener("click", () => {
   document.getElementById("form-modal").style.display = "none";
 });
 
+document.getElementById("form-modal").addEventListener("click", (e) => {
+  if (e.target.id === "form-modal") {
+    e.currentTarget.style.display = "none";
+  }
+});
+
+document.getElementById("modal-description").addEventListener("input", function() {
+  this.style.height = "auto";
+  this.style.height = this.scrollHeight + "px";
+});
 
 document.getElementById("modal-update-btn").addEventListener("click", async () => {
   if (!selectedForm) return;
-
 
   const updatedForm = {
     ...selectedForm,
@@ -101,13 +106,11 @@ document.getElementById("modal-update-btn").addEventListener("click", async () =
     tags: document.getElementById("modal-tags").value.split(",").map(t => t.trim())
   };
 
-
   const res = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=forms&id=${selectedForm._id.$oid}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(updatedForm)
   });
-
 
   if (res.ok) {
     alert("Form updated successfully!");
@@ -118,16 +121,13 @@ document.getElementById("modal-update-btn").addEventListener("click", async () =
   }
 });
 
-
 document.getElementById("modal-delete-btn").addEventListener("click", async () => {
   if (!selectedForm) return;
   if (!confirm("Are you sure you want to delete this form?")) return;
 
-
   const res = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=forms&id=${selectedForm._id.$oid}`, {
     method: "DELETE"
   });
-
 
   if (res.ok) {
     alert("Form deleted successfully!");
@@ -137,6 +137,5 @@ document.getElementById("modal-delete-btn").addEventListener("click", async () =
     alert("Failed to delete form.");
   }
 });
-
 
 loadActiveForms();

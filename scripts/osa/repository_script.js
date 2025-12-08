@@ -1,61 +1,59 @@
 const searchInput = document.getElementById("searchInput");
 const filterLocation = document.getElementById("filterLocation");
 const clearFiltersBtn = document.getElementById("clearFilters");
-const repoList = document.getElementById("repoList");
 const totalCount = document.getElementById("totalCount");
 const shownCount = document.getElementById("shownCount");
-const HOST = window.location.origin
+const HOST = window.location.origin;
 let allItems = [];
-
 
 async function loadItems() {
   try {
-    const res = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`)
+    const res = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`);
     const data = await res.json();
     console.log("Fetched data:", data);
 
-
-    repoList.innerHTML = "";
-
+    const tbody = document.querySelector("#submissions-table tbody");
+    tbody.innerHTML = "";
 
     data.forEach(org => {
       if (org.requirements) {
         for (const [reqType, reqData] of Object.entries(org.requirements)) {
-          const div = document.createElement("div");
-          div.classList.add("submission-item");
+          const row = document.createElement("tr");
+          row.setAttribute("data-location", org.short_name || "");
 
+          const nameCell = document.createElement("td");
+          nameCell.textContent = reqType.replace(/_/g, " ");
+          row.appendChild(nameCell);
 
-            div.setAttribute("data-location", org.short_name || "");
+          const tagCell = document.createElement("td");
+          tagCell.textContent = (reqData.tags || []).join(", ");
+          row.appendChild(tagCell);
 
+          const orgCell = document.createElement("td");
+          orgCell.textContent = org.org_name;
+          row.appendChild(orgCell);
 
-          div.innerHTML = `
-              <div class="sub-header">
-                <div class="submission-name">${reqType.replace(/_/g, " ")}</div>
-                <div class="submission-tag">${(reqData.tags || []).join(", ")}</div>
-              </div>
-              <div class="sub-details">
-                <div class="submission-org-name">${org.org_name}</div>
-                <div class="submission-org-shortname">${org.short_name}</div>
-                <div class="submission-date">${reqData.last_updated || "N/A"}</div>
-              </div>
-            `;
+          const shortCell = document.createElement("td");
+          shortCell.textContent = org.short_name;
+          row.appendChild(shortCell);
 
+          const dateCell = document.createElement("td");
+          dateCell.textContent = reqData.last_updated || "N/A";
+          row.appendChild(dateCell);
 
-          repoList.appendChild(div);
-          div.addEventListener("click", () => {
-      showFormDetails(org, reqType, reqData);
-      }   );
+          tbody.appendChild(row);
 
-
+          row.addEventListener("click", () => {
+            showFormDetails(org, reqType, reqData);
+          });
         }
       }
     });
 
+    allItems = Array.from(document.querySelectorAll("#submissions-table tbody tr"));
 
-    allItems = Array.from(repoList.querySelectorAll(".submission-item"));
     totalCount.textContent = allItems.length;
     shownCount.textContent = allItems.length;
-
 
     console.log(`Loaded ${allItems.length} items successfully.`);
   } catch (err) {
@@ -63,85 +61,56 @@ async function loadItems() {
   }
 }
 
-
 function filterResults() {
   const searchQuery = searchInput.value.toLowerCase().trim();
   const selectedLocation = filterLocation.value.trim().toLowerCase();
-  const tagFilter = document.getElementById("tagFilterInput").value.toLowerCase().split(",").map(t => t.trim()).filter(t => t);
+  const tagFilter = document.getElementById("tagFilterInput").value
+    .toLowerCase()
+    .split(",")
+    .map(t => t.trim())
+    .filter(t => t);
   const dateFrom = document.getElementById("dateFrom").value;
   const dateTo = document.getElementById("dateTo").value;
 
-
-
-
   let visibleCount = 0;
 
-
-
-
   allItems.forEach(item => {
-    const name = item.querySelector(".submission-name")?.textContent.toLowerCase() || "";
-    const org = item.querySelector(".submission-org-name")?.textContent.toLowerCase() || "";
-    const tagText = item.querySelector(".submission-tag")?.textContent.toLowerCase() || "";
+    const cells = item.querySelectorAll("td");
+    const name = cells[0].textContent.toLowerCase();
+    const tagText = cells[1].textContent.toLowerCase();
+    const org = cells[2].textContent.toLowerCase();
     const location = item.getAttribute("data-location")?.toLowerCase() || "";
-    const date = item.querySelector(".submission-date")?.textContent || "";
-
-
-
+    const dateText = cells[4].textContent;
+    const dateVal = dateText !== "N/A" ? new Date(dateText) : null;
 
     const matchesSearch =
       name.includes(searchQuery) ||
       org.includes(searchQuery) ||
       tagText.includes(searchQuery);
 
-
-
-
     const matchesLocation =
       !selectedLocation || location === selectedLocation;
-
-
-
 
     const matchesTags =
       tagFilter.length === 0 ||
       tagFilter.some(t => tagText.includes(t));
 
-
-
-
     let matchesDate = true;
-    if (dateFrom && date < dateFrom) matchesDate = false;
-    if (dateTo && date > dateTo) matchesDate = false;
-
-
-
+    if (dateVal) {
+      if (dateFrom && dateVal < new Date(dateFrom)) matchesDate = false;
+      if (dateTo && dateVal > new Date(dateTo)) matchesDate = false;
+    }
 
     const isVisible = matchesSearch && matchesLocation && matchesTags && matchesDate;
 
-
-
-
-    item.style.display = isVisible ? "block" : "none";
+    item.style.display = isVisible ? "table-row" : "none";
     if (isVisible) visibleCount++;
   });
-
-
-
 
   shownCount.textContent = visibleCount;
 }
 
-
-
-
-
-
 function showFormDetails(org, reqType, reqData) {
-
-
-
-
   const reqDiv = document.getElementById("modalRequirements");
   reqDiv.innerHTML = `
     <h3>${reqType.replace(/_/g, " ")}</h3>
@@ -149,7 +118,6 @@ function showFormDetails(org, reqType, reqData) {
     <p><strong>Last Updated:</strong> ${reqData.last_updated || "N/A"}</p>
     <div><strong>Fields:</strong></div>
   `;
-
 
   if (reqData.fields) {
     reqData.fields.forEach(field => {
@@ -162,27 +130,12 @@ function showFormDetails(org, reqType, reqData) {
     });
   }
 
-
   document.getElementById("formDetailsModal").style.display = "flex";
 }
 
-
 document.getElementById("closeModal").addEventListener("click", () => {
   document.getElementById("formDetailsModal").style.display = "none";
 });
-
-
-
-
-// Close modal
-document.getElementById("closeModal").addEventListener("click", () => {
-  document.getElementById("formDetailsModal").style.display = "none";
-});
-
-
-
-
-
 
 document.getElementById("tagFilterInput").addEventListener("input", filterResults);
 document.getElementById("dateFrom").addEventListener("change", filterResults);
@@ -197,8 +150,5 @@ clearFiltersBtn.addEventListener("click", () => {
   document.getElementById("dateTo").value = "";
   filterResults();
 });
-
-
-
 
 loadItems();

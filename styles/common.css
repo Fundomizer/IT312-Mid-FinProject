@@ -25,6 +25,12 @@ body {
     color: var(--text-color);
 }
 
+#title {
+    color: var(--body-title-color);
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
 .Card,
 .SubCard {
     color: var(--text-color);

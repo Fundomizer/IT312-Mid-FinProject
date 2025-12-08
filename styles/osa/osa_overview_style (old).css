@@ -1,16 +1,112 @@
+body, html{
+  background: #1a1f2e;
+}
+
+#PageContent {
+
+  flex: 1;
+  padding: 28px 40px;
+  overflow: auto;
+
+}
+
+p , h2 {
+  color : white;
+}
+
+/* Topbar */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.search {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.search input {
+  background: var(--search-bar-bg-color);
+  border: 1px solid var(--outline-color);
+  color: var(--text-color);
+  padding: 10px 12px;
+  border-radius: var(--border-rad);
+  width: 420px;
+}
+
+.filters {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+select#filterLocation {
+  background: var(--search-bar-bg-color);
+  border-radius: var(--border-rad);
+  padding: 8px;
+  color: var(--text-color);
+  border: 1px solid var(--outline-color);
+}
+
 /* Dashboard cards */
 .dashboard-content {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.25rem;
+  gap: 20px;
   justify-content: center;
   margin-top: 20px;
 }
 
+.dashboard-content .card {
+  position: relative;
+  background: linear-gradient(180deg, #081226 0%, #071021 100%);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 12px;
+  box-shadow: 0 6px 24px rgba(2,6,23,0.6);
+  padding: 18px;
+  width: 240px;
+  text-align: left;
+  color: var(--text-color);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
 
 .dashboard-content .card:hover {
   border-color: var(--accent-color);
   transform: translateY(-3px);
+}
+
+.card h3 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.card .num {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 4px 0;
+  color: var(--text-color);
+}
+
+.card p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.card-img {
+  position: absolute;
+  right: 15px;
+  top: 18px;
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  opacity: 0.85;
 }
 
 /* Charts */
@@ -23,7 +119,7 @@
 }
 
 .charts-section .chart-container {
-  background: var(--card-bg-color);
+  background: linear-gradient(180deg, #081226 0%, #071021 100%);
   border: 1px solid rgba(255,255,255,0.05);
   border-radius: 12px;
   box-shadow: 0 6px 24px rgba(2,6,23,0.6);
@@ -92,8 +188,44 @@
   justify-content: center;    
   align-items: flex-start;    
   width: 100%;
-  padding: 0;
+  padding: 20px 0;
   box-sizing: border-box;
+}
+
+.submissions-container,
+.organizations-container {
+    
+  width: 100%;
+  text-align: left;
+}
+
+.submissions-container,
+.organizations-container {
+  background: linear-gradient(180deg, #081226 0%, #071021 100%);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 12px;
+  box-shadow: 0 6px 24px rgba(2,6,23,0.6);
+  padding: 20px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  text-align: left;
+  color: var(--text-color);
+  margin: 30px 0 30px;
+}
+
+.submission-item {
+  border-radius: var(--border-rad);
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: border-color 0.2s ease;
+}
+
+.submission-item:hover,
+.organization-item:hover {
+  border-color: var(--accent-color);
 }
 
 .sub-header {
@@ -164,6 +296,19 @@
   align-items: center;
   margin-bottom: 6px;
 }
+/* Collapsible organization card */
+.organization-item {
+  background: #1a1f2e;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.05);
+  margin-bottom: 16px;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.organization-item:hover {
+  border-color: rgba(255,255,255,0.15);
+}
 
 .org-header {
   display: flex;
@@ -171,7 +316,8 @@
   align-items: center;
   padding: 16px;
   cursor: pointer;
-  color: var(--text-color);
+  background: #1a1f2e;
+  color: white;
 }
 
 .org-title {
@@ -204,29 +350,24 @@
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.35s ease;
-  background-color: var(--card-bg-color);
-  border-radius: 12px;
-  color: var(--text-color);
+  background: #14151b;
+  color: #cfd6de;
+  padding: 0 16px;
 }
 
-.org-dropdown p,
-.org-dropdown h4{
-  padding: 0.5rem 1rem;
-}
-
-.org-dropdown li{
-  padding: 0 1rem;
+.organization-item.open .org-dropdown {
+  padding: 16px;
 }
 
 /* Requirement entry */
 .requirement-entry {
-  padding: 1rem;
-  border-radius: 0;
-  background: var(--subcard-bg-color);
-  border-bottom: 2px solid var(--card-bg-color);
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  background: #181a23;
 }
 
 .requirement-entry .type {
-  font-weight: bold;
-  color: var(--text-color);
+  font-weight: 600;
+  color: white;
 }

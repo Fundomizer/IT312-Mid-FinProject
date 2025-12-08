@@ -135,7 +135,7 @@ async function loadForms() {
 
             // Title + Action
             const titleBlock = document.createElement("span");
-            const titleEl = document.createElement("h3");
+            const titleEl = document.createElement("h2");
             titleEl.className = "FormTitle";
             titleEl.textContent = form.requirement_name;
 

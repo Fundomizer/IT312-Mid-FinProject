@@ -1,104 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="module" src="../../scripts/auth.js"></script>
     <title>Overview</title>
 </head>
-
 <body>
-
     <section id="PageContent">
-        <h2>Welcome to the overview</h2>
-        <p>Here's an overview of the requirements repository.</p>
-
-
-        <div class="dashboard-content">
-            <div class="card">
-                <img src="../../assets/images/osa_dashboard_icons/forms_icon.png" alt="forms" class="card-img">
-                <h3>Total Requirements</h3>
-                <p class="num" id="all-time-submission-count">0</p>
-                <p>All time Submissions</p>
+        <div id="title">
+            <h2>Welcome to the overview</h2>
+            <p>Here's an overview of the requirements repository.</p>
+        </div>
+        <div class="Card">
+            <div class="dashboard-content">
+                <div class="card">
+                    <img src="../../assets/images/osa_dashboard_icons/forms_icon.png" alt="forms" class="card-img">
+                    <h3>Total Requirements</h3>
+                    <p class="num" id="all-time-submission-count">0</p>
+                    <p>All time Submissions</p>
+                </div>
+                <div class="card">
+                    <img src="../../assets/images/osa_dashboard_icons/this_month_icon.png" alt="new-subs" class="card-img">
+                    <h3>This Month</h3>
+                    <p class="num" id="new-submissions-count">0</p>
+                    <p>New Submissions</p>
+                </div>
+                <div class="card">
+                    <img src="../../assets/images/osa_dashboard_icons/organizations_icon.png" alt="orgs" class="card-img">
+                    <h3>Organization</h3>
+                    <p class="num" id="active-org-count">0</p>
+                    <p>Active student organizations</p>
+                </div>
+                <div class="card">
+                    <img src="../../assets/images/osa_dashboard_icons/forms_icon.png" alt="forms" class="card-img">
+                    <h3>Active Forms</h3>
+                    <p class="num" id="active_form_count">0</p>
+                    <p>1(s) draft forms</p>
+                </div>
             </div>
-            <div class="card">
-                <img src="../../assets/images/osa_dashboard_icons/this_month_icon.png" alt="new-subs" class="card-img">
-                <h3>This Month</h3>
-                <p class="num" id="new-submissions-count">0</p>
-                <p>New Submissions</p>
-            </div>
+            <div class="charts-section">
+                <div class="chart-container">
+                    <h3>Top Submissions</h3>
+                    <p class="chart-header">Most common requirement types</p>
+                    <div class="progress-header">
+                        <p>
+                            Activity Report
+                        </p>
+                        <div class="progress-label">0</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 0%;"></div>
+                    </div>
+                    <div class="progress-header">
+                        <p>
+                            Event Proposal
+                        </p>
+                        <div class="progress-label">0</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 0%;"></div>
+                    </div>
+                    <div class="progress-header">
+                        <p>
+                            Budget Plan
+                        </p>
+                        <div class="progress-label">0</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 0%;"></div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3>Academic Year Distribution </h3>
+                    <p class="chart-header">Requirements by Academic Year</p>
+                    <div class="progress-header">
+                        <p>
+                            2024-2025
+                        </p>
+                        <div class="progress-label">0</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 70%;"></div>
+                    </div>
+                </div>
 
-            <div class="card">
-                <img src="../../assets/images/osa_dashboard_icons/organizations_icon.png" alt="orgs" class="card-img">
-                <h3>Organization</h3>
-                <p class="num" id="active-org-count">0</p>
-                <p>Active student organizations</p>
-
-            </div>
-            <div class="card">
-                <img src="../../assets/images/osa_dashboard_icons/forms_icon.png" alt="forms" class="card-img">
-                <h3>Active Forms</h3>
-                <p class="num" id="active_form_count">0</p>
-                <p>1(s) draft forms</p>
             </div>
         </div>
-
-
-
-        <div class="charts-section">
-            <div class="chart-container">
-                <h3>Top Submissions</h3>
-                <p class="chart-header">Most common requirement types</p>
-                <div class="progress-header">
-                    <p>
-                        Activity Report
-                    </p>
-                    <div class="progress-label">0</div>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress" style="width: 0%;"></div>
-                </div>
-                <div class="progress-header">
-                    <p>
-                        Event Proposal
-                    </p>
-                    <div class="progress-label">0</div>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress" style="width: 0%;"></div>
-                </div>
-                <div class="progress-header">
-                    <p>
-                        Budget Plan
-                    </p>
-                    <div class="progress-label">0</div>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress" style="width: 0%;"></div>
-                </div>
-            </div>
-            <div class="chart-container">
-                <h3>Academic Year Distribution </h3>
-                <p class="chart-header">Requirements by Academic Year</p>
-                <div class="progress-header">
-                    <p>
-                        2024-2025
-                    </p>
-                    <div class="progress-label">0</div>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress" style="width: 70%;"></div>
-                </div>
-            </div>
-
-        </div>
-
-
         <div class="recent-submissions-section">
-
             <div class="submissions-container" id="submissions-list">
-                <h3>Recent Submissions</h3>
+                <h2>Recent Submissions</h2>
                 <div class="submission-item">
                     <div class="sub-header">
                         <div class="submission-name">Sample Submission 1</div>
@@ -111,13 +102,10 @@
                     </div>
                 </div>
             </div>
-
         </div>
-
         <div class="active-organization-section">
-
             <div class="organizations-container" id="organizations-list">
-                <h3>Active Organizations</h3>
+                <h2>Active Organizations</h2>
                 <div class="organization-item">
                     <div class="org-header">
                         <div class="org-title">
@@ -129,16 +117,7 @@
                     <div class="org-dropdown">
                     </div>
                 </div>
-
             </div>
-
-
-
-
-
     </section>
-
-
 </body>
-
 </html>
