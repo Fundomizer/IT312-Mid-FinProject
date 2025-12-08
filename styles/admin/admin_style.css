@@ -12,7 +12,6 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 2rem;
-
 }
 
 .AdminDashboard h1 {
@@ -174,7 +173,7 @@
 
 #EditButton:hover,
 #SaveButton:hover {
-    background-color: #4f46e5;
+    background-color: var(--hover-accent-color);
     transform: scale(1.05);
 }
 
