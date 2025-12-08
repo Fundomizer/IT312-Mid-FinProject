@@ -1,4 +1,5 @@
 <?php
+ini_set('session.cookie_lifetime', 0); 
 session_start();
 
 header("Access-Control-Allow-Origin: http://localhost:8123");
