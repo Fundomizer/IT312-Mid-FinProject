@@ -352,9 +352,13 @@ async function loadForms() {
             uploadInput.id = "UploadButton";
             uploadInput.multiple = true;
 
+            const uploadContainer = document.createElement("div");
+            uploadContainer.id = "UploadedFilesContainer";
+
             uploadDiv.appendChild(uploadSpan);
             uploadDiv.appendChild(uploadLabel);
             uploadDiv.appendChild(uploadInput);
+            uploadDiv.appendChild(uploadContainer);
             formElement.appendChild(uploadDiv);
         },
         forms: forms
@@ -516,6 +520,76 @@ function applyFilter() {
     }
 }
 
+let selectedFiles = [];
+
+function fileAction(e) {
+    const files = Array.from(e.target.files);
+            
+    files.forEach(file => {
+        if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
+            selectedFiles.push(file);
+            createCardFile(file, selectedFiles.length - 1);
+        }
+    });
+}
+
+function createCardFile(file, index) {
+    const container = document.getElementById('UploadedFilesContainer');
+            
+    const fileSelected = document.createElement('div');
+    fileSelected.className = 'FileSelectedCard';
+    fileSelected.id = `File-${index}`;
+            
+    const fileName = document.createElement('span');
+    fileName.className = 'FileName';
+    let newFileName = `AttachedFile${index}`;
+    let renamedFile = new File([file], newFileName, {type: file.type});
+    fileName.textContent = renamedFile.name;
+
+    const preview = document.createElement('div');
+    preview.className = 'FilePreview';
+    
+    if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.innerHTML = `<img src="${e.target.result}" alt="${file.name}">`;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        let icon = '📄';
+        if (file.type.includes('pdf')) icon = '📕';
+        else if (file.type.includes('video')) icon = '🎥';
+        else if (file.type.includes('audio')) icon = '🎵';
+        else if (file.type.includes('zip') || file.type.includes('compressed')) icon = '📦';
+                
+        preview.innerHTML = `<span class="file-icon">${icon}</span>`;
+    }
+    
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'RemoveButton';
+    removeBtn.innerHTML = '×';
+    removeBtn.onclick = () => removeFile(index);
+    
+    fileSelected.appendChild(fileName);
+    fileSelected.appendChild(preview);
+    fileSelected.appendChild(removeBtn);
+    
+    container.appendChild(fileSelected);
+}
+
+function removeFile(index) {
+    selectedFiles.splice(index, 1);
+    reDisplayFiles();
+}
+        
+function reDisplayFiles() {
+    const container = document.getElementById('UploadedFilesContainer');
+    container.innerHTML = '';
+    selectedFiles.forEach((file, index) => {
+        showFile(file, index);
+    });
+}
+
 // Assign event handlers for navigation
 if (dashboard) dashboard.addEventListener('click', loadDashboard)
 if (forms) forms.addEventListener('click', async () => {formModule = await loadForms();})
@@ -553,6 +627,9 @@ document.addEventListener("click", (e) => {
     }
     if (e.target.id === "ClearFilterButton") {
         clearFilters();
+    }
+    if (e.target.id === "UploadButton") {
+        fileAction(e);
     }
     if (e.target.id === "SubmitForm") {
         closeForm();
