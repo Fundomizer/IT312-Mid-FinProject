@@ -36,10 +36,10 @@ app.use(session({ // Configure session handling
     store: new MongoStore({
         mongoUrl: url,
         collectionName: "sessions",
-        ttl: 20,
+        ttl: 60 * 60, // This in seconds btw
     }),
     cookie: {
-        maxAge: (1000 * 20), // How long the cookie will be saved, btw this is in millisecond
+        maxAge: (1000 * 60 * 60), // How long the cookie will be saved, btw this is in millisecond
         httpOnly: true,
         secure: false,                     // set true if using HTTPS
         sameSite: "lax",                   // or "none" if cross-site + HTTPS

@@ -10,12 +10,7 @@ async function checkSession() {
             method: "POST"
         });
 
-        console.log("Heartbeat, Current time ", new Date());
-
-
         const data = await res.json();
-
-        console.log("Data", data);
 
         if (!data.loggedIn) {
             alert("Your session has expired. Please log in again.");
