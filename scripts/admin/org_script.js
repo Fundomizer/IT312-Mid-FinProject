@@ -46,6 +46,14 @@ function renderOrgs(orgs) {
     document.getElementById('AlphaFilter').addEventListener('change', handleFilter)
     document.getElementById('SchoolFilter').addEventListener('change', handleFilter)
     document.getElementById('OrgTypeFilter').addEventListener('change', handleFilter)
+
+    document.getElementById('ClearFiltersButton').addEventListener('click', () => {
+    document.getElementById('SearchInput').value = "";
+    document.getElementById('AlphaFilter').value = "desc";
+    document.getElementById('SchoolFilter').value = "All";
+    document.getElementById('OrgTypeFilter').value = "All";
+    handleFilter();
+     });
 }
 
 function makeActionButtons(item) {
