@@ -1,29 +1,26 @@
 #PageContent {
   flex: 1;
-  padding: 28px 40px;
+  padding: 1.75rem 2.5rem;
   overflow: auto;
 }
-
 
 .form-builder-section {
   background: var(--card-bg-color);
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 0 6px 24px rgba(2, 6, 23, 0.6);
-  padding: 24px;
-  margin-bottom: 24px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
-
 .form-builder-section h3 {
-  margin: 0 0 20px 0;
+  margin: 0 0 1.25rem 0;
   font-size: 1.5rem;
   font-weight: 600;
 }
 
-
 .form-builder-section .form-item {
-  margin-bottom: 16px;
+  margin-bottom: 1rem;
   border: 1px solid var(--outline-color);
   border-radius: 12px;
   padding: 1rem;
@@ -31,41 +28,36 @@
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
-
 .form-builder-section .form-item:hover {
   border-color: var(--accent-color);
   background-color: rgba(255, 255, 255, 0.05);
 }
 
-
 .form-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 0.5rem;
   font-size: 1rem;
   font-weight: 600;
 }
 
-
 .form-description {
   font-size: 1rem;
   color: var(--muted);
-  margin-bottom: 6px;
+  margin-bottom: 0.375rem;
 }
-
 
 .form-tag {
   display: inline-block;
   background: var(--surface);
   color: var(--muted);
-  padding: 3px 10px;
+  padding: 0.188px 0.625rem;
   border-radius: 12px;
   font-size: 1rem;
   font-weight: 500;
-  margin-left: 8px;
+  margin-left: 0.5rem;
 }
-
 
 .form-field-count {
   font-size: 1rem;
@@ -73,10 +65,9 @@
   text-align: right;
 }
 
-
 .form-fields-container {
-  margin-top: 10px;
-  padding: 10px;
+  margin-top: 0.625rem;
+  padding: 0.625rem;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
   font-size: 1rem;
@@ -88,14 +79,14 @@
 }
 
 .form-buttons {
-  margin-top: 10px;
+  margin-top: 0.625rem;
   display: flex;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 
 .form-action-btn {
-  padding: 6px 12px;
+  padding: 0.375rem 12px;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
@@ -109,18 +100,16 @@
   background-color: var(--hover-accent-color);
 }
 
-
 .form-header-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem;
 }
 
 #create-form-btn:hover {
   background: var(--hover-accent-color);
 }
-
 
 #form-modal {
   display: none;
@@ -195,7 +184,7 @@
 #form-modal .modal-buttons {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 0.625rem;
   margin-top: 1rem;
 }
 
