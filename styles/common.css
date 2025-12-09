@@ -73,12 +73,12 @@ body {
 }
 
 .SearchBar {
-    margin: 5px;
-    padding: 5px 15px;
+    margin:0.313rem;
+    padding:0.313rem 0.938rem;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    gap: 5px;
+    gap:0.313rem;
     display: flex;
     align-items: center;
     background-color: var(--search-bar-bg-color);
@@ -92,7 +92,7 @@ body {
     height: 2rem;
     flex: 1;
     color: var(--text-color);
-    font-size: 14px;
+    font-size: 0.875rem;
     box-sizing: border-box;
 }
 
@@ -135,7 +135,7 @@ body {
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.5s ease;
-    gap: 5px;
+    gap:0.313rem;
 }
 
 .StyledButton img {
@@ -148,7 +148,7 @@ body {
 
 .muted {
     color: var(--muted-color);
-    font-size: 14px;
+    font-size: 0.875rem;
 }
 
 .PopUp {
@@ -168,7 +168,7 @@ body {
     margin: 15% auto;
     padding: 1.5rem;
     border-radius: var(--border-rad);
-    width: 320px;
+    width: 31.25rem;
     text-align: left;
     border: 1px solid rgba(255, 255, 255, 0.05);
     box-shadow: 0 6px 24px rgba(2, 6, 23, 0.6);

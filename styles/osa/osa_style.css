@@ -7,8 +7,8 @@
   position: relative;
   border-radius: 12px;
   box-shadow: 0 6px 24px rgba(2,6,23,0.6);
-  padding: 18px;
-  width: 240px;
+  padding: 1.125rem;
+  width: 22.5rem;
   text-align: left;
   color: var(--text-color);
   transition: border-color 0.2s ease, transform 0.2s ease;
@@ -49,10 +49,10 @@
 }
 
 .card-img {
-    position: absolute;
-    right: 15px;
-    top: 30px;
-    width: 50px;
-    height: 50px;
-    object-fit: contain;
+  position: absolute;
+  right: 15px;
+  top: 30px;
+  width: 3.125rem;
+  height: 3.125rem;
+  object-fit: contain;
 }
