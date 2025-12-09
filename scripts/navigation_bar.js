@@ -1,8 +1,9 @@
-import {HOST, API_BASE_URL } from "./config.js";
+import { HOST, API_BASE_URL } from "./config.js";
 
 const sideNavButton = document.getElementById("ToggleSideNavButton");
 const sideNav = document.getElementById("SideNav");
 const logoutButton = document.getElementById("Logout");
+const usernameLabel = document.getElementById('UsernameLabel')
 
 // Toggle SideNav + overlay
 sideNavButton.addEventListener("click", () => {
@@ -31,7 +32,7 @@ logoutButton.addEventListener("click", () => {
     .then(async data => {
       console.log(data);
       if (data.success) {
-        
+
         await fetch(`${HOST}/IT312-Mid-FinProject/server/php/logout.php`, {
           method: "POST",
           credentials: "include"
@@ -47,3 +48,5 @@ logoutButton.addEventListener("click", () => {
       alert("Unexpected logout error");
     });
 });
+
+usernameLabel.innerText = localStorage.getItem("username")

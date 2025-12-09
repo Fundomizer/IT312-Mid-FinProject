@@ -40,7 +40,13 @@ exports.login = async (req, res) => {
             res.status(500).json({ message: "Server error", status: false });
         }
 
-        res.json({ message: "Login successful", success: true, role: user.role.toLowerCase(), redirect: redirect });
+        res.json({
+            message: "Login successful",
+            success: true,
+            role: user.role.toLowerCase(),
+            redirect: redirect,
+            username: user.name
+        });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "Server error", status: false });
