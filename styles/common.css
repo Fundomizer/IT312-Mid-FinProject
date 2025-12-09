@@ -25,6 +25,12 @@ body {
     color: var(--text-color);
 }
 
+#title {
+    color: var(--body-title-color);
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
 .Card,
 .SubCard {
     color: var(--text-color);
@@ -52,7 +58,6 @@ body {
 
 #SearchContainer {
     display: flex;
-    gap: 1rem;
     margin-bottom: 1rem;
     flex-wrap: wrap;
     align-items: center;
@@ -264,7 +269,7 @@ body {
 
 th, td {
     text-align: center;
-    border-bottom: 1px solid var(--outline-color);
+    border-bottom: 3px solid var(--outline-color);
     border-spacing: 0;
     padding: 1rem;
     margin: 0;

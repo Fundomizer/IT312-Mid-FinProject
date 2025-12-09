@@ -6,8 +6,10 @@ async function loadOrganizations() {
 
 
 
-  try {
-    const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`);
+   try {
+    const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`, {
+      credentials: "include" 
+    });
     const orgs = await response.json();
 
 

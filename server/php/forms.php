@@ -1,4 +1,5 @@
 <?php
+ini_set('session.cookie_lifetime', 0);
 session_start();
 
 if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] !== true || ($_SESSION['user']['role'] ?? '') !== 'OSA') {

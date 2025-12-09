@@ -11,7 +11,7 @@
 
 <body>
   <section id="PageContent">
-    <div>
+    <div id="title">
       <h2>Form Builder</h2>
       <p>Create custom forms and assign them to organizations for structured requirement submissions</p>
     </div>
@@ -23,7 +23,7 @@
           <h3>Form Builder</h3>
           <p>Create custom forms and assign them to organizations for structured requirement submissions</p>
         </div>
-        <button id="create-form-btn">+ Create Form</button>
+        <button id="create-form-btn" class="StyledButton">+ Create Form</button>
       </div>
 
 
@@ -34,19 +34,23 @@
     <div id="form-modal">
       <div class="modal-content">
         <span id="modal-close">&times;</span>
-        <h3 id="modal-title">Update Form</h3>
+        <h2 id="modal-title">Update Form</h2>
+
         <div>
-          <label>Requirement Name:</label>
-          <input type="text" id="modal-requirement-name">
+          <label for="modal-requirement-name">Requirement Name:</label>
+          <input type="text" id="modal-requirement-name" name="requirement-name">
         </div>
+
         <div>
-          <label>Description:</label>
-          <textarea id="modal-description"></textarea>
+          <label for="modal-description">Description:</label>
+          <textarea id="modal-description" name="description"></textarea>
         </div>
+
         <div>
-          <label>Tags (comma separated):</label>
-          <input type="text" id="modal-tags">
+          <label for="modal-tags">Tags (comma separated):</label>
+          <input type="text" id="modal-tags" name="tags">
         </div>
+
         <div class="modal-buttons">
           <button id="modal-update-btn">Update</button>
           <button id="modal-delete-btn">Delete</button>
@@ -54,7 +58,5 @@
       </div>
     </div>
   </section>
-
 </body>
-
 </html>

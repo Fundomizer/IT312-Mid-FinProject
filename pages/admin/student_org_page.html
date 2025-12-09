@@ -9,7 +9,10 @@
 
 <body>
     <section id="PageContent">
-
+        <div id="title">
+            <h1>Student Orgnizations</h1>
+            <p>List of Registered Orgs</p>
+        </div>
         <div class="PopUp" id="EditOrgPopup">
             <div class="PopUpContent" id="Details">
                 <button id="XPopup">
@@ -163,33 +166,38 @@
         </div>
 
 
-        <div>
+        <div class="Card" id="SearchContainer">
             <div class="SearchBar">
                 <img src="../../assets/images/icons/magnify_icon.png" alt="Magnify icon">
                 <input id="SearchInput" type="text" placeholder="Search for users">
             </div>
-
-            <label for="AlphaFilter">Order by: </label>
-            <select name="AlphaFilter" id="AlphaFilter">
-                <option value="desc">Descending</option>
-                <option value="asc">Ascending</option>
-            </select>
-            <label for="SchoolFilter">Order by: </label>
-            <select name="SchoolFilter" id="SchoolFilter">
-                <option value="All">All schools</option>
-                <option value="SAMCIS">SAMCIS</option>
-                <option value="SEA">SEA</option>
-                <option value="STELA">STELA</option>
-                <option value="SONAHBS">SONAHBS</option>
-            </select>
-            <label for="OrgTypeFilter"></label>
-            <select name="OrgTypeFilter" id="OrgTypeFilter">
-                <option value="All">All types</option>
-                <option value="Extra-Curricular">Extra-Curricular</option>
-                <option value="Cultural">Cultural</option>
-                <option value="Academic">Academic</option>
-            </select>
-
+            <div class="SubCard">
+                <label for="AlphaFilter">Order by: </label>
+                <select name="AlphaFilter" id="AlphaFilter">
+                    <option value="desc">Descending</option>
+                    <option value="asc">Ascending</option>
+                </select>
+            </div>
+            <div class="SubCard">
+                <label for="SchoolFilter">Order by: </label>
+                <select name="SchoolFilter" id="SchoolFilter">
+                    <option value="All">All schools</option>
+                    <option value="SAMCIS">SAMCIS</option>
+                    <option value="SEA">SEA</option>
+                    <option value="STELA">STELA</option>
+                    <option value="SONAHBS">SONAHBS</option>
+                </select>
+            </div>
+            <div class="SubCard">
+                <label for="OrgTypeFilter"></label>
+                <select name="OrgTypeFilter" id="OrgTypeFilter">
+                    <option value="All">All types</option>
+                    <option value="Extra-Curricular">Extra-Curricular</option>
+                    <option value="Cultural">Cultural</option>
+                    <option value="Academic">Academic</option>
+                </select>
+            </div>
+            <button id="ClearFiltersButton">Clear</button>
         </div>
         <div class="Card" id="LogsView">
             <div class="Header">

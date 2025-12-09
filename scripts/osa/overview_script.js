@@ -1,14 +1,15 @@
   const HOST = window.location.origin;
 
 async function loadOrganizations() {
-  try {
-    const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`);
+   try {
+    const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`, {
+      credentials: "include" 
+    });
     const data = await response.json();
 
     const orgContainer = document.getElementById("organizations-list");
 
-    // Keep header
-    const orgHeader = orgContainer.querySelector("h3");
+    const orgHeader = orgContainer.querySelector("h2");
     orgContainer.innerHTML = "";
     orgContainer.appendChild(orgHeader);
 
@@ -128,7 +129,7 @@ async function updateProgressBars() {
   });
 
   const topSubmissionContainer = document.querySelector('.charts-section .chart-container:first-child');
-  topSubmissionContainer.innerHTML = `<h3>Top Submissions</h3>
+  topSubmissionContainer.innerHTML = `<h2>Top Submissions</h2>
         <p class="chart-header">Most common requirement types</p>`;
 
   const sortedTypes = Object.entries(typeCounts).sort((a, b) => b[1] - a[1]);
@@ -147,7 +148,7 @@ async function updateProgressBars() {
   });
 
   const totalContainer = document.querySelector('.charts-section .chart-container:last-child');
-  totalContainer.innerHTML = `<h3>Total Requirements</h3>
+  totalContainer.innerHTML = `<h2>Total Requirements</h2>
         <p class="chart-header">All requirements across organizations</p>
         <div class="progress-header">
             <p>Total</p>
@@ -163,7 +164,7 @@ async function loadRecentSubmissions() {
     const orgs = await response.json();
 
     const submissionsContainer = document.getElementById("submissions-list");
-    const header = submissionsContainer.querySelector("h3");
+    const header = submissionsContainer.querySelector("h2");
     submissionsContainer.innerHTML = "";
     submissionsContainer.appendChild(header);
 
