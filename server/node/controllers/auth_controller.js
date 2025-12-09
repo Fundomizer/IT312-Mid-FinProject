@@ -1,4 +1,4 @@
-const connectToDB = require('../database/connect.js')
+const { connectToDB } = require('../database/connect.js')
 const { sanitizeObject } = require('../utilities.js')
 
 let db;
@@ -58,7 +58,6 @@ exports.getProfile = (req, res) => {
         role: req.session.role
     });
 };
-
 
 exports.logout = (req, res) => {
     req.session.destroy(err => {

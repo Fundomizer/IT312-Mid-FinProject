@@ -1,7 +1,8 @@
 const express = require('express');
 const session = require('express-session')
 const cors = require('cors');
-const connectToDB = require('./database/connect');
+const { connectToDB, url } = require('./database/connect');
+const { default: MongoStore } = require('connect-mongo');
 
 const port = 8123
 const app = express();
@@ -25,13 +26,23 @@ app.use(cors({
     },
     credentials: true
 }))
-app.use(session({
+
+console.log("My MongoStore: ", MongoStore);
+
+app.use(session({ // Configure session handling 
     secret: "KeepThisSecretToYourself", // Secret :P
     resave: false,
     saveUninitialized: false,
+    store: new MongoStore({
+        mongoUrl: url,
+        collectionName: "sessions",
+        ttl: 20,
+    }),
     cookie: {
-        maxAge: (1000 * 60 * 60), // How long the cookie will be saved, btw this is in millisecond
-        httpOnly: true
+        maxAge: (1000 * 20), // How long the cookie will be saved, btw this is in millisecond
+        httpOnly: true,
+        secure: false,                     // set true if using HTTPS
+        sameSite: "lax",                   // or "none" if cross-site + HTTPS
     }
 }))
 

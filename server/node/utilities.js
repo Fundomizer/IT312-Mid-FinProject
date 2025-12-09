@@ -19,3 +19,14 @@ exports.sanitizeObject = (obj) => {
 
     return cleaned;
 }
+/**
+ * Createa ._lastSeen varialbe inside session to show that the user is not idle
+ * @param {request} req
+ */
+exports.touchSession = (req) => {
+    if (req.session) {
+        
+        req.session._lastSeen = Date.now(); // write something to mark activity
+        console.log("Touching ", req.session);
+    }
+}

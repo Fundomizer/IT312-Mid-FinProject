@@ -1,6 +1,6 @@
-const connectToDB = require('../database/connect.js')
+const { connectToDB } = require('../database/connect.js')
 const { ObjectId } = require('mongodb')
-const { sanitizeObject } = require('../utilities.js')
+const { sanitizeObject, touchSession } = require('../utilities.js')
 
 let db;
 
@@ -47,10 +47,12 @@ exports.createOrganization = async (req, res) => {
             org: { _id: result.insertedId, ...newOrg }
         });
 
+
     } catch (err) {
         console.error("Error creating organization:", err);
         res.status(500).json({ message: "Server error", success: false });
     }
+    touchSession(req)
 }
 
 exports.updateOrganization = async (req, res) => {
@@ -123,6 +125,7 @@ exports.updateOrganization = async (req, res) => {
         console.error("Error updating organization:", err);
         res.status(500).json({ success: false, message: "Server error" });
     }
+    touchSession(req)
 };
 
 exports.deleteOrganization = async (req, res) => {
@@ -149,4 +152,5 @@ exports.deleteOrganization = async (req, res) => {
         console.error("Error deleting organization:", err);
         res.status(500).json({ message: "Server error", success: false });
     }
+    touchSession(req)
 };

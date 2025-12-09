@@ -1,6 +1,6 @@
-const connectToDB = require('../database/connect.js')
+const { connectToDB } = require('../database/connect.js')
 const { ObjectId } = require('mongodb')
-const { sanitizeObject } = require('../utilities.js')
+const { sanitizeObject, touchSession } = require('../utilities.js')
 
 let db;
 
@@ -9,6 +9,7 @@ let db;
 })();
 
 exports.createUser = async (req, res) => {
+
     try {
         const newUser = sanitizeObject(req.body);
 
@@ -23,6 +24,7 @@ exports.createUser = async (req, res) => {
 
         res.status(500).json({ message: "Could not create user", status: false });
 
+
     } catch (err) {
         if (err.code === 11000) {
             return res
@@ -35,6 +37,7 @@ exports.createUser = async (req, res) => {
             .status(500)
             .json({ message: "Server error", status: false });
     }
+    touchSession(req)
 };
 
 exports.updateUser = async (req, res) => {
@@ -78,6 +81,8 @@ exports.updateUser = async (req, res) => {
         } else {
             res.status(500).json({ message: "Update failed", status: false });
         }
+
+
     } catch (err) {
         console.error(err);
         if (err.code === 11000) {
@@ -86,6 +91,7 @@ exports.updateUser = async (req, res) => {
             res.status(500).json({ message: "Error updating user", status: false });
         }
     }
+    touchSession(req)
 }
 
 exports.deleteUser = async (req, res) => {
@@ -101,8 +107,10 @@ exports.deleteUser = async (req, res) => {
         } else {
             res.status(404).json({ message: "User not found", status: false });
         }
+
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "Error deleting user", status: false });
     }
+    touchSession(req)
 }
