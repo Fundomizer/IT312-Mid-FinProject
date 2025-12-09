@@ -1,7 +1,5 @@
 import { HOST, API_BASE_URL } from "./config.js";
 
-// Element selectors
-const googleLogButton = document.getElementById("GoogleLogin");
 const loginForm = document.getElementById('LoginForm');
 
 loginForm.addEventListener('submit', (e) => {
@@ -16,8 +14,6 @@ loginForm.addEventListener('submit', (e) => {
     })
         .then(res => res.json())
         .then(auth => {
-            console.log(auth);
-
             if (!auth.success) {
                 alert('Invalid credentials');
                 return;
@@ -41,15 +37,7 @@ loginForm.addEventListener('submit', (e) => {
             } else {
                 window.location.href = `${HOST}/IT312-Mid-FinProject${auth.redirect}`;
             }
-
             localStorage.setItem("username", auth.username);
-
-            alert("auth object: ", auth)
         })
         .catch(err => alert("Login has hit an unexpected error"));
-});
-
-googleLogButton.addEventListener("click", () => {
-    // Add google login through here
-    alert("Under construction!");
 });
