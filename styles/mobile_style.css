@@ -4,9 +4,9 @@
     }
 
     .LoginTitle img {
-        max-width: 100%;   /* never exceed parent width */
-        height: auto;      /* keep aspect ratio */
-        display: block;    /* removes inline spacing issues */
+        max-width: 100%;
+        height: auto;
+        display: block;
     }
 
     .header h1{
@@ -18,16 +18,15 @@
     }
 }
 
-/* Mobile tweaks */
 @media (max-width: 480px) {
   .LoginForm {
     width: 100%;
     max-width: 100%;
-    padding: 20px 16px;
+    padding: 1.25rem 1rem;
   }
 
   .LoginTitle {
-    flex-direction: column; /* stack logos + header */
+    flex-direction: column;
   }
 
   .ImageWrapper {
