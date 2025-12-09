@@ -29,6 +29,15 @@ app.use(cors({
 
 console.log("My MongoStore: ", MongoStore);
 
+app.use((req, res, next) => {
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, private, max-age=0");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
+    res.setHeader("Surrogate-Control", "no-store");
+
+    next();
+});
+
 app.use(session({ // Configure session handling 
     secret: "KeepThisSecretToYourself", // Secret :P
     resave: false,

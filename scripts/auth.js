@@ -24,3 +24,10 @@ async function checkSession() {
 checkSession();
 let seconds = 60;
 setInterval(checkSession, 1000 * seconds); // This in miliseconds
+
+window.addEventListener("pageshow", function (event) {
+    if (event.persisted) {
+        // Page was restored from bfcache
+        window.location.reload();
+    }
+});
