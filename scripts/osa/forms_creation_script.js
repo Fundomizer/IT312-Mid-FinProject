@@ -1,4 +1,6 @@
-  const HOST = window.location.origin;
+const HOST = window.location.origin;
+
+
 
 
 async function loadOrganizations() {
@@ -6,11 +8,16 @@ async function loadOrganizations() {
 
 
 
+
+
+
    try {
     const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`, {
-      credentials: "include" 
+      credentials: "include"
     });
     const orgs = await response.json();
+
+
 
 
     orgs.forEach(org => {
@@ -25,7 +32,11 @@ async function loadOrganizations() {
 }
 
 
+
+
 loadOrganizations();
+
+
 
 
 // -------------------- Dynamic Form Fields --------------------
@@ -36,9 +47,13 @@ function loadFormCreation() {
   let fieldCounter = 0;
 
 
+
+
   addFieldBtn.addEventListener("click", () => {
     const fieldType = fieldTypeSelect.value;
     fieldCounter++;
+
+
 
 
     const field = document.createElement("div");
@@ -46,8 +61,20 @@ function loadFormCreation() {
     field.dataset.type = fieldType;
 
 
-    let fieldHTML = `<label>Question ${fieldCounter}</label>
-      <input type="text" placeholder="Enter question title" class="field-title" required>`;
+
+
+ let fieldHTML = `
+    <label>Question ${fieldCounter}</label>
+    <input type="text" placeholder="Enter question title" class="field-title" required>
+
+
+    <label class="required-toggle">
+      <input type="checkbox" class="required-checkbox">
+      Required
+    </label>
+  `;
+
+
 
 
     if (fieldType === "textarea") {
@@ -68,12 +95,18 @@ function loadFormCreation() {
     }
 
 
+
+
     fieldHTML += `<button class="remove-field-btn">Remove Question</button>`;
     field.innerHTML = fieldHTML;
     formFields.appendChild(field);
 
 
+
+
     field.querySelector(".remove-field-btn").addEventListener("click", () => field.remove());
+
+
 
 
     if (fieldType === "checkbox" || fieldType === "radio") {
@@ -81,10 +114,14 @@ function loadFormCreation() {
       const addOptionBtn = field.querySelector(".add-option-btn");
 
 
+
+
       addOptionBtn.addEventListener("click", () => {
         const optionCount = optionsContainer.children.length + 1;
         const optionItem = document.createElement("div");
         optionItem.classList.add("option-item");
+
+
 
 
         optionItem.innerHTML = `
@@ -97,21 +134,31 @@ function loadFormCreation() {
       });
 
 
+
+
       field.querySelector(".remove-option-btn").addEventListener("click", (e) => e.target.parentElement.remove());
     }
   });
 }
 
 
+
+
 loadFormCreation();
+
+
 
 
 document.getElementById("submitFormBtn").addEventListener("click", async (event) => {
   event.preventDefault();
 
 
+
+
   const requirement_name = document.getElementById("formTitle").value.trim();
   const description = document.getElementById("formDescription").value.trim();
+
+
 
 
   if (!requirement_name) return alert("Please enter a form title.");
@@ -119,7 +166,13 @@ document.getElementById("submitFormBtn").addEventListener("click", async (event)
 
 
 
+
+
+
+
     const formFieldsElements = [...document.querySelectorAll(".form-field")];
+
+
 
 
     if (formFieldsElements.length === 0) {
@@ -128,9 +181,11 @@ document.getElementById("submitFormBtn").addEventListener("click", async (event)
   const fields = [...document.querySelectorAll(".form-field")].map((field) => {
     const question = field.querySelector(".field-title").value.trim();
     const field_type = field.dataset.type || "text";
-    const required = true;
+    const required = field.querySelector(".required-checkbox").checked;
     return { question, field_type, required };
   });
+
+
 
 
   const tags = document.getElementById("tagInput").value
@@ -139,14 +194,20 @@ document.getElementById("submitFormBtn").addEventListener("click", async (event)
     .filter(tag => tag);
 
 
+
+
   const selectedOrgOptions = [...document.getElementById("orgSelect").selectedOptions];
   const assigned_to = selectedOrgOptions.length > 0
                       ? selectedOrgOptions.map(opt => opt.value)
                       : ["all"];
 
 
+
+
   const formData = { requirement_name, description, fields, tags, assigned_to,
   };
+
+
 
 
   try {
@@ -158,11 +219,17 @@ document.getElementById("submitFormBtn").addEventListener("click", async (event)
     });
 
 
+
+
     const result = await response.json();
+
+
 
 
     if (result.success) {
       alert("Form successfully saved!");
+
+
 
 
       document.getElementById("formTitle").value = "";

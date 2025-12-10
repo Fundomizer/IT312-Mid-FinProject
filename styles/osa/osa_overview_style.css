@@ -224,3 +224,141 @@
   font-weight: bold;
   color: var(--text-color);
 }
+
+/* Requirement Entry Styling */
+.requirement-entry {
+  background-color: var(--search-bar-bg-color);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  margin: 0.5rem 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+
+.requirement-entry:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+}
+
+
+.req-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+
+.req-header .req-type {
+  font-size: 0.95rem;
+}
+
+
+.req-arrow {
+  transition: transform 0.25s ease;
+  font-size: 1rem;
+}
+
+
+.req-details {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, padding 0.35s ease;
+  padding-left: 1rem;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+
+.req-questions {
+  margin-top: 0.5rem;
+}
+
+
+.req-q-item {
+  background-color: var(--card-bg-color);
+  border-radius: 8px;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+
+.req-q-item:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+
+.req-q-meta {
+  font-size: 0.75rem;
+  color: var(--muted);
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+
+.no-questions {
+  font-style: italic;
+  color: var(--muted);
+}
+
+
+/* Modal overlay */
+.org-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+
+/* Modal content */
+.org-modal-content {
+  background: var(--card-bg-color);
+  color: var(--text-color);
+  padding: 20px;
+  max-width: 600px;
+  width: 90%;
+  border-radius: 12px;
+  overflow-y: auto;
+  max-height: 90vh;
+  box-shadow: 0 6px 24px rgba(2, 6, 23, 0.6);
+}
+
+
+/* Close button */
+.org-modal-close {
+  float: right;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  color: var(--muted);
+  transition: color 0.2s ease;
+}
+
+
+.org-modal-close:hover {
+  color: var(--accent-color);
+}
+
+
+.requirement-entry {
+  margin: 10px 0;
+  cursor: pointer;
+}
+
+
+.req-details {
+  margin-left: 20px;
+  display: none;
+}
