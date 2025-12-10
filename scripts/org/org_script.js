@@ -6,21 +6,22 @@ const history = document.getElementById("historyButton")
 
 async function loadDashboard() {
     loadPage('org', 'dashboard_page.html')
-
+    
     let orgs = await fetchCollection('student_organization');
     let totalSubmissions = 0;
     orgs.forEach(org => {
         const reqs = org.requirements || {};
         totalSubmissions += Object.keys(reqs).length;
     });
-
+    
     let assignedForms = await fetchCollection('forms')
-
+    
     const totalSubs = document.querySelector("#TotalSubmissions b");
     const totalAssForms = document.querySelector("#AssignedForms b");
-
+    
     totalSubs.textContent = totalSubmissions;
     totalAssForms.textContent = assignedForms.length;
+    document.getElementById('OrgName').innerText = localStorage.getItem('org_name')
 }
 
 // For the apply and clear filter buttons to work
