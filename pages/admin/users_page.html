@@ -32,11 +32,16 @@
 
                     <div class="Hidden" id="OrgForm">
                         <label for="organization">Organization</label>
-                        <input type="text" name="organization">
+                        <select name="organization" id="OrgListAdd"></select>
                     </div>
                     <div class="Hidden" id="OsaForm">
                         <label for="department">Department</label>
-                        <input type="text" name="department">
+                        <select name="department">
+                            <option value="SAMCIS">SAMCIS</option>
+                            <option value="SEA">SEA</option>
+                            <option value="STELA">STELA</option>
+                            <option value="SONAHBS">SONAHBS</option>
+                        </select>
                     </div>
 
                     <input type="submit">
@@ -68,14 +73,18 @@
                     <input type="password" id="password" name="password" disabled>
                     <br />
 
-                    <div id="DetailsOrgForm" class="Hidden">
-                        <label for="DetailsOrganization">Organization</label>
-                        <input type="text" id="organization" name="organization" disabled>
+                    <div class="Hidden" id="DetailsOrgForm">
+                        <label for="organization">Organization</label>
+                        <select name="organization" id="organization" disabled></select>
                     </div>
-
-                    <div id="DetailsOsaForm" class="Hidden">
-                        <label for="DetailsDepartment">Department</label>
-                        <input type="text" id="department" name="department" disabled>
+                    <div class="Hidden" id="DetailsOsaForm">
+                        <label for="department">Department</label>
+                        <select name="department" id="department">
+                            <option value="SAMCIS">SAMCIS</option>
+                            <option value="SEA">SEA</option>
+                            <option value="STELA">STELA</option>
+                            <option value="SONAHBS">SONAHBS</option>
+                        </select>
                     </div>
 
                     <div id="DetailsActions">
@@ -97,36 +106,36 @@
             </div>
 
             <label class="SubCard" for="RolesFilter">
-            Filter users by:
-            <select name="RolesFilter" id="RolesFilter" id="FilterSkin">
-                <option value="All">All roles</option>
-                <option value="Admin">Admin</option>
-                <option value="OSA">Office of student affair</option>
-                <option value="Student Organization User">Student organization</option>
-            </select>
+                Filter users by:
+                <select name="RolesFilter" id="RolesFilter" id="FilterSkin">
+                    <option value="All">All roles</option>
+                    <option value="Admin">Admin</option>
+                    <option value="OSA">Office of student affair</option>
+                    <option value="Student Organization User">Student organization</option>
+                </select>
             </label>
 
             <label class="SubCard" for="DateFilter">
-            Date:
-            <select name="DateFilter" id="DateFilter">
-                <option value="oldest">Oldest</option>
-                <option value="newest">Newest</option>
-            </select>
+                Date:
+                <select name="DateFilter" id="DateFilter">
+                    <option value="oldest">Oldest</option>
+                    <option value="newest">Newest</option>
+                </select>
             </label>
 
             <label class="SubCard" for="AlphaFilter">
-            Alphabetical:
-            <select name="AlphaFilter" id="AlphaFilter">
-                <option value="desc">Descending</option>
-                <option value="asc">Ascending</option>
-            </select>
+                Alphabetical:
+                <select name="AlphaFilter" id="AlphaFilter">
+                    <option value="desc">Descending</option>
+                    <option value="asc">Ascending</option>
+                </select>
             </label>
             <div class="SubCard DateRange">
-            <label for="StartDate">From:</label>
-            <input type="date" id="StartDate">
+                <label for="StartDate">From:</label>
+                <input type="date" id="StartDate">
 
-            <label for="EndDate">To:</label>
-            <input type="date" id="EndDate">
+                <label for="EndDate">To:</label>
+                <input type="date" id="EndDate">
             </div>
 
         </div>

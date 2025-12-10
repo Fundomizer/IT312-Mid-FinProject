@@ -72,11 +72,6 @@ document.addEventListener("click", (event) => {
   }
 });
 
-
-
-
-
-
 /**
  * Fetches data from an endpoint.
  * NOTE: This function is specifically for fetching from the Node server and not PHP server
@@ -86,24 +81,16 @@ document.addEventListener("click", (event) => {
  */
 export async function fetchCollection(collection, URI = "", Port = 8123) {
 
-
-
-
   const HOST = window.location.origin; // Host machine's IP
   const endpoint =
     URI ||
     `${HOST}:${Port}/api/${collection}`;
 
 
-
-
   return fetch(endpoint)
     .then((request) => request.json())
     .then((data) => data);
 }
-
-
-
 
 /**
  * @param {HTMLElement} popup The popup container element.

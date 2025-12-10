@@ -82,6 +82,7 @@ async function loadUsersPage() {
             setupPopup(popup, openBtn, xButton, onOpen, onClose)
 
             function onOpen() {
+
                 form.dataset.userId = openBtn.dataset.userId
                 Object.entries(details).forEach(([key, value]) => {
                     const element = document.querySelector(`#DetailsForm #${key}`)
@@ -104,7 +105,6 @@ async function loadUsersPage() {
                             roleSelect.value = "ORG"
                             break
                     }
-
                 }
 
                 const osaForm = document.getElementById("DetailsOsaForm");
@@ -124,7 +124,7 @@ async function loadUsersPage() {
 
             function onClose() {
                 // Clear the inptus
-                let elementIds = ['name', 'email', 'password', 'department', 'organization']
+                let elementIds = ['name', 'email', 'password']
                 elementIds.forEach(id => {
                     const element = document.getElementById(id)
                     if (element) {
@@ -137,7 +137,7 @@ async function loadUsersPage() {
         }
 
         function handleEdit() {
-            let elementIds = ['name', 'email', 'password', 'department', 'organization']
+            let elementIds = ['name', 'email', 'password', 'department', 'organization',]
             elementIds.forEach(id => {
                 const element = document.getElementById(id)
                 if (element) element.disabled = false
@@ -227,6 +227,22 @@ async function loadUsersPage() {
 
         displayUsers(filtered)
     }
+
+    // Handle adding the list of organizations to the dropdown
+    const orgs = await fetchCollection('org_names')
+
+    let orgsListAdd = document.getElementById('OrgListAdd')
+    let orgsListEdit = document.getElementById('organization')
+    orgsListAdd.innerHTML = ""
+    orgsListEdit.innerHTML = ""
+    orgs.forEach(org => {
+        const option = document.createElement("option");
+        option.value = org['org_name'];
+        option.textContent = org['org_name'];
+
+        orgsListAdd.appendChild(option);
+        orgsListEdit.appendChild(option.cloneNode(true));
+    })
 }
 
 async function loadLogsPage() {
