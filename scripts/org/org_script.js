@@ -36,7 +36,7 @@ async function loadForms() {
 
     let forms = await fetchCollection(`orgs/requirements/${encodeURIComponent(orgName)}`)
     console.log("Forms: ", forms);
-    let requirements = []
+    let requirements = {}
 
     if (forms.success) {
         requirements = forms.requirements
@@ -45,13 +45,18 @@ async function loadForms() {
         return
     }
 
+    let requirementsArray = Object.entries(requirements).map(([key, value]) => ({
+        requirement_name: key,
+        ...value
+    }));
+
     document.getElementById('SearchInput').addEventListener('input', handleFilter)
 
     const selectedTags = new Set();
     let currentSortOrder = 'none';
 
-    // createTags()
-    displayForm(requirements)
+    createTags()
+    displayForm(requirementsArray)
 
     filters = {
         updateFilters: updateFilters,
@@ -70,18 +75,19 @@ async function loadForms() {
             return;
         }
 
-        Object.entries(requirements).forEach(([key, form]) => {
-            const formCard = createForm(key, form);
-            document.getElementById("Forms").insertAdjacentHTML("beforeend", formCard);
+        formsToDisplay.forEach(form => {
+            const formCard = createForm(form.requirement_name, form);
+            formDisplay.insertAdjacentHTML("beforeend", formCard);
         });
 
     }
 
     function createTags() {
         const tagsSet = new Set();
-        forms.forEach(form => {
-            if (form.tags) {
-                form.tags.forEach(tag => tagsSet.add(tag));
+
+        Object.values(requirements).forEach(req => {
+            if (req.tags && Array.isArray(req.tags)) {
+                req.tags.forEach(tag => tagsSet.add(tag));
             }
         });
 
@@ -137,22 +143,21 @@ async function loadForms() {
     function handleFilter() {
         const term = document.getElementById('SearchInput').value.toLowerCase();
 
-        let filtered = forms;
+        let filtered = requirementsArray;
 
         // Search filter
         if (term) {
             filtered = filtered.filter(form =>
                 form.requirement_name?.toLowerCase().includes(term) ||
-                form.description?.toLowerCase().includes(term) ||
                 (form.tags && form.tags.some(tag => tag.toLowerCase().includes(term)))
             );
         }
 
         // Tag filter
         if (selectedTags.size > 0) {
-            filtered = filtered.filter(form => {
-                if (!form.tags) return false;
-                return form.tags.some(tag => selectedTags.has(tag));
+            filtered = filtered.filter(forms => {
+                if (!forms.tags) return false;
+                return forms.tags.some(tag => selectedTags.has(tag));
             });
         }
 
