@@ -154,3 +154,31 @@ exports.deleteOrganization = async (req, res) => {
     }
     touchSession(req)
 };
+
+exports.getRequirements = async (req, res) => {
+    try {
+        const orgs = db.collection("student_organization");
+        const { name } = req.params;
+
+        const org = await orgs.findOne(
+            { org_name: name },
+            { projection: { _id: 0, requirements: 1 } }
+        );
+
+        if (!org) {
+            return res.status(404).json({
+                success: false,
+                message: "Organization not found"
+            });
+        }
+
+        res.json({
+            success: true,
+            requirements: org.requirements
+        });
+
+    } catch (err) {
+        console.error("Error fetching requirements:", err);
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+};

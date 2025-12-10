@@ -31,16 +31,27 @@ let formModule = null;
 
 async function loadForms() {
     loadPage('org', 'assigned_form_page.html')
+    const orgName = localStorage.getItem('org_name')
+    console.log("org name: ", orgName);
 
-    let forms = await fetchCollection('forms')
+    let forms = await fetchCollection(`orgs/requirements/${encodeURIComponent(orgName)}`)
+    console.log("Forms: ", forms);
+    let requirements = []
+
+    if (forms.success) {
+        requirements = forms.requirements
+    } else {
+        console.log("Could not get forms :(");
+        return
+    }
 
     document.getElementById('SearchInput').addEventListener('input', handleFilter)
 
     const selectedTags = new Set();
     let currentSortOrder = 'none';
 
-    createTags()
-    displayForm(forms)
+    // createTags()
+    displayForm(requirements)
 
     filters = {
         updateFilters: updateFilters,
@@ -59,9 +70,11 @@ async function loadForms() {
             return;
         }
 
-        formsToDisplay.forEach(item => {
-            formDisplay.appendChild(createForm(item));
+        Object.entries(requirements).forEach(([key, form]) => {
+            const formCard = createForm(key, form);
+            document.getElementById("Forms").insertAdjacentHTML("beforeend", formCard);
         });
+
     }
 
     function createTags() {
@@ -82,11 +95,11 @@ async function loadForms() {
             checkbox.type = 'checkbox';
             checkbox.id = `TagsButton${index}`;
             checkbox.dataset.tag = tag;
-                
+
             const label = document.createElement('label');
             label.htmlFor = `TagsButton${index}`;
             label.textContent = tag;
-                
+
             Container.appendChild(checkbox);
             Container.appendChild(label);
         });
@@ -98,13 +111,13 @@ async function loadForms() {
         document.querySelectorAll('.TagsContainer input[type="checkbox"]:checked').forEach(checkbox => {
             selectedTags.add(checkbox.dataset.tag);
         });
-        
+
         // Update sort order from dropdown
         const sortDropdown = document.getElementById('FilterDropdown');
         if (sortDropdown) {
             currentSortOrder = sortDropdown.value.toLowerCase();
         }
-        
+
         handleFilter();
     }
 
@@ -120,7 +133,7 @@ async function loadForms() {
         }
         handleFilter();
     }
-    
+
     function handleFilter() {
         const term = document.getElementById('SearchInput').value.toLowerCase();
 
@@ -153,216 +166,276 @@ async function loadForms() {
         displayForm(filtered);
     }
 
-    function createForm(form) {
-        // Parent wrapper
-        const wrapper = document.createElement("div");
-        wrapper.className = "SubCard Form";
 
-        // Attach the two big parts
-        wrapper.appendChild(createFormDetails());
-        wrapper.appendChild(createStyledButtonDiv());
+    function createForm(requirementName, form) {
+        return `
+    <div class="SubCard Form">
 
-        return wrapper;
+        <div class="FormDetails">
 
-        function createFormDetails() {
-            const formDetails = document.createElement("div");
-            formDetails.className = "FormDetails";
+            <!-- Title -->
+            <span>
+                <h2 class="FormTitle">${formatTitle(requirementName)}</h2>
+            </span>
 
-            // Title + Action
-            const titleBlock = document.createElement("span");
-            const titleEl = document.createElement("h2");
-            titleEl.className = "FormTitle";
-            titleEl.textContent = form.requirement_name;
+            <!-- Description (optional, if you add one later) -->
+            ${form.description ? `<p class="FormDescription">${form.description}</p>` : ""}
 
+            <!-- Requirements summary -->
+            <div class="FormRequirements">
+                <span>
+                    <div class="ImageWrapper">
+                        <img src="../../assets/images/org_icons/document_icon.png" alt="Document icon">
+                    </div>
+                    <p>${form.fields.length} Fields required</p>
+                </span>
+            </div>
 
+            <!-- Tags -->
+            <div class="Tags">
+                ${form.tags.map(tag => `<p class="Tag">${tag}</p>`).join("")}
+            </div>
 
-            titleBlock.appendChild(titleEl);
+            <!-- Last Updated -->
+            <p class="LastUpdated">Last updated: ${form.last_updated}</p>
 
+        </div>
 
-            // Description
-            const descEl = document.createElement("p");
-            descEl.className = "FormDescription";
-            descEl.textContent = form.description;
+        <!-- Button -->
+        <div>
+            <button class="StyledButton" data-form-id="${form.form_id}">
+                <span>
+                    <img src="../../assets/images/icons/forms_icon.png" alt="Form icon">
+                </span>
+                <span>Fill Out Form</span>
+            </button>
+        </div>
 
-            // Requirements
-            const requirements = document.createElement("div");
-            requirements.className = "FormRequirements";
-
-            const reqSpan = document.createElement("span");
-
-            const imageWrapper = document.createElement("div");
-            imageWrapper.className = "ImageWrapper";
-
-            const icon = document.createElement("img");
-            icon.src = "../../assets/images/org_icons/document_icon.png";
-            icon.alt = "Document icon";
-
-            imageWrapper.appendChild(icon);
-
-            const reqText = document.createElement("p");
-            reqText.textContent = `${form.fields.length} Fields required`;
-
-            reqSpan.appendChild(imageWrapper);
-            reqSpan.appendChild(reqText);
-            requirements.appendChild(reqSpan);
-
-            // Tags
-            const tagsContainer = document.createElement("div");
-            tagsContainer.className = "Tags";
-            form.tags.forEach(tag => {
-                const tagEl = document.createElement("p");
-                tagEl.className = "Tag";
-                tagEl.textContent = tag;
-                tagsContainer.appendChild(tagEl);
-            });
-
-            // Assemble FormDetails
-            formDetails.appendChild(titleBlock);
-            formDetails.appendChild(descEl);
-            formDetails.appendChild(requirements);
-            formDetails.appendChild(tagsContainer);
-
-            return formDetails;
-        }
-
-        // --- Internal function: Styled button ---
-        function createStyledButtonDiv() {
-            const buttonWrapper = document.createElement("div");
-
-            const button = document.createElement("button");
-            button.className = "StyledButton";
-            button.dataset.formId = form._id;
-
-            const iconSpan = document.createElement("span");
-            const formIcon = document.createElement("img");
-            formIcon.src = "../../assets/images/icons/forms_icon.png";
-            formIcon.alt = "Form icon";
-            iconSpan.appendChild(formIcon);
-
-            const labelSpan = document.createElement("span");
-            labelSpan.textContent = "Fill Out form";
-
-            button.appendChild(iconSpan);
-            button.appendChild(labelSpan);
-            buttonWrapper.appendChild(button);
-
-            return buttonWrapper;
-        }
+    </div>
+    `;
     }
 
-    return {
-        populatePopupForm: function(form) {
-            const popup = document.querySelector(".PopupForm");
-            if (!popup) return;
+    // Helper to convert "strategic_plan" → "Strategic Plan"
+    function formatTitle(key) {
+        return key
+            .replace(/_/g, " ")
+            .replace(/\b\w/g, c => c.toUpperCase());
+    }
 
-            // Set form ID as data attribute
-            popup.dataset.formId = form._id;
 
-            // Find the form element inside popup
-            const formElement = popup.querySelector(".Form");
-            if (!formElement) return;
+    // function createForm(form) {
 
-            // Clear existing content
-            formElement.innerHTML = '';
 
-            // Create title
-            const titleLabel = document.createElement("label");
-            titleLabel.htmlFor = "FormTitle";
-            const titleH3 = document.createElement("h3");
-            titleH3.textContent = form.requirement_name;
-            titleLabel.appendChild(titleH3);
-            formElement.appendChild(titleLabel);
-            formElement.appendChild(document.createElement("br"));
 
-            // Create description
-            const descLabel = document.createElement("label");
-            descLabel.textContent = form.description;
-            formElement.appendChild(descLabel);
-            formElement.appendChild(document.createElement("br"));
+    //     // Parent wrapper
+    //     const wrapper = document.createElement("div");
+    //     wrapper.className = "SubCard Form";
 
-            // Create fields dynamically
-            form.fields.forEach((field, index) => {
-                const formFields = document.createElement("div");
-                formFields.className = "FormFields";
+    //     // Attach the two big parts
+    //     wrapper.appendChild(createFormDetails());
+    //     wrapper.appendChild(createStyledButtonDiv());
 
-                const fieldLabel = document.createElement("label");
-                fieldLabel.htmlFor = `field_${index}`;
-                const fieldSpan = document.createElement("span");
-                fieldSpan.textContent = field.question;
-                if (field.required) {
-                    fieldSpan.textContent += " *";
-                }
-                fieldLabel.appendChild(fieldSpan);
+    //     return wrapper;
 
-                let inputElement;
-                
-                // Create appropriate input based on field_type
-                switch(field.field_type) {
-                    case 'number':
-                        inputElement = document.createElement("input");
-                        inputElement.type = "number";
-                        inputElement.id = `field_${index}`;
-                        inputElement.required = field.required;
-                        break;
-                    case 'date':
-                        inputElement = document.createElement("input");
-                        inputElement.type = "date";
-                        inputElement.id = `field_${index}`;
-                        inputElement.required = field.required;
-                        break;
-                    case 'array':
-                        inputElement = document.createElement("textarea");
-                        inputElement.id = `field_${index}`;
-                        inputElement.required = field.required;
-                        inputElement.placeholder = "Enter items separated by commas";
-                        break;
-                    case 'object':
-                        inputElement = document.createElement("textarea");
-                        inputElement.id = `field_${index}`;
-                        inputElement.required = field.required;
-                        inputElement.placeholder = "Enter JSON object";
-                        break;
-                    case 'text':
-                    default:
-                        inputElement = document.createElement("input");
-                        inputElement.type = "text";
-                        inputElement.id = `field_${index}`;
-                        inputElement.required = field.required;
-                        break;
-                }
+    //     function createFormDetails() {
+    //         const formDetails = document.createElement("div");
+    //         formDetails.className = "FormDetails";
 
-                formFields.appendChild(fieldLabel);
-                formFields.appendChild(inputElement);
-                formElement.appendChild(formFields);
-            });
+    //         // Title + Action
+    //         const titleBlock = document.createElement("span");
+    //         const titleEl = document.createElement("h2");
+    //         titleEl.className = "FormTitle";
+    //         titleEl.textContent = form.requirement_name;
 
-            // Add file upload section
-            const uploadDiv = document.createElement("div");
-            uploadDiv.className = "FormUpload";
 
-            const uploadSpan = document.createElement("span");
-            uploadSpan.textContent = "Supporting Documents";
 
-            const uploadLabel = document.createElement("label");
-            uploadLabel.htmlFor = "UploadButton";
-            uploadLabel.textContent = "Upload File";
+    //         titleBlock.appendChild(titleEl);
 
-            const uploadInput = document.createElement("input");
-            uploadInput.type = "file";
-            uploadInput.id = "UploadButton";
-            uploadInput.multiple = true;
 
-            const uploadContainer = document.createElement("div");
-            uploadContainer.id = "UploadedFilesContainer";
+    //         // Description
+    //         const descEl = document.createElement("p");
+    //         descEl.className = "FormDescription";
+    //         descEl.textContent = form.description;
 
-            uploadDiv.appendChild(uploadSpan);
-            uploadDiv.appendChild(uploadLabel);
-            uploadDiv.appendChild(uploadInput);
-            uploadDiv.appendChild(uploadContainer);
-            formElement.appendChild(uploadDiv);
-        },
-        forms: forms
-    };
+    //         // Requirements
+    //         const requirements = document.createElement("div");
+    //         requirements.className = "FormRequirements";
+
+    //         const reqSpan = document.createElement("span");
+
+    //         const imageWrapper = document.createElement("div");
+    //         imageWrapper.className = "ImageWrapper";
+
+    //         const icon = document.createElement("img");
+    //         icon.src = "../../assets/images/org_icons/document_icon.png";
+    //         icon.alt = "Document icon";
+
+    //         imageWrapper.appendChild(icon);
+
+    //         const reqText = document.createElement("p");
+    //         reqText.textContent = `${form.fields.length} Fields required`;
+
+    //         reqSpan.appendChild(imageWrapper);
+    //         reqSpan.appendChild(reqText);
+    //         requirements.appendChild(reqSpan);
+
+    //         // Tags
+    //         const tagsContainer = document.createElement("div");
+    //         tagsContainer.className = "Tags";
+    //         form.tags.forEach(tag => {
+    //             const tagEl = document.createElement("p");
+    //             tagEl.className = "Tag";
+    //             tagEl.textContent = tag;
+    //             tagsContainer.appendChild(tagEl);
+    //         });
+
+    //         // Assemble FormDetails
+    //         formDetails.appendChild(titleBlock);
+    //         formDetails.appendChild(descEl);
+    //         formDetails.appendChild(requirements);
+    //         formDetails.appendChild(tagsContainer);
+
+    //         return formDetails;
+    //     }
+
+    //     // --- Internal function: Styled button ---
+    //     function createStyledButtonDiv() {
+    //         const buttonWrapper = document.createElement("div");
+
+    //         const button = document.createElement("button");
+    //         button.className = "StyledButton";
+    //         button.dataset.formId = form._id;
+
+    //         const iconSpan = document.createElement("span");
+    //         const formIcon = document.createElement("img");
+    //         formIcon.src = "../../assets/images/icons/forms_icon.png";
+    //         formIcon.alt = "Form icon";
+    //         iconSpan.appendChild(formIcon);
+
+    //         const labelSpan = document.createElement("span");
+    //         labelSpan.textContent = "Fill Out form";
+
+    //         button.appendChild(iconSpan);
+    //         button.appendChild(labelSpan);
+    //         buttonWrapper.appendChild(button);
+
+    //         return buttonWrapper;
+    //     }
+    // }
+
+    // return {
+    //     populatePopupForm: function (form) {
+    //         const popup = document.querySelector(".PopupForm");
+    //         if (!popup) return;
+
+    //         // Set form ID as data attribute
+    //         popup.dataset.formId = form._id;
+
+    //         // Find the form element inside popup
+    //         const formElement = popup.querySelector(".Form");
+    //         if (!formElement) return;
+
+    //         // Clear existing content
+    //         formElement.innerHTML = '';
+
+    //         // Create title
+    //         const titleLabel = document.createElement("label");
+    //         titleLabel.htmlFor = "FormTitle";
+    //         const titleH3 = document.createElement("h3");
+    //         titleH3.textContent = form.requirement_name;
+    //         titleLabel.appendChild(titleH3);
+    //         formElement.appendChild(titleLabel);
+    //         formElement.appendChild(document.createElement("br"));
+
+    //         // Create description
+    //         const descLabel = document.createElement("label");
+    //         descLabel.textContent = form.description;
+    //         formElement.appendChild(descLabel);
+    //         formElement.appendChild(document.createElement("br"));
+
+    //         // Create fields dynamically
+    //         form.fields.forEach((field, index) => {
+    //             const formFields = document.createElement("div");
+    //             formFields.className = "FormFields";
+
+    //             const fieldLabel = document.createElement("label");
+    //             fieldLabel.htmlFor = `field_${index}`;
+    //             const fieldSpan = document.createElement("span");
+    //             fieldSpan.textContent = field.question;
+    //             if (field.required) {
+    //                 fieldSpan.textContent += " *";
+    //             }
+    //             fieldLabel.appendChild(fieldSpan);
+
+    //             let inputElement;
+
+    //             // Create appropriate input based on field_type
+    //             switch (field.field_type) {
+    //                 case 'number':
+    //                     inputElement = document.createElement("input");
+    //                     inputElement.type = "number";
+    //                     inputElement.id = `field_${index}`;
+    //                     inputElement.required = field.required;
+    //                     break;
+    //                 case 'date':
+    //                     inputElement = document.createElement("input");
+    //                     inputElement.type = "date";
+    //                     inputElement.id = `field_${index}`;
+    //                     inputElement.required = field.required;
+    //                     break;
+    //                 case 'array':
+    //                     inputElement = document.createElement("textarea");
+    //                     inputElement.id = `field_${index}`;
+    //                     inputElement.required = field.required;
+    //                     inputElement.placeholder = "Enter items separated by commas";
+    //                     break;
+    //                 case 'object':
+    //                     inputElement = document.createElement("textarea");
+    //                     inputElement.id = `field_${index}`;
+    //                     inputElement.required = field.required;
+    //                     inputElement.placeholder = "Enter JSON object";
+    //                     break;
+    //                 case 'text':
+    //                 default:
+    //                     inputElement = document.createElement("input");
+    //                     inputElement.type = "text";
+    //                     inputElement.id = `field_${index}`;
+    //                     inputElement.required = field.required;
+    //                     break;
+    //             }
+
+    //             formFields.appendChild(fieldLabel);
+    //             formFields.appendChild(inputElement);
+    //             formElement.appendChild(formFields);
+    //         });
+
+    //         // Add file upload section
+    //         const uploadDiv = document.createElement("div");
+    //         uploadDiv.className = "FormUpload";
+
+    //         const uploadSpan = document.createElement("span");
+    //         uploadSpan.textContent = "Supporting Documents";
+
+    //         const uploadLabel = document.createElement("label");
+    //         uploadLabel.htmlFor = "UploadButton";
+    //         uploadLabel.textContent = "Upload File";
+
+    //         const uploadInput = document.createElement("input");
+    //         uploadInput.type = "file";
+    //         uploadInput.id = "UploadButton";
+    //         uploadInput.multiple = true;
+
+    //         const uploadContainer = document.createElement("div");
+    //         uploadContainer.id = "UploadedFilesContainer";
+
+    //         uploadDiv.appendChild(uploadSpan);
+    //         uploadDiv.appendChild(uploadLabel);
+    //         uploadDiv.appendChild(uploadInput);
+    //         uploadDiv.appendChild(uploadContainer);
+    //         formElement.appendChild(uploadDiv);
+    //     },
+    //     forms: forms
+    // };
 }
 
 // this fucntion is currently reading all requirements from
@@ -504,7 +577,7 @@ function toggleFilter() {
 function clearFilters() {
     const dropdown = document.querySelectorAll('#FilterDropdown');
     dropdown.forEach(select => select.selectedIndex = 0);
-    
+
     if (filters && filters.clearFilters) {
         filters.clearFilters();
     } else {
@@ -524,7 +597,7 @@ let selectedFiles = [];
 
 function fileAction(e) {
     const files = Array.from(e.target.files);
-            
+
     files.forEach(file => {
         if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
             selectedFiles.push(file);
@@ -535,23 +608,23 @@ function fileAction(e) {
 
 function createCardFile(file, index) {
     const container = document.getElementById('UploadedFilesContainer');
-            
+
     const fileSelected = document.createElement('div');
     fileSelected.className = 'FileSelectedCard';
     fileSelected.id = `File-${index}`;
-            
+
     const fileName = document.createElement('span');
     fileName.className = 'FileName';
     let newFileName = `AttachedFile${index}`;
-    let renamedFile = new File([file], newFileName, {type: file.type});
+    let renamedFile = new File([file], newFileName, { type: file.type });
     fileName.textContent = renamedFile.name;
 
     const preview = document.createElement('div');
     preview.className = 'FilePreview';
-    
+
     if (file.type.startsWith('image/')) {
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             preview.innerHTML = `<img src="${e.target.result}" alt="${file.name}">`;
         };
         reader.readAsDataURL(file);
@@ -561,19 +634,19 @@ function createCardFile(file, index) {
         else if (file.type.includes('video')) icon = '🎥';
         else if (file.type.includes('audio')) icon = '🎵';
         else if (file.type.includes('zip') || file.type.includes('compressed')) icon = '📦';
-                
+
         preview.innerHTML = `<span class="file-icon">${icon}</span>`;
     }
-    
+
     const removeBtn = document.createElement('button');
     removeBtn.className = 'RemoveButton';
     removeBtn.innerHTML = '×';
     removeBtn.onclick = () => removeFile(index);
-    
+
     fileSelected.appendChild(fileName);
     fileSelected.appendChild(preview);
     fileSelected.appendChild(removeBtn);
-    
+
     container.appendChild(fileSelected);
 }
 
@@ -581,7 +654,7 @@ function removeFile(index) {
     selectedFiles.splice(index, 1);
     reDisplayFiles();
 }
-        
+
 function reDisplayFiles() {
     const container = document.getElementById('UploadedFilesContainer');
     container.innerHTML = '';
@@ -592,7 +665,7 @@ function reDisplayFiles() {
 
 // Assign event handlers for navigation
 if (dashboard) dashboard.addEventListener('click', loadDashboard)
-if (forms) forms.addEventListener('click', async () => {formModule = await loadForms();})
+if (forms) forms.addEventListener('click', async () => { formModule = await loadForms(); })
 if (history) history.addEventListener('click', loadHistory)
 
 // EventHandlers for the forms
@@ -600,11 +673,11 @@ document.addEventListener("click", (e) => {
     if (e.target.closest(".StyledButton")) {
         const button = e.target.closest(".StyledButton");
         const formId = button.dataset.formId;
-        
+
         if (formId && formModule) {
             // Find the form in the cached forms data
             const selectedForm = formModule.forms.find(f => f._id === formId);
-            
+
             if (selectedForm) {
                 formModule.populatePopupForm(selectedForm);
             }
