@@ -1,6 +1,6 @@
-import { fetchCollection, setupPopup } from "../utilities";
-import { createTableRow, createButton } from "../components";
-import { API_BASE_URL } from "../config";
+import { fetchCollection, setupPopup } from "../utilities.js";
+import { createTableRow, createButton } from "../components.js";
+import { API_BASE_URL } from "../config.js";
 
 let orgs = []
 
@@ -48,12 +48,12 @@ function renderOrgs(orgs) {
     document.getElementById('OrgTypeFilter').addEventListener('change', handleFilter)
 
     document.getElementById('ClearFiltersButton').addEventListener('click', () => {
-    document.getElementById('SearchInput').value = "";
-    document.getElementById('AlphaFilter').value = "desc";
-    document.getElementById('SchoolFilter').value = "All";
-    document.getElementById('OrgTypeFilter').value = "All";
-    handleFilter();
-     });
+        document.getElementById('SearchInput').value = "";
+        document.getElementById('AlphaFilter').value = "desc";
+        document.getElementById('SchoolFilter').value = "All";
+        document.getElementById('OrgTypeFilter').value = "All";
+        handleFilter();
+    });
 }
 
 function makeActionButtons(item) {
