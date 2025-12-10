@@ -1,4 +1,5 @@
   const HOST = window.location.origin;
+  // Check OSA Authentication
 (async function checkOSA() {
         const usernameLabel = document.getElementById("UsernameLabel");
 

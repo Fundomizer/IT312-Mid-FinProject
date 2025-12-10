@@ -2,13 +2,9 @@ const HOST = window.location.origin;
 
 
 
-
+// Load Organizations 
 async function loadOrganizations() {
   const orgSelect = document.getElementById("orgSelect");
-
-
-
-
 
 
    try {

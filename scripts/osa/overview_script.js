@@ -2,7 +2,7 @@ const HOST = window.location.origin;
 
 
 
-
+// Load Dashboard Stats
 async function loadDashboard() {
   const orgResponse = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`);
   const orgs = await orgResponse.json();
@@ -28,7 +28,7 @@ async function loadDashboard() {
 
 
 
-
+// Update Progress Bars
 async function updateProgressBars() {
   const orgResponse = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`);
   const orgs = await orgResponse.json();
@@ -81,7 +81,7 @@ async function updateProgressBars() {
 
 
 
-
+// Load Recent Submissions
 async function loadRecentSubmissions() {
   const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`);
   const orgs = await response.json();
@@ -95,7 +95,7 @@ async function loadRecentSubmissions() {
 
   let allRequirements = [];
 
-
+// Gather all requirements from all organizations
   orgs.forEach(org => {
     const reqs = org.requirements || {};
     Object.entries(reqs).forEach(([type, info]) => {
@@ -157,10 +157,13 @@ function showRequirementModal(title, questions) {
     <div class="org-modal-content">
       <span class="org-modal-close">&times;</span>
       <h2>${title}</h2>
+      <br>
       ${questions.length
-        ? questions.map(q => `<p><b>Q:</b> ${q.question}
-          <br> <b> Content: </b> ${q.content} </p>`).join('')
+        ? questions.map(q => `<p><b>Question:</b> ${q.question}
+          <br> <b> Content: </b> ${q.content} </p>     <br>`).join('')
+          
         : '<p>No questions for this requirement</p>'}
+   
     </div>
   `;
   document.body.appendChild(modal);
@@ -183,20 +186,39 @@ async function loadOrganizations() {
   const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`, { credentials: "include" });
   const orgs = await response.json();
 
-
   const orgContainer = document.getElementById("organizations-list");
   const orgHeader = orgContainer.querySelector("h2");
   orgContainer.innerHTML = "";
   orgContainer.appendChild(orgHeader);
 
-
   orgs.forEach(org => {
     const card = document.createElement('div');
     card.className = 'organization-item';
 
-
     const reqCount = Object.keys(org.requirements || {}).length;
 
+    const dropdown = document.createElement('div');
+    dropdown.className = 'org-dropdown';
+    dropdown.innerHTML = `
+      <p><b>School:</b> ${org.school || 'N/A'}</p>
+      <p><b>Type:</b> ${org.org_type || 'N/A'}</p>
+      ${org.adviser?.name ? `<p><b>Adviser:</b> ${org.adviser.name}</p>` : ''}
+      ${org.officers?.length ? `<p><b>Officers:</b></p><ul>${org.officers.map(o => `<li>${o.position}: ${o.name}</li>`).join('')}</ul>` : ''}
+      <h4>Requirements (${reqCount})</h4>
+    `;
+
+    const reqContainer = document.createElement('div');
+    reqContainer.className = 'requirements-container';
+    dropdown.appendChild(reqContainer);
+
+    const reqObj = org.requirements || {};
+    Object.entries(reqObj).forEach(([type, info]) => {
+      const entry = document.createElement('div');
+      entry.className = 'requirement-entry';
+      entry.textContent = type.replace(/_/g, ' ');
+      entry.addEventListener('click', () => showRequirementModal(type.replace(/_/g, ' '), info.fields || []));
+      reqContainer.appendChild(entry);
+    });
 
     card.innerHTML = `
       <div class="org-header">
@@ -206,42 +228,18 @@ async function loadOrganizations() {
         </div>
         <div class="org-toggle">▶</div>
       </div>
-      <div class="org-dropdown">
-        <p><b>School:</b> ${org.school || 'N/A'}</p>
-        <p><b>Type:</b> ${org.org_type || 'N/A'}</p>
-        ${org.adviser?.name ? `<p><b>Adviser:</b> ${org.adviser.name}</p>` : ''}
-        ${org.officers?.length ? `<p><b>Officers:</b></p><ul>${org.officers.map(o => `<li>${o.position}: ${o.name}</li>`).join('')}</ul>` : ''}
-        <h4>Requirements (${reqCount})</h4>
-      </div>
     `;
-
-
+    card.appendChild(dropdown);
     orgContainer.appendChild(card);
 
-
-
-
     const header = card.querySelector('.org-header');
-    const dropdown = card.querySelector('.org-dropdown');
     header.addEventListener('click', () => {
       const open = card.classList.toggle('open');
       dropdown.style.maxHeight = open ? dropdown.scrollHeight + 'px' : '0px';
     });
-
-
-
-
-    const reqObj = org.requirements || {};
-    Object.entries(reqObj).forEach(([type, info]) => {
-      const entry = document.createElement('div');
-      entry.className = 'requirement-entry';
-      entry.textContent = type.replace(/_/g, ' ');
-      entry.style.cursor = 'pointer';
-      entry.addEventListener('click', () => showRequirementModal(type.replace(/_/g, ' '), info.fields || []));
-      dropdown.appendChild(entry);
-    });
   });
 }
+
 
 
 

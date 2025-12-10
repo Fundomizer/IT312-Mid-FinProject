@@ -7,7 +7,7 @@ const totalCount = document.getElementById("totalCount");
 const shownCount = document.getElementById("shownCount");
 
 let allItems = [];
-
+// Load Items into Table
 async function loadItems() {
    try {
     const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`, {
@@ -64,7 +64,7 @@ async function loadItems() {
     console.error("Error loading data:", err);
   }
 }
-
+// Filter Results
 function filterResults() {
   const searchQuery = searchInput.value.toLowerCase().trim();
   const selectedLocation = filterLocation.value.trim().toLowerCase();
@@ -113,7 +113,7 @@ function filterResults() {
 
   shownCount.textContent = visibleCount;
 }
-
+// Show Form Details in Modal
 function showFormDetails(org, reqType, reqData) {
   const reqDiv = document.getElementById("modalRequirements");
   reqDiv.innerHTML = `
