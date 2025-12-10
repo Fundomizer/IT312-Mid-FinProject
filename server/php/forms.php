@@ -52,39 +52,37 @@ try {
             break;
 
 
-        case 'PUT':
-            if (!$data || !isset($data["requirement_name"])) {
-                http_response_code(400);
-                echo json_encode(["error" => "Missing form name"]);
-                exit();
-            }
+case 'PUT':
+    $id = $data['_id'] ?? null;
+    if (!$id) {
+        http_response_code(400);
+        echo json_encode(["error" => "Missing _id"]);
+        exit();
+    }
+    $updateResult = $collection->updateOne(
+        ["_id" => new MongoDB\BSON\ObjectId($id)],
+        ['$set' => [
+            "requirement_name" => $data["requirement_name"] ?? null,
+            "description" => $data["description"] ?? null,
+            "fields" => $data["fields"] ?? null,
+            "tags" => $data["tags"] ?? null,
+            "assigned_to" => $data["assigned_to"] ?? ["all"]
+        ]]
+    );
+    echo json_encode(["success" => true, "modified_count" => $updateResult->getModifiedCount()]);
+    break;
 
+case 'DELETE':
+    $id = $data['_id'] ?? null;
+    if (!$id) {
+        http_response_code(400);
+        echo json_encode(["error" => "Missing _id"]);
+        exit();
+    }
+    $deleteResult = $collection->deleteOne(["_id" => new MongoDB\BSON\ObjectId($id)]);
+    echo json_encode(["success" => true, "deleted_count" => $deleteResult->getDeletedCount()]);
+    break;
 
-            $name = $data["requirement_name"];
-            $updateResult = $collection->updateOne(
-                ["requirement_name" => $name],
-                ['$set' => [
-                    "requirement_name" => $data["requirement_name"] ?? null,
-                    "description" => $data["description"] ?? null,
-                    "fields" => $data["fields"] ?? null,
-                    "tags" => $data["tags"] ?? null,
-                    "assigned_to" => $data["assigned_to"] ?? ["all"]
-                ]]
-            );
-            echo json_encode(["success" => true, "modified_count" => $updateResult->getModifiedCount()]);
-            break;
-
-
-        case 'DELETE':
-            if (!$data || !isset($data["requirement_name"])) {
-                http_response_code(400);
-                echo json_encode(["error" => "Missing form ID"]);
-                exit();
-            }
-            $name = $data["requirement_name"];
-            $deleteResult = $collection->deleteOne(["requirement_name" => $name]);
-            echo json_encode(["success" => true, "deleted_count" => $deleteResult->getDeletedCount()]);
-            break;
 
 
         default:

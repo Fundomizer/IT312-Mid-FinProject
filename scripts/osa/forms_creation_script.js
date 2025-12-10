@@ -37,9 +37,6 @@ async function loadOrganizations() {
 loadOrganizations();
 
 
-
-
-// -------------------- Dynamic Form Fields --------------------
 function loadFormCreation() {
   const formFields = document.getElementById("formFields");
   const addFieldBtn = document.getElementById("addFieldBtn");

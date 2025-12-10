@@ -1,6 +1,8 @@
   const HOST = window.location.origin;
 
 let selectedForm = null;
+
+//loads active form
 async function loadActiveForms() {
   
   const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=forms`, {
@@ -61,11 +63,29 @@ async function loadActiveForms() {
       }
     });
 
-    formItem.querySelector(".update-form-btn").addEventListener("click", () => openModal(form));
-    formItem.querySelector(".delete-form-btn").addEventListener("click", () => {
-      selectedForm = form;
-      document.getElementById("modal-delete-btn").click();
-    });
+formItem.querySelector(".update-form-btn").addEventListener("click", () => {
+    selectedForm = form;   
+    openModal(form);
+});
+
+formItem.querySelector(".delete-form-btn").addEventListener("click", async () => {
+  if (!confirm(`Delete form "${form.requirement_name}"?`)) return;
+//send delete request
+  const res = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/forms.php`, {
+    method: "DELETE",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ _id: form._id.$oid || form._id })
+  });
+
+  if (res.ok) {
+    alert("Form deleted successfully!");
+    loadActiveForms();
+  } else {
+    alert("Failed to delete form.");
+  }
+});
+
   });
 }
 
@@ -102,19 +122,22 @@ document.getElementById("modal-description").addEventListener("input", function(
 document.getElementById("modal-update-btn").addEventListener("click", async () => {
   if (!selectedForm) return;
 
-  const updatedForm = {
-    ...selectedForm,
-    requirement_name: document.getElementById("modal-requirement-name").value,
-    description: document.getElementById("modal-description").value,
-    tags: document.getElementById("modal-tags").value.split(",").map(t => t.trim())
-  };
+const updatedForm = {
+  _id: selectedForm._id.$oid || selectedForm._id, 
+  requirement_name: document.getElementById("modal-requirement-name").value,
+  description: document.getElementById("modal-description").value,
+  tags: document.getElementById("modal-tags").value.split(",").map(t => t.trim()),
+  fields: selectedForm.fields || [],
+  assigned_to: selectedForm.assigned_to || ["all"]
+};
 
-  const res = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=forms&id=${selectedForm._id.$oid}`, {
-    method: "PUT",
-     credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(updatedForm)
-  });
+//send update request
+const res = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/forms.php`, {
+  method: "PUT",
+  credentials: "include",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(updatedForm)
+});
 
   if (res.ok) {
     alert("Form updated successfully!");
@@ -125,22 +148,6 @@ document.getElementById("modal-update-btn").addEventListener("click", async () =
   }
 });
 
-document.getElementById("modal-delete-btn").addEventListener("click", async () => {
-  if (!selectedForm) return;
-  if (!confirm("Are you sure you want to delete this form?")) return;
 
-  const res = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=forms&id=${selectedForm._id.$oid}`, {
-    method: "DELETE",
-     credentials: "include",
-  });
-
-  if (res.ok) {
-    alert("Form deleted successfully!");
-    document.getElementById("form-modal").style.display = "none";
-    loadActiveForms();
-  } else {
-    alert("Failed to delete form.");
-  }
-});
 
 loadActiveForms();
