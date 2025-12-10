@@ -3,6 +3,7 @@ const session = require('express-session')
 const cors = require('cors');
 const { connectToDB, url } = require('./database/connect');
 const { default: MongoStore } = require('connect-mongo');
+const { exposeEndpoints } = require('./endpoints');
 
 const port = 8123
 const app = express();
@@ -56,22 +57,8 @@ app.use(session({ // Configure session handling
 }))
 
 async function startServer() {
-    const db = await connectToDB()
-
-    const collectionNames = ["forms", "log", "student_organization", "users"]
-
-    collectionNames.forEach(name => {
-        const collection = db.collection(name)
-        if (name === "users") collection.createIndex({ email: 1 }, { unique: true });
-        app.get(`/api/${name}`, async (req, res) => {
-            try {
-                const all = await collection.find().toArray();
-                res.json(all);
-            } catch (e) {
-                res.status(500).send({ error: e.message })
-            }
-        });
-    })
+    const db = await connectToDB();
+    exposeEndpoints(db, app)
 
     // Register routes
     app.use('/api/auth', require('./routes/auth'))
