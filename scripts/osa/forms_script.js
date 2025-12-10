@@ -40,6 +40,10 @@ async function loadActiveForms() {
       <div class="form-description">
         ${form.description || "No description available."}
       </div>
+      <div class="form-assigned">
+      Assigned to: ${(form.assigned_to || ["all"]).join(", ")}
+      </div>
+
       <div class="form-field-count">
         ${form.fields ? form.fields.length : 0} field(s)
       </div>
@@ -102,10 +106,13 @@ function openModal(form) {
   desc.style.height = desc.scrollHeight + "px";
   
   document.getElementById("modal-tags").value = (form.tags || []).join(", ");
+  document.getElementById("modal-assigned").value = (form.assigned_to || []).join(", ");
+
 }
 
 document.getElementById("modal-close").addEventListener("click", () => {
   document.getElementById("form-modal").style.display = "none";
+  
 });
 
 document.getElementById("form-modal").addEventListener("click", (e) => {
@@ -128,7 +135,10 @@ const updatedForm = {
   description: document.getElementById("modal-description").value,
   tags: document.getElementById("modal-tags").value.split(",").map(t => t.trim()),
   fields: selectedForm.fields || [],
-  assigned_to: selectedForm.assigned_to || ["all"]
+    assigned_to: document.getElementById("modal-assigned").value
+                 .split(",")
+                 .map(x => x.trim())
+                 .filter(x => x) || ["all"]
 };
 
 //send update request

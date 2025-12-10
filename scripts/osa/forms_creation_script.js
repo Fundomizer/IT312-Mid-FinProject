@@ -175,12 +175,21 @@ document.getElementById("submitFormBtn").addEventListener("click", async (event)
     if (formFieldsElements.length === 0) {
       return alert("Please add at least one question.");
     }
-  const fields = [...document.querySelectorAll(".form-field")].map((field) => {
-    const question = field.querySelector(".field-title").value.trim();
-    const field_type = field.dataset.type || "text";
-    const required = field.querySelector(".required-checkbox").checked;
-    return { question, field_type, required };
-  });
+const fields = [...document.querySelectorAll(".form-field")].map((field) => {
+  const question = field.querySelector(".field-title").value.trim();
+  const field_type = field.dataset.type || "text";
+  const required = field.querySelector(".required-checkbox").checked;
+
+  let options = [];
+  if (field_type === "checkbox" || field_type === "radio") {
+    options = [...field.querySelectorAll(".option-text")]
+      .map(opt => opt.value.trim())
+      .filter(opt => opt);
+  }
+
+  return { question, field_type, required, options };
+});
+
 
 
 
