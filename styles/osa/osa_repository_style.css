@@ -262,3 +262,18 @@ td{
 .Card.search {
     padding: 1rem;
 }
+
+th {
+  cursor: pointer;
+  user-select: none;
+}
+
+th.asc::after {
+  content: " ▲";
+  color: var(--accent-color);
+}
+
+th.desc::after {
+  content: " ▼";
+  color: var(--accent-color);
+}

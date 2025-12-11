@@ -161,3 +161,46 @@ clearFiltersBtn.addEventListener("click", () => {
 });
 
 loadItems();
+
+loadItems().then(() => {
+  const table = document.getElementById("submissions-table");
+  // Default sort: Date column (index 4), descending
+  sortTableByColumn(table, 4, false);
+
+  // Enable click sorting
+  const headers = table.querySelectorAll("th");
+  headers.forEach((th, index) => {
+    th.addEventListener("click", () => {
+      const isAsc = th.classList.contains("asc");
+      sortTableByColumn(table, index, !isAsc);
+    });
+  });
+});
+
+function sortTableByColumn(table, columnIndex, asc = true) {
+  const tbody = table.querySelector("tbody");
+  const rows = Array.from(tbody.querySelectorAll("tr"));
+
+  rows.sort((a, b) => {
+    let aText = a.children[columnIndex].innerText.trim();
+    let bText = b.children[columnIndex].innerText.trim();
+
+    // Handle date column
+    if (columnIndex === 4) {
+      aText = aText !== "N/A" ? new Date(aText) : new Date(0);
+      bText = bText !== "N/A" ? new Date(bText) : new Date(0);
+    }
+
+    return asc
+      ? (aText > bText ? 1 : -1)
+      : (aText < bText ? 1 : -1);
+  });
+
+  rows.forEach(row => tbody.appendChild(row));
+
+  // Reset header classes
+  const headers = table.querySelectorAll("th");
+  headers.forEach(h => h.classList.remove("asc", "desc"));
+  const targetHeader = headers[columnIndex];
+  targetHeader.classList.add(asc ? "asc" : "desc");
+}
