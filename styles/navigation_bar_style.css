@@ -1,5 +1,5 @@
 :root {
-    --nav-bars-bg-color: #1f2635;
+    --nav-bars-bg-color: #2b3240;
 }
 
 * {
@@ -21,7 +21,6 @@ button {
 #SideNav,
 #TopNav {
     background-color: var(--nav-bars-bg-color);
-    outline: 1px solid var(--outline-color);
 }
 
 #Overlay {
@@ -37,7 +36,6 @@ button {
 
 #SideNav {
     position: fixed;
-    background-color: #0F1420;
     top: 0;
     left: 0;
     height: 100vh;

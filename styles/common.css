@@ -6,12 +6,12 @@
 :root {
     --border-rad: 10px;
     --main-bg-color: #efefef;
-    --card-bg-color: #2b3240;
-    --subcard-bg-color: #131824;
-    --outline-color: #232937;
+    --card-bg-color: #334962;
+    --subcard-bg-color: #657a8d;
+    --outline-color: #22303c;
     --text-color: #e6eef8;
     --body-title-color: #131824;
-    --muted-color: #98a0b3;
+    --muted-color: #c5c9d2;
     --search-bar-bg-color: #0A0E1A;
     --accent-color: #6366F1;
     --hover-accent-color: #4f46e5;
@@ -36,8 +36,8 @@ body {
     color: var(--text-color);
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 6px 24px rgba(2, 6, 23, 0.6);
     transition: border-color 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 0 10px rgba(2, 6, 23, 0.6);
     min-width: fit-content;
     width: 100%;
     box-sizing: border-box;
@@ -49,6 +49,7 @@ body {
 }
 
 .SubCard {
+    background-color: var(--subcard-bg-color);
     padding: 1rem 1.25rem;
 }
 
@@ -62,14 +63,15 @@ body {
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-evenly;
+    background-color: var(--card-bg-color);
 }
 
 #SearchContainer .SubCard{
     flex-wrap: wrap;
     display: inline-flex;
-    background-color: var(--card-bg-color);
     gap: 1rem;
     width: fit-content;
+    margin: 0.5rem;
 }
 
 .SearchBar {
@@ -81,19 +83,20 @@ body {
     gap:0.313rem;
     display: flex;
     align-items: center;
-    background-color: var(--search-bar-bg-color);
+    background-color: var(--subcard-bg-color);
     border-radius: 20px;
 }
 
 .SearchBar>input {
-    background-color: transparent;
     border: 0;
     outline: none;
     height: 2rem;
     flex: 1;
-    color: var(--text-color);
     font-size: 0.875rem;
     box-sizing: border-box;
+    border-radius: var(--border-rad);
+    border: 1px solid var(--outline-color);
+    padding-left: 0.5rem;
 }
 
 #SearchContainer select,
@@ -101,8 +104,6 @@ body {
     padding: 0.5rem 0.5rem;
     border-radius: var(--border-rad);
     border: 1px solid var(--outline-color);
-    background-color: var(--search-bar-bg-color);
-    color: var(--text-color);
     cursor: pointer;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -129,6 +130,7 @@ body {
     padding: 0.5rem 1rem;
     margin: 0.5rem;
     background-color: var(--accent-color);
+    box-shadow: 0 0 5px rgba(2, 6, 23, 0.6);
     border: none;
     border-radius: var(--border-rad);
     color: var(--text-color);
@@ -178,6 +180,10 @@ body {
 
 .PopUpContent:hover {
     border-color: var(--hover-accent-color);
+}
+
+button img{
+    filter: brightness(100);
 }
 
 #EkisButton,
@@ -232,8 +238,6 @@ body {
     margin-top: 0.25rem;
     border-radius: var(--border-rad);
     border: 1px solid var(--outline-color);
-    background-color: var(--search-bar-bg-color);
-    color: var(--text-color);
     font-size: 0.9rem;
     box-sizing: border-box;
 }
@@ -283,8 +287,17 @@ th:nth-child(even) {
 }
 
 td:nth-child(odd) {
-    background-color: #1c2230;
+    background-color: var(--subcard-bg-color);
 }
 td:nth-child(even) {
-    background-color: #2b3240;
+    background-color: var(--card-bg-color);
+}
+
+select, input, textarea{
+    background-color: var(--main-bg-color);
+    color: var(--body-title-color);
+}
+
+img {
+    filter: brightness(10);
 }
