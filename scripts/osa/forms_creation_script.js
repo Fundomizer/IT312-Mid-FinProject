@@ -46,7 +46,9 @@ function loadFormCreation() {
 
   addFieldBtn.addEventListener("click", () => {
     const fieldType = fieldTypeSelect.value;
-    fieldCounter++;
+    const questionNumber = formFields.querySelectorAll(".form-field").length + 1;
+
+
 
 
 
@@ -59,7 +61,7 @@ function loadFormCreation() {
 
 
  let fieldHTML = `
-    <label>Question ${fieldCounter}</label>
+  <label>Question ${questionNumber}</label>  
     <input type="text" placeholder="Enter question title" class="field-title" required>
 
 
@@ -99,7 +101,10 @@ function loadFormCreation() {
 
 
 
-    field.querySelector(".remove-field-btn").addEventListener("click", () =>   checkOSA(), field.remove());
+field.querySelector(".remove-field-btn").addEventListener("click", () => {
+    checkOSA();
+    field.remove();
+});
 
 
 
@@ -112,7 +117,7 @@ function loadFormCreation() {
 
 
       addOptionBtn.addEventListener("click", () => {
-          checkOSA();
+                  checkOSA();
         const optionCount = optionsContainer.children.length + 1;
         const optionItem = document.createElement("div");
         optionItem.classList.add("option-item");
@@ -125,7 +130,10 @@ function loadFormCreation() {
           <input type="text" class="option-text" placeholder="Option ${optionCount}">
           <button type="button" class="remove-option-btn">×</button>
         `;
-        optionItem.querySelector(".remove-option-btn").addEventListener("click", () =>   checkOSA() ,optionItem.remove());
+optionItem.querySelector(".remove-option-btn").addEventListener("click", () => {
+    checkOSA();
+    optionItem.remove();
+});
         optionsContainer.appendChild(optionItem);
       });
 
