@@ -139,29 +139,116 @@ function showFormDetails(org, reqType, reqData) {
     });
   }
 
-  // Add uploaded files section
-  if (reqData.filename && reqData.filename.length > 0) {
+  // Uploaded file section with viewer
+  if (reqData.filename) {
     const filesDiv = document.createElement("div");
-    filesDiv.innerHTML = `<strong>Uploaded Files:</strong>`;
-    
-    reqData.filename.forEach(file => {
-      const fileLink = document.createElement("a");
-      fileLink.href = `${HOST}/IT312-Mid-FinProject/uploads/${file}`; 
-      fileLink.textContent = file;
-      fileLink.target = "_blank"; 
-      fileLink.style.display = "block";
-      filesDiv.appendChild(fileLink);
+    filesDiv.innerHTML = `<strong>Uploaded File:</strong>`; 
+
+    const fileButton = document.createElement("button");
+    fileButton.textContent = reqData.filename;
+    fileButton.style.display = "block";
+    fileButton.style.marginTop = "4px";
+    fileButton.style.padding = "6px 12px";
+    fileButton.style.cursor = "pointer";
+
+    fileButton.addEventListener("click", () => {
+      // Overlay
+      const overlay = document.createElement("div");
+      overlay.style.position = "fixed";
+      overlay.style.top = 0;
+      overlay.style.left = 0;
+      overlay.style.width = "100%";
+      overlay.style.height = "100%";
+      overlay.style.background = "rgba(0,0,0,0.8)";
+      overlay.style.display = "flex";
+      overlay.style.justifyContent = "center";
+      overlay.style.alignItems = "center";
+      overlay.style.zIndex = 3000;
+
+      // File viewer container
+      const viewer = document.createElement("div");
+      viewer.style.background = "#fff";
+      viewer.style.padding = "10px";
+      viewer.style.borderRadius = "10px";
+      viewer.style.width = "90%";
+      viewer.style.height = "90%";
+      viewer.style.display = "flex";
+      viewer.style.flexDirection = "column";
+      viewer.style.position = "relative";
+
+      // Toolbar for print/download
+      const toolbar = document.createElement("div");
+      toolbar.style.display = "flex";
+      toolbar.style.justifyContent = "flex-end";
+      toolbar.style.gap = "10px";
+      toolbar.style.marginBottom = "5px";
+
+
+      const downloadBtn = document.createElement("button");
+      downloadBtn.textContent = "Download";
+      downloadBtn.style.cursor = "pointer";
+      downloadBtn.addEventListener("click", () => {
+        const link = document.createElement("a");
+        link.href = `${HOST}/IT312-Mid-FinProject/uploads/${reqData.filename}`;
+        link.download = reqData.filename;
+        link.click();
+      });
+
+
+      toolbar.appendChild(downloadBtn);
+
+      // Content container
+      const content = document.createElement("div");
+      content.style.flex = "1";
+      content.style.overflow = "auto";
+      content.style.display = "flex";
+      content.style.justifyContent = "center";
+      content.style.alignItems = "center";
+
+      // Embed PDF or message
+      const ext = reqData.filename.split('.').pop().toLowerCase();
+      if (ext === "pdf") {
+        const iframe = document.createElement("iframe");
+        iframe.src = `${HOST}/IT312-Mid-FinProject/uploads/${reqData.filename}`;
+        iframe.style.width = "100%";
+        iframe.style.height = "100%";
+        content.appendChild(iframe);
+      } else if (["png","jpg","jpeg","gif"].includes(ext)) {
+        const img = document.createElement("img");
+        img.src = `${HOST}/IT312-Mid-FinProject/uploads/${reqData.filename}`;
+        img.style.maxWidth = "100%";
+        img.style.maxHeight = "100%";
+        content.appendChild(img);
+      } else {
+        content.textContent = "Cannot preview this file type.";
+      }
+
+      // Close button
+      const closeBtn = document.createElement("button");
+      closeBtn.textContent = "Close";
+      closeBtn.style.position = "absolute";
+      closeBtn.style.top = "10px";
+      closeBtn.style.right = "10px";
+      closeBtn.style.padding = "6px 12px";
+      closeBtn.style.cursor = "pointer";
+      closeBtn.addEventListener("click", () => overlay.remove());
+
+      viewer.appendChild(toolbar);
+      viewer.appendChild(content);
+      viewer.appendChild(closeBtn);
+      overlay.appendChild(viewer);
+      document.body.appendChild(overlay);
     });
 
+    filesDiv.appendChild(fileButton);
     reqDiv.appendChild(filesDiv);
   }
 
   document.getElementById("formDetailsModal").style.display = "flex";
   document.getElementById("closeModal").addEventListener("click", () => {
     checkOSA();
-  document.getElementById("formDetailsModal").style.display = "none";
+    document.getElementById("formDetailsModal").style.display = "none";
   });
-
 }
 
 
