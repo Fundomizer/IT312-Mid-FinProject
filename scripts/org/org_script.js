@@ -1,3 +1,4 @@
+import { HOST, PORT } from "../config.js"
 import { fetchCollection, loadPage } from "../utilities.js"
 
 const dashboard = document.getElementById("dashboardButton")
@@ -6,19 +7,19 @@ const history = document.getElementById("historyButton")
 
 async function loadDashboard() {
     loadPage('org', 'dashboard_page.html')
-    
+
     let orgs = await fetchCollection('student_organization');
     let totalSubmissions = 0;
     orgs.forEach(org => {
         const reqs = org.requirements || {};
         totalSubmissions += Object.keys(reqs).length;
     });
-    
+
     let assignedForms = await fetchCollection('forms')
-    
+
     const totalSubs = document.querySelector("#TotalSubmissions b");
     const totalAssForms = document.querySelector("#AssignedForms b");
-    
+
     totalSubs.textContent = totalSubmissions;
     totalAssForms.textContent = assignedForms.length;
     document.getElementById('OrgName').innerText = localStorage.getItem('org_name')
@@ -228,9 +229,13 @@ async function loadForms() {
             .replace(/\b\w/g, c => c.toUpperCase());
     }
 
+    // Add functionality to the submisssion form
+    let form = document.getElementById('SubmissionForm').addEventListener('submit', (e) => handleSubmit(e))
+    console.log(form);
+
     return {
         populatePopupForm: function (form) {
-            
+
             const popup = document.querySelector(".PopupForm");
             if (!popup) {
                 console.error("PopupForm not found");
@@ -270,6 +275,8 @@ async function loadForms() {
             // Create fields dynamically
             if (form.fields && form.fields.length > 0) {
                 form.fields.forEach((field, index) => {
+                    console.log("field: ", field, "index: ", index);
+
                     const formFields = document.createElement("div");
                     formFields.className = "FormFields";
 
@@ -319,45 +326,114 @@ async function loadForms() {
                             break;
                     }
 
+                    inputElement.name = `field_${index}`
                     formFields.appendChild(fieldLabel);
                     formFields.appendChild(inputElement);
                     formElement.appendChild(formFields);
                 });
             }
 
-            // Add file upload section
-            const uploadDiv = document.createElement("div");
-            uploadDiv.className = "FormUpload";
+            if (form.upload) { // Add upload button only if the form requires them
 
-            const uploadSpan = document.createElement("span");
-            uploadSpan.textContent = "Supporting Documents";
+                // Add file upload section
+                const uploadDiv = document.createElement("div");
+                uploadDiv.className = "FormUpload";
 
-            const uploadLabel = document.createElement("label");
-            uploadLabel.htmlFor = "UploadButton";
-            uploadLabel.textContent = "Upload File";
+                const uploadSpan = document.createElement("span");
+                uploadSpan.textContent = "Supporting Documents";
 
-            const uploadInput = document.createElement("input");
-            uploadInput.type = "file";
-            uploadInput.id = "UploadButton";
-            uploadInput.multiple = true;
+                const uploadLabel = document.createElement("label");
+                uploadLabel.htmlFor = "UploadButton";
+                uploadLabel.textContent = "Upload File";
 
-            const uploadContainer = document.createElement("div");
-            uploadContainer.id = "UploadedFilesContainer";
+                const uploadInput = document.createElement("input");
+                uploadInput.type = "file";
+                uploadInput.id = "UploadButton";
+                uploadInput.multiple = true;
 
-            uploadDiv.appendChild(uploadSpan);
-            uploadDiv.appendChild(uploadLabel);
-            uploadDiv.appendChild(uploadInput);
-            uploadDiv.appendChild(uploadContainer);
-            formElement.appendChild(uploadDiv);
+                const uploadContainer = document.createElement("div");
+                uploadContainer.id = "UploadedFilesContainer";
+
+                uploadDiv.appendChild(uploadSpan);
+                uploadDiv.appendChild(uploadLabel);
+                uploadDiv.appendChild(uploadInput);
+                uploadDiv.appendChild(uploadContainer);
+                formElement.appendChild(uploadDiv);
+            }
+
+            let buttonContainers = document.createElement('div')
+            buttonContainers.classList.add('FormButtons')
+            buttonContainers.innerHTML = `
+                <button type="button" id="CancelForm">Cancel</button>
+                <button type="submit" id="SubmitForm">Submit Form</button>
+            `
+            formElement.appendChild(buttonContainers)
         },
         requirementsArray: requirementsArray,
         formatTitle: formatTitle,
-        getFormById: function(formId, requirementName) {
-            return requirementsArray.find(f => 
+        getFormById: function (formId, requirementName) {
+            return requirementsArray.find(f =>
                 f.form_id === formId && f.requirement_name === requirementName
             );
         }
     };
+
+    async function handleSubmit(event) {
+        event.preventDefault();
+        console.log("Submitting form");
+        
+        const popup = document.querySelector(".PopupForm");
+        const requirementName = popup.dataset.requirementName
+        console.log("Requirement anme from handle submit: ", requirementName);
+        const formElement = popup.querySelector(".Form");
+
+        if (!requirementName) {
+            console.error("No requirement name found in popup.dataset");
+            return;
+        }
+
+        const formData = new FormData();
+        let orgName = localStorage.getItem('org_name')
+        console.log("Form filled out by: ", orgName);
+        
+        formData.append('org_name',orgName)
+        // ✅ Collect all text inputs and textareas
+        const textInputs = formElement.querySelectorAll("input[name^='field_'], textarea[name^='field_']");
+        textInputs.forEach(input => {
+            formData.append(input.name, input.value);
+        });
+
+        // ✅ Collect all file inputs
+        const fileInputs = formElement.querySelectorAll("input[type='file'][name^='file_']");
+        fileInputs.forEach(input => {
+            if (input.files.length > 0) {
+                formData.append(input.name, input.files[0]);
+            }
+        });
+
+        try {
+            const response = await fetch(`${HOST}:${PORT}/api/orgs/requirements/${encodeURIComponent(requirementName)}`, {
+                method: "PUT",
+                body: formData,
+                credentials: "include" // ✅ important for session cookies
+            });
+
+            const result = await response.json();
+            console.log("Server response:", result);
+
+            if (result.success) {
+                alert("Form submitted successfully");
+                popup.style.display = "none"; // close popup
+            } else {
+                alert("Failed to submit form: " + result.message);
+            }
+
+        } catch (err) {
+            console.error("Error submitting form:", err);
+            alert("An error occurred while submitting the form.");
+        }
+    }
+
 }
 
 // this fucntion is currently reading all requirements from
@@ -461,12 +537,10 @@ async function loadHistory() {
     }
 }
 
-
-
 function openForm(formId) {
     const popup = document.querySelector(".PopupForm");
     const overlay = document.getElementById("PopupOverlay");
-    
+
     if (popup && overlay) {
         popup.style.display = "block";
         overlay.classList.add("show");
@@ -592,15 +666,20 @@ function reDisplayFiles() {
 
 function styleButtonEventListener(e) {
     const button = e.target.closest(".StyledButton");
+    const popup = document.querySelector(".PopupForm");
+    console.log(button);
 
     if (button.dataset.formId) {
-            
-        const formId = button.dataset.formId;
+
+        const formId = button.dataset.formId;``
         const requirementName = button.dataset.requirementName;
-            
+        console.log("Requirement name: ", requirementName);
+        
+        popup.dataset.requirementName = requirementName
+
         if (formModule && formModule.getFormById) {
             const formData = formModule.getFormById(formId, requirementName);
-                
+
             if (formData) {
                 if (formModule.populatePopupForm) {
                     formModule.populatePopupForm(formData);

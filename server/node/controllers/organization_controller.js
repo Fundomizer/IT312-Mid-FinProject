@@ -157,6 +157,9 @@ exports.deleteOrganization = async (req, res) => {
 
 exports.getRequirements = async (req, res) => {
     try {
+
+        console.log("Received requirements: ", req);
+        
         const orgs = db.collection("student_organization");
         const { name } = req.params;
 
@@ -185,31 +188,44 @@ exports.getRequirements = async (req, res) => {
 
 exports.fillRequirements = async (req, res) => {
     try {
-        const orgName = req.params.orgName;
-        const requirementKey = req.params.requirementKey;
+        console.log("Body: ", req.body); // TODO form is being received but the database isn't updating
+        // 1. Identify org and requirement
+        const requirementKey = req.params.requirement;      // e.g. "strategic_plan"
+        const orgName = req.body.org_name;                  // adjust based on your auth
+
+        
+        if (!orgName) {
+            return res.status(400).json({
+                success: false,
+                message: "Organization not found in session/user"
+            });
+        }
 
         const orgs = db.collection("student_organization");
 
-        // 1. Parse text fields
+        // 2. Build updatedFields array by index
         const updatedFields = [];
 
+        // 2a. Handle text fields from req.body
         Object.keys(req.body).forEach(key => {
             if (key.startsWith("field_")) {
-                const index = key.split("_")[1];
-                updatedFields[index] = {
-                    content: req.body[key]
-                };
+                const index = Number(key.split("_")[1]);
+
+                if (!updatedFields[index]) {
+                    updatedFields[index] = {};
+                }
+
+                updatedFields[index].content = req.body[key];
             }
         });
 
-        // 2. Parse file uploads (express-fileupload)
+        // 2b. Handle file uploads via express-fileupload
         if (req.files) {
             Object.keys(req.files).forEach(fileKey => {
                 if (fileKey.startsWith("file_")) {
-                    const index = fileKey.split("_")[1];
+                    const index = Number(fileKey.split("_")[1]);
                     const file = req.files[fileKey];
 
-                    // Save file to /uploads
                     const savePath = `./uploads/${Date.now()}_${file.name}`;
 
                     file.mv(savePath, err => {
@@ -218,38 +234,42 @@ exports.fillRequirements = async (req, res) => {
                         }
                     });
 
-                    // Store file metadata
-                    updatedFields[index] = {
-                        ...updatedFields[index],
-                        file: {
-                            filename: file.name,
-                            saved_as: savePath,
-                            mimetype: file.mimetype,
-                            size: file.size
-                        }
+                    if (!updatedFields[index]) {
+                        updatedFields[index] = {};
+                    }
+
+                    updatedFields[index].file = {
+                        filename: file.name,
+                        saved_as: savePath,
+                        mimetype: file.mimetype,
+                        size: file.size
                     };
                 }
             });
         }
 
-        // 3. Update the requirement in MongoDB
+        // 3. Persist changes to MongoDB
         await orgs.updateOne(
             { org_name: orgName },
             {
                 $set: {
                     [`requirements.${requirementKey}.fields`]: updatedFields,
-                    [`requirements.${requirementKey}.last_updated`]: new Date().toISOString().split("T")[0]
+                    [`requirements.${requirementKey}.last_updated`]:
+                        new Date().toISOString().split("T")[0]
                 }
             }
         );
 
-        res.json({
+        return res.json({
             success: true,
             message: "Requirement updated successfully"
         });
-
     } catch (err) {
         console.error("Update error:", err);
-        res.status(500).json({ success: false, message: "Server error" });
+        return res.status(500).json({
+            success: false,
+            message: "Server error"
+        });
     }
-}
+};
+
