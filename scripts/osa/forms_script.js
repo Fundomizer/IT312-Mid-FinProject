@@ -1,4 +1,6 @@
-  const HOST = window.location.origin;
+import { checkOSA } from "./osa_auth.js";
+
+const HOST = window.location.origin;
 
 let selectedForm = null;
 
@@ -58,6 +60,7 @@ async function loadActiveForms() {
     formsContainer.appendChild(formItem);
 
     formItem.querySelector(".view-fields-btn").addEventListener("click", () => {
+        checkOSA();
       if (fieldsContainer.style.display === "none") {
         fieldsContainer.style.display = "block";
         formItem.querySelector(".view-fields-btn").textContent = "Hide Fields";
@@ -68,11 +71,13 @@ async function loadActiveForms() {
     });
 
 formItem.querySelector(".update-form-btn").addEventListener("click", () => {
+    checkOSA();
     selectedForm = form;   
     openModal(form);
 });
 
 formItem.querySelector(".delete-form-btn").addEventListener("click", async () => {
+  checkOSA();
   if (!confirm(`Delete form "${form.requirement_name}"?`)) return;
 //send delete request
   const res = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/forms.php`, {
@@ -111,11 +116,13 @@ function openModal(form) {
 }
 
 document.getElementById("modal-close").addEventListener("click", () => {
+    checkOSA();
   document.getElementById("form-modal").style.display = "none";
   
 });
 
 document.getElementById("form-modal").addEventListener("click", (e) => {
+    checkOSA();
   if (e.target.id === "form-modal") {
     e.currentTarget.style.display = "none";
   }

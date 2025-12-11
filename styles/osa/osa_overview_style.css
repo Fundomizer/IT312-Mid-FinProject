@@ -6,12 +6,7 @@
   margin-top: 1.25rem;
 }
 
-
-.dashboard-content .card:hover {
-  border-color: var(--accent-color);
-  transform: translateY(-3px);
-}
-
+/* Chart section - desktop default */
 .charts-section {
   display: flex;
   flex-wrap: wrap;
@@ -20,6 +15,10 @@
   margin-top: 1.875rem;
 }
 
+/* Chart container default width */
+.charts-section .chart-container {
+  width: 480px;
+}
 .charts-section .chart-container {
   background: var(--card-bg-color);
   border: 1px solid rgba(255,255,255,0.05);
@@ -221,7 +220,7 @@
 
 .requirements-container {
   display: flex;
-  flex-wrap: wrap;      /* allow requirements to go side by side */
+  flex-wrap: wrap;    
   gap: 0.5rem;
 }
 /* Requirement Entry Styling */
@@ -357,4 +356,96 @@
 .req-details {
   margin-left: 20px;
   display: none;
+}
+@media screen and (max-width: 768px) {
+  .dashboard-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+    .dashboard-content .card img {
+        display: none;
+    }
+  .dashboard-content .card {
+    width: 90%;
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .charts-section {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .charts-section .chart-container {
+    width: 90%;
+    max-width: 100%;
+    padding: 1rem;
+  }
+
+  .progress-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .progress-label {
+    text-align: left;
+  }
+
+  .recent-submissions-section,
+  .active-organizations-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .submission-item, 
+  .organization-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .org-title {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .org-toggle {
+    align-self: flex-end;
+  }
+}
+
+/* Extra small screens - mobile phones */
+@media screen and (max-width: 480px) {
+  .dashboard-content .card h3 {
+    font-size: 0.9rem;
+  }
+
+  .dashboard-content .card p {
+    font-size: 0.75rem;
+  }
+
+    .dashboard-content .card img {
+        display: none;
+    }
+  .charts-section .chart-container h3 {
+    font-size: 0.9rem;
+  }
+
+  .charts-section .chart-container .chart-header {
+    font-size: 0.75rem;
+  }
+
+  .progress-label {
+    font-size: 0.6rem;
+  }
+
+  .org-title .name {
+    font-size: 0.9rem;
+  }
+
+  .org-title .short {
+    font-size: 0.75rem;
+  }
 }

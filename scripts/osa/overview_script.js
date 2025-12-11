@@ -1,3 +1,6 @@
+import { checkOSA } from "./osa_auth.js";
+
+
 const HOST = window.location.origin;
 
 
@@ -137,6 +140,7 @@ async function loadRecentSubmissions() {
 
 
     subHeader.addEventListener("click", () => {
+        checkOSA();
       subDetails.style.display = subDetails.style.display === "none" ? "flex" : "none";
     });
 
@@ -169,8 +173,8 @@ function showRequirementModal(title, questions) {
   document.body.appendChild(modal);
 
 
-  modal.querySelector('.org-modal-close').addEventListener('click', () => modal.remove());
-  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+  modal.querySelector('.org-modal-close').addEventListener('click', () =>  checkOSA(),  modal.remove());
+  modal.addEventListener('click', e => {   checkOSA(); if (e.target === modal) modal.remove(); });
 
 
   modal.style.display = 'flex';
@@ -216,7 +220,7 @@ async function loadOrganizations() {
       const entry = document.createElement('div');
       entry.className = 'requirement-entry';
       entry.textContent = type.replace(/_/g, ' ');
-      entry.addEventListener('click', () => showRequirementModal(type.replace(/_/g, ' '), info.fields || []));
+      entry.addEventListener('click', () =>   checkOSA(), showRequirementModal(type.replace(/_/g, ' '), info.fields || []));
       reqContainer.appendChild(entry);
     });
 
@@ -234,6 +238,7 @@ async function loadOrganizations() {
 
     const header = card.querySelector('.org-header');
     header.addEventListener('click', () => {
+        checkOSA();
       const open = card.classList.toggle('open');
       dropdown.style.maxHeight = open ? dropdown.scrollHeight + 'px' : '0px';
     });

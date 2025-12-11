@@ -1,3 +1,5 @@
+import { checkOSA } from "./osa_auth.js";
+
 const HOST = window.location.origin;
 
 
@@ -97,7 +99,7 @@ function loadFormCreation() {
 
 
 
-    field.querySelector(".remove-field-btn").addEventListener("click", () => field.remove());
+    field.querySelector(".remove-field-btn").addEventListener("click", () =>   checkOSA(), field.remove());
 
 
 
@@ -110,6 +112,7 @@ function loadFormCreation() {
 
 
       addOptionBtn.addEventListener("click", () => {
+          checkOSA();
         const optionCount = optionsContainer.children.length + 1;
         const optionItem = document.createElement("div");
         optionItem.classList.add("option-item");
@@ -122,7 +125,7 @@ function loadFormCreation() {
           <input type="text" class="option-text" placeholder="Option ${optionCount}">
           <button type="button" class="remove-option-btn">×</button>
         `;
-        optionItem.querySelector(".remove-option-btn").addEventListener("click", () => optionItem.remove());
+        optionItem.querySelector(".remove-option-btn").addEventListener("click", () =>   checkOSA() ,optionItem.remove());
         optionsContainer.appendChild(optionItem);
       });
 
@@ -143,6 +146,7 @@ loadFormCreation();
 
 
 document.getElementById("submitFormBtn").addEventListener("click", async (event) => {
+    checkOSA();
   event.preventDefault();
 
 

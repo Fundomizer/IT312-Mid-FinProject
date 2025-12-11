@@ -1,4 +1,6 @@
-  const HOST = window.location.origin;
+ import { checkOSA } from "./osa_auth.js";
+
+ const HOST = window.location.origin;
 
 const searchInput = document.getElementById("searchInput");
 const filterLocation = document.getElementById("filterLocation");
@@ -48,6 +50,7 @@ async function loadItems() {
           tbody.appendChild(row);
 
           row.addEventListener("click", () => {
+              checkOSA();
             showFormDetails(org, reqType, reqData);
           });
         }
@@ -138,15 +141,17 @@ function showFormDetails(org, reqType, reqData) {
 }
 
 document.getElementById("closeModal").addEventListener("click", () => {
+    checkOSA();
   document.getElementById("formDetailsModal").style.display = "none";
 });
 
-document.getElementById("tagFilterInput").addEventListener("input", filterResults);
-document.getElementById("dateFrom").addEventListener("change", filterResults);
-document.getElementById("dateTo").addEventListener("change", filterResults);
-searchInput.addEventListener("input", filterResults);
-filterLocation.addEventListener("change", filterResults);
+document.getElementById("tagFilterInput").addEventListener("input", filterResults, checkOSA());
+document.getElementById("dateFrom").addEventListener("change", filterResults, checkOSA());
+document.getElementById("dateTo").addEventListener("change", filterResults, checkOSA());
+searchInput.addEventListener("input",    filterResults, checkOSA());
+filterLocation.addEventListener("change",  filterResults, checkOSA());
 clearFiltersBtn.addEventListener("click", () => {
+    checkOSA();
   searchInput.value = "";
   filterLocation.value = "";
   document.getElementById("tagFilterInput").value = "";
