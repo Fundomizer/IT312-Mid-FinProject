@@ -85,10 +85,6 @@
     align-items: center;
 }
 
-.SubCard#SubCardOverview img{
-    filter: brightness(1);
-}
-
 #Content {
     display: flex;
     flex-direction: column;

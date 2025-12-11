@@ -223,3 +223,82 @@ const fields = [...document.querySelectorAll(".form-field")].map((field) => {
     alert("Failed to connect to the server.");
   }
 });
+// For saving data on back
+function saveFormData() {
+  const data = {
+    requirement_name: document.getElementById("formTitle").value,
+    description: document.getElementById("formDescription").value,
+    tags: document.getElementById("tagInput").value,
+    upload: document.getElementById("formFileRequired").checked,
+    assigned_to: [...document.getElementById("orgSelect").selectedOptions].map(opt => opt.value),
+    fields: [...document.querySelectorAll(".form-field")].map(field => {
+      const question = field.querySelector(".field-title").value;
+      const field_type = field.dataset.type;
+      const required = field.querySelector(".required-checkbox").checked;
+      const options = field_type === "checkbox" || field_type === "radio"
+        ? [...field.querySelectorAll(".option-text")].map(opt => opt.value)
+        : [];
+      return { question, field_type, required, options };
+    })
+  };
+  localStorage.setItem("savedFormData", JSON.stringify(data));
+}
+
+document.getElementById("formTitle").addEventListener("input", saveFormData);
+document.getElementById("formDescription").addEventListener("input", saveFormData);
+document.getElementById("tagInput").addEventListener("input", saveFormData);
+document.getElementById("formFileRequired").addEventListener("change", saveFormData);
+document.getElementById("orgSelect").addEventListener("change", saveFormData);
+document.getElementById("formFields").addEventListener("input", saveFormData);
+document.getElementById("formFields").addEventListener("change", saveFormData);
+
+
+//loading saved form
+function loadSavedForm() {
+  const savedData = JSON.parse(localStorage.getItem("savedFormData"));
+  if (!savedData) return;
+
+  document.getElementById("formTitle").value = savedData.requirement_name || "";
+  document.getElementById("formDescription").value = savedData.description || "";
+  document.getElementById("tagInput").value = savedData.tags || "";
+  document.getElementById("formFileRequired").checked = savedData.upload || false;
+
+  const orgSelect = document.getElementById("orgSelect");
+  if (savedData.assigned_to) {
+    [...orgSelect.options].forEach(option => {
+      option.selected = savedData.assigned_to.includes(option.value);
+    });
+  }
+
+  if (savedData.fields && savedData.fields.length > 0) {
+    savedData.fields.forEach(fieldData => {
+
+      const fieldTypeSelect = document.getElementById("fieldType");
+      fieldTypeSelect.value = fieldData.field_type;
+      document.getElementById("addFieldBtn").click();
+
+      const lastField = document.querySelector(".form-field:last-child");
+      lastField.querySelector(".field-title").value = fieldData.question;
+      lastField.querySelector(".required-checkbox").checked = fieldData.required;
+
+      if (fieldData.options && fieldData.options.length > 0) {
+        const optionsContainer = lastField.querySelector(".options-container");
+        optionsContainer.innerHTML = ""; 
+        fieldData.options.forEach((optText, idx) => {
+          const optionItem = document.createElement("div");
+          optionItem.classList.add("option-item");
+          optionItem.innerHTML = `
+            <input type="${fieldData.field_type}" disabled>
+            <input type="text" class="option-text" placeholder="Option ${idx + 1}" value="${optText}">
+            <button type="button" class="remove-option-btn">×</button>
+          `;
+          optionItem.querySelector(".remove-option-btn").addEventListener("click", e => e.target.parentElement.remove());
+          optionsContainer.appendChild(optionItem);
+        });
+      }
+    });
+  }
+}
+
+
+loadSavedForm();
