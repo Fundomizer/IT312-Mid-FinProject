@@ -60,14 +60,12 @@ body.modal-open {
 }
 
 .FormFields span{
-    color: white;
+    color: var(--main-bg-color);
 }
 
 .FormFields input{
     border-radius: .5rem;
     border-style: none;
-    color: var(--text-color);
-    background-color: var(--search-bar-bg-color);
     padding: 1vh 1rem 1vh;
 }
 

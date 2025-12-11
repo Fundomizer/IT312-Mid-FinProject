@@ -1,9 +1,13 @@
-.card {
+img {
+  filter: brightness(1);
+}
+
+.SubCard {
   background-color: var(--card-bg-color);
 }
 
 .dashboard-content .card {
-  background-color: var(--card-bg-color);
+  background-color: var(--subcard-bg-color);
   position: relative;
   border-radius: 12px;
   box-shadow: 0 6px 24px rgba(2,6,23,0.6);
@@ -13,6 +17,11 @@
   color: var(--text-color);
   transition: border-color 0.2s ease, transform 0.2s ease;
 }
+
+.card {
+  background-color: var(--card-bg-color);
+}
+
 
 #title {
   padding: 0 0 1rem;
@@ -40,6 +49,7 @@
   margin: 1rem;
   background: var(--subcard-bg-color);
   border: 1px solid var(--outline-color);
+  box-shadow: 0 0 10px rgba(2, 6, 23, 0.6);
   transition: border-color 0.2s ease;
 }
 

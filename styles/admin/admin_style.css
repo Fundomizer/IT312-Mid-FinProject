@@ -216,8 +216,6 @@ td {
   padding: 0.5rem 0.75rem;
   border: 1px solid var(--outline-color);
   border-radius: var(--border-rad);
-  background-color: var(--search-bar-bg-color);
-  color: var(--text-color);
   font-size: 0.875rem;
   cursor: pointer;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -238,7 +236,6 @@ td {
 
 .OrgSection {
     border: none;
-    border-top: 2.25rem solid var(--outline-color);
     padding: 1rem 1.5rem;
     margin-bottom: 1.5rem;
     background-color: var(--card-bg-color);
@@ -250,7 +247,7 @@ td {
 
 .OrgSectionTitle {
     font-weight: bold;
-    font-size: 1.5rem;
+    font-size: 2rem;
     color: var(--text-color);
     padding: 0 0.5rem;
 }
@@ -270,8 +267,6 @@ td {
     margin-top: 0.25rem;
     border: 1px solid var(--outline-color);
     border-radius: var(--border-rad, 6px);
-    background-color: var(--search-bar-bg-color, #0f1724);
-    color: var(--text-color);
     font-size: 0.875rem;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -388,8 +383,6 @@ td {
     padding: 0.5rem;
     margin-top: 0.25rem;
     border: 1px solid var(--outline-color);
-    background-color: var(--search-bar-bg-color);
-    color: var(--text-color);
     font-size: 1rem;
     resize: none;
 }
@@ -432,6 +425,10 @@ td {
 #AddOrgForm button[type="reset"]:hover {
     color: var(--accent-color);
     border-color: var(--accent-color);
+}
+
+#AddPopupContent.PopUpContent label{
+    color: var(--text-color);
 }
 
 @media (max-width: 480px) {

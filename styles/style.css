@@ -25,10 +25,11 @@ section>div {
 }
 
 input {
-    background-color: var(--search-bar-bg-color);
     border-width: 0px;
-    color: var(--text-color);
     padding: 0.625rem;
+    background-color: var(--subcard-bg-color);
+    color: var(--text-color);
+    font-size: 1rem;
 }
 
 #LoginButton {

@@ -14,8 +14,9 @@
   cursor: pointer;
   font-size: 0.875rem;
   transition: all 0.2s ease;
-  margin-bottom: 3.125rem;
+  margin-bottom: 1.25rem;
 }
+
 .back-button:hover {
   background: var(--subcard-bg-color);
   border-color: var(--accent-color);
@@ -29,7 +30,6 @@
   border: 1px solid var(--outline-color);
   border-radius: var(--border-rad);
   font-size: 1rem;
-  background-color: var(--search-bar-bg-color);
   color: var(--text-color);
 }
 
@@ -39,14 +39,21 @@
   margin: 0.25rem;
   border: 1px solid var(--outline-color);
   border-radius: var(--border-rad);
-  background-color: var(--search-bar-bg-color);
-  color: var(--text-color);
+  background-color: var(--accent-color);
 }
+
 .add-field-controls button {
   background-color: var(--accent-color);
-  border: none;
+  color: var(--text-color);
 }
-.add-field-controls button:hover {
+
+.add-field-controls select {
+  background-color: var(--main-bg-color);
+}
+
+.add-field-controls button:hover,
+.add-field-controls select:checked {
+  transition: background-color 0.5s ease;
   background-color: var(--hover-accent-color);
 }
 
@@ -71,8 +78,6 @@
   padding: 0.688rem;
   border: 1px solid var(--outline-color);
   border-radius: var(--border-rad);
-  background-color: var(--search-bar-bg-color);
-  color: var(--text-color);
   width: 100%;
   box-sizing: border-box;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -89,8 +94,6 @@
   padding: 0.688rem;
   border: 1px solid var(--outline-color);
   border-radius: var(--border-rad);
-  background-color: var(--search-bar-bg-color);
-  color: var(--text-color);
   width: 100%;
   min-height: 120px;
   resize: none;
@@ -144,8 +147,6 @@
   padding: 0.625rem;
   border: 1px solid var(--outline-color);
   border-radius: var(--border-rad);
-  background-color: var(--search-bar-bg-color);
-  color: var(--text-color);
   font-size: 0.875rem;
   box-sizing: border-box;
 }
@@ -166,10 +167,9 @@
 #orgSelect {
   width: 100%;
   padding: 0.625rem;
-  border: 1px solid var(--outline-color);
+  border: none;
   border-radius: var(--border-rad);
-  background-color: var(--subcard-bg-color);
-  color: var(--text-color);
+  background-color: var(--card-bg-color);
   font-size: 0.875rem;
   box-sizing: border-box;
   min-height: 120px;
@@ -179,9 +179,11 @@
 
 #orgSelect option {
   padding: 1rem 1.5rem;
-  background-color: var(--card-bg-color);
+  margin: 0.5rem 0;
+  background-color: var(--subcard-bg-color);
   color: var(--text-color);
-  border-bottom: 2px solid var(--outline-color);
+  border: 1px solid var(--outline-color);
+  border-radius: var(--border-rad);
 }
 
 #orgSelect option:checked {
@@ -198,7 +200,7 @@
 }
 
 .form-field {
-  background-color: var(--card-bg-color);
+  background-color: var(--subcard-bg-color);
   border: 1px solid var(--outline-color);
   border-radius: var(--border-rad);
   padding: 1rem;
@@ -210,7 +212,7 @@
 
 .form-field label {
   font-weight: 600;
-  color: var(--accent-color);
+  color: var(--text-color);
   margin-bottom: 0.25rem;
 }
 
@@ -219,7 +221,6 @@
   padding: 0.625rem;
   border: 1px solid var(--outline-color);
   border-radius: var(--border-rad);
-  background-color: var(--search-bar-bg-color);
   color: var(--text-color);
   font-size: 0.875rem;
   box-sizing: border-box;
@@ -227,7 +228,6 @@
 
 .form-field input[disabled],
 .form-field textarea[disabled] {
-  background-color: var(--subcard-bg-color);
   color: var(--muted-color);
   border: 1px dashed var(--outline-color);
   padding: 0.5rem;
@@ -263,7 +263,9 @@
   cursor: pointer;
   font-size: 1.125rem;
   color: var(--muted-color);
+  padding: 1rem;
 }
+
 .option-item .remove-option-btn:hover {
   color: var(--accent-color);
 }
@@ -291,6 +293,7 @@
   align-items: center;
   gap: 8px;
   font-weight: 500;
+  color: var(--text-color);
 }
 .required-toggle input[type="checkbox"] {
   transform: scale(1.2);

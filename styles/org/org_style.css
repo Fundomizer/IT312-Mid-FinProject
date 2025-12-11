@@ -69,6 +69,10 @@
     gap: 1rem;
 }
 
+#Forms p{
+    color: var(--text-color);
+}
+
 .Form {
     width: 100%;
     box-sizing: border-box;
@@ -151,7 +155,7 @@
 }
 
 .LogDetails>p {
-    color: var(--muted-color);
+    color: var(--text-color);
 }
 
 .LogDate,

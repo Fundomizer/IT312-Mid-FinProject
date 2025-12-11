@@ -24,13 +24,12 @@
   border: 1px solid var(--outline-color);
   border-radius: 12px;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--subcard-bg-color);
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .form-builder-section .form-item:hover {
   border-color: var(--accent-color);
-  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .form-header {
@@ -68,10 +67,10 @@
 .form-fields-container {
   margin-top: 0.625rem;
   padding: 0.625rem;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--main-bg-color);
   border-radius: 8px;
   font-size: 1rem;
-  color: var(--muted);
+  color: var(--body-title-color);
 }
 
 .form-fields-container div{
@@ -91,8 +90,9 @@
   cursor: pointer;
   font-weight: 600;
   transition: background-color 0.2s ease, transform 0.15s ease;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: none;
   background: var(--accent-color);
+  box-shadow: 0 0 5px rgba(2, 6, 23, 0.6);
   color: var(--text);
 }
 
@@ -168,10 +168,9 @@
   margin-top: 0.25rem;
   border-radius: var(--border-rad);
   border: 1px solid var(--outline-color);
-  background-color: var(--search-bar-bg-color);
-  color: var(--text-color);
-  font-size: 1cqh;
+  font-size: 1rem;
   box-sizing: border-box;
+  margin-bottom: 0.5rem;
 }
 
 #form-modal input:focus,
