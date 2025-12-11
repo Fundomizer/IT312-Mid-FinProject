@@ -95,8 +95,8 @@
   flex: 1;
   padding: 0.375rem 0.625rem;
   border: 1px solid var(--outline-color);
-  background-color: var(--search-bar-bg-color);
-  color: var(--text-color);
+  background-color: white;
+   color: #000;
   font-size: 0.688rem;
   border-radius: var(--border-rad);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -172,15 +172,22 @@ select#filterLocation {
 
 #submissions-table {
     width: 100%;
-    min-width: 100px;
-    min-height: 100px;
-    overflow: auto;
+    border-collapse: collapse;
+    display: table; 
+    overflow: visible;
 }
-
 td{
     padding: 2rem 1rem;
     cursor: pointer;
 }
+
+
+#submissions-table th,
+#submissions-table td {
+    padding: 1rem;
+    font-size: 0.875rem; /* desktop font size */
+}
+
 
 @media (max-width: 768px) {
   .filters {
@@ -199,4 +206,59 @@ td{
   .muted {
     text-align: left;
   }
+}
+
+@media (max-width: 768px) {
+    /* Make table scrollable horizontally on small screens */
+    #submissions-table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
+    }
+
+    #submissions-table th,
+    #submissions-table td {
+        padding: 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    /* Ensure filters stack vertically */
+    .topbar {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .filters {
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    .filter-block {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    #clearFilters {
+        width: 100%;
+        margin: 0;
+    }
+
+    #searchInput {
+        width: 100%;
+        padding: 0.5rem;
+        font-size: 0.813rem;
+    }
+
+    /* Modal adjustments */
+    #formDetailsModal > div {
+        width: 95%;
+        max-width: 90%;
+        padding: 1rem;
+        font-size: 0.813rem;
+    }
+}
+
+.Card.search {
+    padding: 1rem;
 }

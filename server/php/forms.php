@@ -2,6 +2,11 @@
 ini_set('session.cookie_lifetime', 0);
 session_start();
 
+
+
+
+
+
 if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] !== true || ($_SESSION['user']['role'] ?? '') !== 'OSA') {
     http_response_code(403);
     echo json_encode(["success" => false, "error" => "Unauthorized"]);

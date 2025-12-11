@@ -4,12 +4,20 @@ const cors = require('cors');
 const { connectToDB, url } = require('./database/connect');
 const { default: MongoStore } = require('connect-mongo');
 const { exposeEndpoints } = require('./endpoints');
+const fileUpload = require("express-fileupload");
 
 const port = 8123
 const app = express();
 
 app.use(express.json());
 app.set("json spaces", 4) // Pretty print 
+
+
+app.use(fileUpload({
+    createParentPath: true
+}));
+
+// Cross origin access
 app.use(cors({
     origin: function (origin, callback) {
         // allow requests with no origin (like curl or mobile apps)
@@ -28,8 +36,7 @@ app.use(cors({
     credentials: true
 }))
 
-console.log("My MongoStore: ", MongoStore);
-
+// Caching settings
 app.use((req, res, next) => {
     res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, private, max-age=0");
     res.setHeader("Pragma", "no-cache");
