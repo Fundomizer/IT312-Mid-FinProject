@@ -5,10 +5,10 @@ header("Content-Type: application/json");
 
 require __DIR__ . '/vendor/autoload.php';
 use MongoDB\Client;
-
+// Read input data
 $input = file_get_contents("php://input");
 $data = json_decode($input, true);
-
+// Extract email and password
 $email = $data["email"] ?? "";
 $password = $data["password"] ?? "";
 
@@ -35,7 +35,7 @@ try {
         if (file_exists($oldSessionFile)) unlink($oldSessionFile);
         session_start();
     }
-
+// Set session variables
     $_SESSION["loggedIn"] = true;
     $_SESSION["user"] = [
         "email" => $user["email"],

@@ -8,7 +8,7 @@ const HOST = window.location.origin;
 async function loadOrganizations() {
   const orgSelect = document.getElementById("orgSelect");
 
-
+//request to fetch organizations
    try {
     const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`, {
       credentials: "include"
@@ -35,23 +35,16 @@ async function loadOrganizations() {
 
 loadOrganizations();
 
-
+// Form Creation Logic
 function loadFormCreation() {
   const formFields = document.getElementById("formFields");
   const addFieldBtn = document.getElementById("addFieldBtn");
   const fieldTypeSelect = document.getElementById("fieldType");
   let fieldCounter = 0;
 
-
-
-
   addFieldBtn.addEventListener("click", () => {
     const fieldType = fieldTypeSelect.value;
     const questionNumber = formFields.querySelectorAll(".form-field").length + 1;
-
-
-
-
 
 
     const field = document.createElement("div");
@@ -74,7 +67,6 @@ function loadFormCreation() {
 
 
 
-
     if (fieldType === "textarea") {
       fieldHTML += `<textarea disabled placeholder="Paragraph answer"></textarea>`;
     } else if (fieldType === "checkbox" || fieldType === "radio") {
@@ -92,38 +84,24 @@ function loadFormCreation() {
       fieldHTML += `<input type="text" disabled placeholder="Short answer">`;
     }
 
-
-
-
     fieldHTML += `<button class="remove-field-btn">Remove Question</button>`;
     field.innerHTML = fieldHTML;
     formFields.appendChild(field);
-
-
-
 
 field.querySelector(".remove-field-btn").addEventListener("click", () => {
     checkOSA();
     field.remove();
 });
 
-
-
-
     if (fieldType === "checkbox" || fieldType === "radio") {
       const optionsContainer = field.querySelector(".options-container");
       const addOptionBtn = field.querySelector(".add-option-btn");
-
-
-
 
       addOptionBtn.addEventListener("click", () => {
                   checkOSA();
         const optionCount = optionsContainer.children.length + 1;
         const optionItem = document.createElement("div");
         optionItem.classList.add("option-item");
-
-
 
 
         optionItem.innerHTML = `
@@ -138,22 +116,12 @@ optionItem.querySelector(".remove-option-btn").addEventListener("click", () => {
         optionsContainer.appendChild(optionItem);
       });
 
-
-
-
       field.querySelector(".remove-option-btn").addEventListener("click", (e) => e.target.parentElement.remove());
     }
   });
 }
 
-
-
-
 loadFormCreation();
-
-
-
-
 document.getElementById("submitFormBtn").addEventListener("click", async (event) => {
     checkOSA();
   event.preventDefault();

@@ -3,7 +3,7 @@ import { checkOSA } from "./osa_auth.js";
 const HOST = window.location.origin;
 let selectedForm = null;
 
-// --- Load active forms ---
+//loading active forms
 async function loadActiveForms() {
   const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=forms`, {
     credentials: "include",
@@ -86,11 +86,11 @@ async function loadActiveForms() {
   });
 }
 
-// --- Open modal ---
+//opening a modal to update form
 function openModal(form) {
   const modal = document.getElementById("form-modal");
   modal.style.display = "flex";
-
+//populating modal fields
   document.getElementById("modal-title").textContent = "Update Form";
   document.getElementById("modal-requirement-name").value = form.requirement_name || "";
   const desc = document.getElementById("modal-description");
@@ -103,7 +103,7 @@ function openModal(form) {
 
   const fieldsContainer = document.getElementById("modal-fields");
   fieldsContainer.innerHTML = "";
-
+//populates the modal with existing fields
   if (form.fields && form.fields.length > 0) {
     form.fields.forEach((field, index) => {
       const fieldDiv = document.createElement("div");
@@ -169,7 +169,7 @@ if (field.field_type === "checkbox" || field.field_type === "radio") {
   }
 }
 
-// --- Modal close ---
+//close modal
 document.getElementById("modal-close").addEventListener("click", () => {
   checkOSA();
   document.getElementById("form-modal").style.display = "none";
@@ -179,7 +179,7 @@ document.getElementById("form-modal").addEventListener("click", e => {
   if (e.target.id === "form-modal") e.currentTarget.style.display = "none";
 });
 
-// --- Update form ---
+//updating form
 document.getElementById("modal-update-btn").addEventListener("click", async () => {
   if (!selectedForm) return;
 
