@@ -647,13 +647,16 @@ document.addEventListener("click", (e) => {
     if (e.target.id === "ClearFilterButton") {
         clearFilters();
     }
-    if (e.target.id === "UploadButton") {
-        fileAction(e);
-    }
     if (e.target.id === "SubmitForm") {
         closeForm();
         // Submit form data to database
         // Remove form card from assigned forms
+    }
+});
+
+document.addEventListener("change", (e) => {
+    if (e.target.id === "UploadButton") {
+        fileAction(e);
     }
 });
 
