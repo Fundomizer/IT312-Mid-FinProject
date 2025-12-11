@@ -24,6 +24,10 @@ section>div {
     align-items: center;
 }
 
+section img{
+    filter: brightness(1);
+}
+
 input {
     border-width: 0px;
     padding: 0.625rem;
