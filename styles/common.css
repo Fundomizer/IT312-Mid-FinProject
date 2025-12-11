@@ -57,6 +57,10 @@ body {
     border-color: var(--hover-accent-color);
 }
 
+.SubCard#SubCardOverview img{
+    filter: brightness(1);
+}
+
 #SearchContainer {
     display: flex;
     margin-bottom: 1rem;
