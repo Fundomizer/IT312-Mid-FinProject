@@ -1,4 +1,5 @@
 <?php
+// Logout which unsets the sesion
 session_start();
 
 session_unset();

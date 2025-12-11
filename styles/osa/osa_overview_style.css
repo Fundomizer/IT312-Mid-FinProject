@@ -15,6 +15,16 @@
   margin-top: 1.875rem;
 }
 
+#orgSearchInput{
+  width: 100%;
+    background: var(--search-bar-bg-color);
+   padding: 10px; 
+   margin-top: 5px;
+   margin-bottom: 15px; 
+   color: var(--text-color);
+   border-radius: 6px;
+}
+
 /* Chart container default width */
 .charts-section .chart-container {
   width: 480px;

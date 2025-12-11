@@ -296,3 +296,21 @@
   transform: scale(1.2);
   cursor: pointer;
 }
+.form-file-upload-toggle {
+  margin-top: 10px;
+  display: flex;
+  align-items: center; 
+  gap: 0.5rem;           
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.form-file-upload-toggle input[type="checkbox"] {
+    margin-top: 10px;
+
+  transform: scale(1.2); 
+  margin: 0;             
+  vertical-align: middle; 
+  display: inline-block;  
+}
+
