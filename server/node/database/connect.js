@@ -1,6 +1,6 @@
 const { MongoClient } = require('mongodb');
 
-const url = "mongodb+srv://testuser:test321@cluster0.lbsrw5e.mongodb.net/" // TODO change this to use local later on
+const url = "mongodb://localhost:27017/" // TODO change this to use local later on
 const client = new MongoClient(url);
 
 let db;
