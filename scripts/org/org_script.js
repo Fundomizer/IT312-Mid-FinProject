@@ -228,7 +228,6 @@ async function loadForms() {
             .replace(/\b\w/g, c => c.toUpperCase());
     }
 
-
     return {
         populatePopupForm: function (form) {
             
