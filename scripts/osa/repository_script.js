@@ -116,7 +116,9 @@ function filterResults() {
 
   shownCount.textContent = visibleCount;
 }
-// Show Form Details in Modal
+
+
+  // Add uploaded files section
 function showFormDetails(org, reqType, reqData) {
   const reqDiv = document.getElementById("modalRequirements");
   reqDiv.innerHTML = `
@@ -137,13 +139,32 @@ function showFormDetails(org, reqType, reqData) {
     });
   }
 
-  document.getElementById("formDetailsModal").style.display = "flex";
-}
+  // Add uploaded files section
+  if (reqData.filename && reqData.filename.length > 0) {
+    const filesDiv = document.createElement("div");
+    filesDiv.innerHTML = `<strong>Uploaded Files:</strong>`;
+    
+    reqData.filename.forEach(file => {
+      const fileLink = document.createElement("a");
+      fileLink.href = `${HOST}/IT312-Mid-FinProject/uploads/${file}`; 
+      fileLink.textContent = file;
+      fileLink.target = "_blank"; 
+      fileLink.style.display = "block";
+      filesDiv.appendChild(fileLink);
+    });
 
-document.getElementById("closeModal").addEventListener("click", () => {
+    reqDiv.appendChild(filesDiv);
+  }
+
+  document.getElementById("formDetailsModal").style.display = "flex";
+  document.getElementById("closeModal").addEventListener("click", () => {
     checkOSA();
   document.getElementById("formDetailsModal").style.display = "none";
-});
+  });
+
+}
+
+
 
 document.getElementById("tagFilterInput").addEventListener("input", filterResults, checkOSA());
 document.getElementById("dateFrom").addEventListener("change", filterResults, checkOSA());
@@ -159,48 +180,25 @@ clearFiltersBtn.addEventListener("click", () => {
   document.getElementById("dateTo").value = "";
   filterResults();
 });
+async function loadOrganizationsForFilter() {
+  try {
+    const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`, {
+      credentials: "include"
+    });
+    const orgs = await response.json();
+
+    filterLocation.innerHTML = `<option value="">All Orgs</option>`;
+
+    orgs.forEach(org => {
+      const option = document.createElement("option");
+      option.value = org.short_name;
+      option.textContent = org.org_name;
+      filterLocation.appendChild(option);
+    });
+  } catch (err) {
+    console.error("Error loading organizations for filter:", err);
+  }
+}
+loadOrganizationsForFilter();
 
 loadItems();
-
-loadItems().then(() => {
-  const table = document.getElementById("submissions-table");
-  // Default sort: Date column (index 4), descending
-  sortTableByColumn(table, 4, false);
-
-  // Enable click sorting
-  const headers = table.querySelectorAll("th");
-  headers.forEach((th, index) => {
-    th.addEventListener("click", () => {
-      const isAsc = th.classList.contains("asc");
-      sortTableByColumn(table, index, !isAsc);
-    });
-  });
-});
-
-function sortTableByColumn(table, columnIndex, asc = true) {
-  const tbody = table.querySelector("tbody");
-  const rows = Array.from(tbody.querySelectorAll("tr"));
-
-  rows.sort((a, b) => {
-    let aText = a.children[columnIndex].innerText.trim();
-    let bText = b.children[columnIndex].innerText.trim();
-
-    // Handle date column
-    if (columnIndex === 4) {
-      aText = aText !== "N/A" ? new Date(aText) : new Date(0);
-      bText = bText !== "N/A" ? new Date(bText) : new Date(0);
-    }
-
-    return asc
-      ? (aText > bText ? 1 : -1)
-      : (aText < bText ? 1 : -1);
-  });
-
-  rows.forEach(row => tbody.appendChild(row));
-
-  // Reset header classes
-  const headers = table.querySelectorAll("th");
-  headers.forEach(h => h.classList.remove("asc", "desc"));
-  const targetHeader = headers[columnIndex];
-  targetHeader.classList.add(asc ? "asc" : "desc");
-}

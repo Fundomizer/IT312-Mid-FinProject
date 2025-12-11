@@ -6,7 +6,7 @@ session_start();
 
 
 
-
+// Authorization check
 if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] !== true || ($_SESSION['user']['role'] ?? '') !== 'OSA') {
     http_response_code(403);
     echo json_encode(["success" => false, "error" => "Unauthorized"]);
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
-
+// MongoDB connection
 try {
     $client = new MongoDB\Client("mongodb+srv://testuser:test321@cluster0.lbsrw5e.mongodb.net/"); // currently using local for easier testing and deletinng
     $db = $client->OrganizationManagementDatabase;
@@ -32,8 +32,9 @@ try {
 
     $data = json_decode(file_get_contents("php://input"), true);
 
-
+// Handles different request methods
     switch ($_SERVER['REQUEST_METHOD']) {
+        //create form 
         case 'POST':
             if (!$data || !isset($data["requirement_name"])) {
                 http_response_code(400);
@@ -48,7 +49,7 @@ try {
                 "fields" => $data["fields"] ?? [],
                 "tags" => $data["tags"] ?? [],
                 "assigned_to" => $data["assigned_to"] ?? ["all"],
-
+                "upload" => $data["upload"] ?? false
 
             ]);
 
@@ -56,7 +57,7 @@ try {
             echo json_encode(["success" => true, "inserted_id" => (string)$insertResult->getInsertedId()]);
             break;
 
-
+//update form by id
 case 'PUT':
     $id = $data['_id'] ?? null;
     if (!$id) {
@@ -71,12 +72,14 @@ case 'PUT':
             "description" => $data["description"] ?? null,
             "fields" => $data["fields"] ?? null,
             "tags" => $data["tags"] ?? null,
-            "assigned_to" => $data["assigned_to"] ?? ["all"]
+            "assigned_to" => $data["assigned_to"] ?? ["all"],
+            "upload" => $data["upload"] ?? false 
+
         ]]
     );
     echo json_encode(["success" => true, "modified_count" => $updateResult->getModifiedCount()]);
     break;
-
+//delete form by id
 case 'DELETE':
     $id = $data['_id'] ?? null;
     if (!$id) {

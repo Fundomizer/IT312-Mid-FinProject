@@ -132,6 +132,10 @@
   border: 1px solid rgba(255,255,255,0.05);
   box-shadow: 0 6px 24px rgba(2,6,23,0.6);
   position: relative;
+
+  max-height: 85vh;
+  overflow-y: auto;
+
 }
 
 .modal-description textarea {
@@ -218,4 +222,28 @@
 #modal-delete-btn:hover {
   color: var(--accent-color);
   border: 1px solid var(--accent-color);
+}
+
+#form-modal .required-toggle {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+
+#form-modal .required-toggle input[type="checkbox"] {
+    margin-top: 10px;
+
+  transform: scale(1.2); 
+  margin: 0;             
+  vertical-align: middle; 
+  display: inline-block; 
+}
+.modal-form-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* ensures EVERYTHING inside aligns left */
 }

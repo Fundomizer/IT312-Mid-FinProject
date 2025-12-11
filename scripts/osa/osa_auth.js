@@ -21,7 +21,7 @@ export async function checkOSA() {
         console.log("OSA Auth Response:", data);
 
         if (!data.loggedIn) {
-            alert(data.error ?? "Your session has expired. Please log in again.");
+            alert(data.error ?? "Your session has expired or doesnt exist Please log in again.");
             window.location.href = "/IT312-Mid-FinProject/index.html";
             return;
         }
@@ -33,3 +33,4 @@ export async function checkOSA() {
         window.location.href = "/IT312-Mid-FinProject/index.html";
     }
 }
+checkOSA();

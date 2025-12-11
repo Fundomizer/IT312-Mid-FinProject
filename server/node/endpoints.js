@@ -1,7 +1,7 @@
 exports.exposeEndpoints = async (db, app) => {
 
     exposeCollections(db, app)
-    exposeOrgNames(db, app)
+    orgRequirements(db, app)
 }
 
 function exposeCollections(db, app) {
@@ -22,7 +22,7 @@ function exposeCollections(db, app) {
     })
 }
 
-function exposeOrgNames(db, app) {
+function orgRequirements(db, app) {
     // Expose specific information
     const orgs = db.collection('student_organization')
     app.get(`/api/org_names`, async (req, res) => {

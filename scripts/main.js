@@ -38,6 +38,7 @@ loginForm.addEventListener('submit', (e) => {
                 window.location.href = `${HOST}/IT312-Mid-FinProject${auth.redirect}`;
             }
             localStorage.setItem("username", auth.username);
+            if (auth.organization) localStorage.setItem("org_name", auth.organization);
         })
         .catch(err => alert("Login has hit an unexpected error"));
 });

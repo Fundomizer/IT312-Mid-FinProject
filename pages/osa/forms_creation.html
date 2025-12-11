@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script type="module" src="../../scripts/osa/osa_auth.js"></script>
+  <script type="module" src="../../scripts/osa/osa_auth.js" defer></script>
 
   <title>Create Form | OSA</title>
 </head>
@@ -28,6 +28,13 @@
         <label for="tagInput">Tags</label>
         <input id="tagInput" type="text" placeholder="Type tags separated by commas">
       </div>
+<div class="toggle-file">
+  <label class="form-file-upload-toggle">
+    <input type="checkbox" id="formFileRequired">
+    File Upload Required for this Form
+  </label>
+</div>
+
 
 
       <div class="org-assignment">
@@ -36,6 +43,7 @@
         </select>
         <p>Hold Ctrl to select multiple organizations, or leave blank for all.</p>
       </div>
+
 
       <div class="form-fields" id="formFields"></div>
 

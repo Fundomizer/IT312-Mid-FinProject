@@ -1,3 +1,4 @@
+import { HOST, PORT } from "../config.js"
 import { fetchCollection, loadPage } from "../utilities.js"
 
 const dashboard = document.getElementById("dashboardButton")
@@ -21,6 +22,7 @@ async function loadDashboard() {
 
     totalSubs.textContent = totalSubmissions;
     totalAssForms.textContent = assignedForms.length;
+    document.getElementById('OrgName').innerText = localStorage.getItem('org_name')
 }
 
 // For the apply and clear filter buttons to work
@@ -31,8 +33,24 @@ let formModule = null;
 
 async function loadForms() {
     loadPage('org', 'assigned_form_page.html')
+    const orgName = localStorage.getItem('org_name')
+    console.log("org name: ", orgName);
 
-    let forms = await fetchCollection('forms')
+    let forms = await fetchCollection(`orgs/requirements/${encodeURIComponent(orgName)}`)
+    console.log("Forms: ", forms);
+    let requirements = {}
+
+    if (forms.success) {
+        requirements = forms.requirements
+    } else {
+        console.log("Could not get forms :(");
+        return
+    }
+
+    let requirementsArray = Object.entries(requirements).map(([key, value]) => ({
+        requirement_name: key,
+        ...value
+    }));
 
     document.getElementById('SearchInput').addEventListener('input', handleFilter)
 
@@ -40,7 +58,7 @@ async function loadForms() {
     let currentSortOrder = 'none';
 
     createTags()
-    displayForm(forms)
+    displayForm(requirementsArray)
 
     filters = {
         updateFilters: updateFilters,
@@ -59,16 +77,19 @@ async function loadForms() {
             return;
         }
 
-        formsToDisplay.forEach(item => {
-            formDisplay.appendChild(createForm(item));
+        formsToDisplay.forEach(form => {
+            const formCard = createForm(form.requirement_name, form);
+            formDisplay.insertAdjacentHTML("beforeend", formCard);
         });
+
     }
 
     function createTags() {
         const tagsSet = new Set();
-        forms.forEach(form => {
-            if (form.tags) {
-                form.tags.forEach(tag => tagsSet.add(tag));
+
+        Object.values(requirements).forEach(req => {
+            if (req.tags && Array.isArray(req.tags)) {
+                req.tags.forEach(tag => tagsSet.add(tag));
             }
         });
 
@@ -82,11 +103,11 @@ async function loadForms() {
             checkbox.type = 'checkbox';
             checkbox.id = `TagsButton${index}`;
             checkbox.dataset.tag = tag;
-                
+
             const label = document.createElement('label');
             label.htmlFor = `TagsButton${index}`;
             label.textContent = tag;
-                
+
             Container.appendChild(checkbox);
             Container.appendChild(label);
         });
@@ -98,13 +119,13 @@ async function loadForms() {
         document.querySelectorAll('.TagsContainer input[type="checkbox"]:checked').forEach(checkbox => {
             selectedTags.add(checkbox.dataset.tag);
         });
-        
+
         // Update sort order from dropdown
         const sortDropdown = document.getElementById('FilterDropdown');
         if (sortDropdown) {
             currentSortOrder = sortDropdown.value.toLowerCase();
         }
-        
+
         handleFilter();
     }
 
@@ -120,26 +141,25 @@ async function loadForms() {
         }
         handleFilter();
     }
-    
+
     function handleFilter() {
         const term = document.getElementById('SearchInput').value.toLowerCase();
 
-        let filtered = forms;
+        let filtered = requirementsArray;
 
         // Search filter
         if (term) {
             filtered = filtered.filter(form =>
                 form.requirement_name?.toLowerCase().includes(term) ||
-                form.description?.toLowerCase().includes(term) ||
                 (form.tags && form.tags.some(tag => tag.toLowerCase().includes(term)))
             );
         }
 
         // Tag filter
         if (selectedTags.size > 0) {
-            filtered = filtered.filter(form => {
-                if (!form.tags) return false;
-                return form.tags.some(tag => selectedTags.has(tag));
+            filtered = filtered.filter(forms => {
+                if (!forms.tags) return false;
+                return forms.tags.some(tag => selectedTags.has(tag));
             });
         }
 
@@ -153,114 +173,84 @@ async function loadForms() {
         displayForm(filtered);
     }
 
-    function createForm(form) {
-        // Parent wrapper
-        const wrapper = document.createElement("div");
-        wrapper.className = "SubCard Form";
 
-        // Attach the two big parts
-        wrapper.appendChild(createFormDetails());
-        wrapper.appendChild(createStyledButtonDiv());
+    function createForm(requirementName, form) {
+        return `
+    <div class="SubCard Form">
 
-        return wrapper;
+        <div class="FormDetails">
 
-        function createFormDetails() {
-            const formDetails = document.createElement("div");
-            formDetails.className = "FormDetails";
+            <!-- Title -->
+            <span>
+                <h2 class="FormTitle">${formatTitle(requirementName)}</h2>
+            </span>
 
-            // Title + Action
-            const titleBlock = document.createElement("span");
-            const titleEl = document.createElement("h2");
-            titleEl.className = "FormTitle";
-            titleEl.textContent = form.requirement_name;
+            <!-- Description (optional, if you add one later) -->
+            ${form.description ? `<p class="FormDescription">${form.description}</p>` : ""}
 
+            <!-- Requirements summary -->
+            <div class="FormRequirements">
+                <span>
+                    <div class="ImageWrapper">
+                        <img src="../../assets/images/org_icons/document_icon.png" alt="Document icon">
+                    </div>
+                    <p>${form.fields.length} Fields required</p>
+                </span>
+            </div>
 
+            <!-- Tags -->
+            <div class="Tags">
+                ${form.tags.map(tag => `<p class="Tag">${tag}</p>`).join("")}
+            </div>
 
-            titleBlock.appendChild(titleEl);
+            <!-- Last Updated -->
+            <p class="LastUpdated">Last updated: ${form.last_updated}</p>
 
+        </div>
 
-            // Description
-            const descEl = document.createElement("p");
-            descEl.className = "FormDescription";
-            descEl.textContent = form.description;
+        <!-- Button -->
+        <div>
+            <button class="StyledButton" data-form-id="${form.form_id}" data-requirement-name="${requirementName}">
+                <span>
+                    <img src="../../assets/images/icons/forms_icon.png" alt="Form icon">
+                </span>
+                <span>Fill Out Form</span>
+            </button>
+        </div>
 
-            // Requirements
-            const requirements = document.createElement("div");
-            requirements.className = "FormRequirements";
-
-            const reqSpan = document.createElement("span");
-
-            const imageWrapper = document.createElement("div");
-            imageWrapper.className = "ImageWrapper";
-
-            const icon = document.createElement("img");
-            icon.src = "../../assets/images/org_icons/document_icon.png";
-            icon.alt = "Document icon";
-
-            imageWrapper.appendChild(icon);
-
-            const reqText = document.createElement("p");
-            reqText.textContent = `${form.fields.length} Fields required`;
-
-            reqSpan.appendChild(imageWrapper);
-            reqSpan.appendChild(reqText);
-            requirements.appendChild(reqSpan);
-
-            // Tags
-            const tagsContainer = document.createElement("div");
-            tagsContainer.className = "Tags";
-            form.tags.forEach(tag => {
-                const tagEl = document.createElement("p");
-                tagEl.className = "Tag";
-                tagEl.textContent = tag;
-                tagsContainer.appendChild(tagEl);
-            });
-
-            // Assemble FormDetails
-            formDetails.appendChild(titleBlock);
-            formDetails.appendChild(descEl);
-            formDetails.appendChild(requirements);
-            formDetails.appendChild(tagsContainer);
-
-            return formDetails;
-        }
-
-        // --- Internal function: Styled button ---
-        function createStyledButtonDiv() {
-            const buttonWrapper = document.createElement("div");
-
-            const button = document.createElement("button");
-            button.className = "StyledButton";
-            button.dataset.formId = form._id;
-
-            const iconSpan = document.createElement("span");
-            const formIcon = document.createElement("img");
-            formIcon.src = "../../assets/images/icons/forms_icon.png";
-            formIcon.alt = "Form icon";
-            iconSpan.appendChild(formIcon);
-
-            const labelSpan = document.createElement("span");
-            labelSpan.textContent = "Fill Out form";
-
-            button.appendChild(iconSpan);
-            button.appendChild(labelSpan);
-            buttonWrapper.appendChild(button);
-
-            return buttonWrapper;
-        }
+    </div>
+    `;
     }
 
+    // Helper to convert "strategic_plan" → "Strategic Plan"
+    function formatTitle(key) {
+        return key
+            .replace(/_/g, " ")
+            .replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    // Add functionality to the submisssion form
+    let form = document.getElementById('SubmissionForm').addEventListener('submit', (e) => handleSubmit(e))
+    console.log(form);
+
     return {
-        populatePopupForm: function(form) {
+        populatePopupForm: function (form) {
+
             const popup = document.querySelector(".PopupForm");
-            if (!popup) return;
+            if (!popup) {
+                console.error("PopupForm not found");
+                return;
+            }
 
             // Set form ID as data attribute
-            popup.dataset.formId = form._id;
+            popup.dataset.formId = form.form_id;
 
             // Find the form element inside popup
             const formElement = popup.querySelector(".Form");
-            if (!formElement) return;
+            if (!formElement) {
+                console.error("Form element inside popup not found");
+                return;
+            }
 
             // Clear existing content
             formElement.innerHTML = '';
@@ -269,100 +259,181 @@ async function loadForms() {
             const titleLabel = document.createElement("label");
             titleLabel.htmlFor = "FormTitle";
             const titleH3 = document.createElement("h3");
-            titleH3.textContent = form.requirement_name;
+            titleH3.textContent = formatTitle(form.requirement_name);
             titleLabel.appendChild(titleH3);
             formElement.appendChild(titleLabel);
             formElement.appendChild(document.createElement("br"));
 
-            // Create description
-            const descLabel = document.createElement("label");
-            descLabel.textContent = form.description;
-            formElement.appendChild(descLabel);
-            formElement.appendChild(document.createElement("br"));
+            // Create description (if exists)
+            if (form.description) {
+                const descLabel = document.createElement("label");
+                descLabel.textContent = form.description;
+                formElement.appendChild(descLabel);
+                formElement.appendChild(document.createElement("br"));
+            }
 
             // Create fields dynamically
-            form.fields.forEach((field, index) => {
-                const formFields = document.createElement("div");
-                formFields.className = "FormFields";
+            if (form.fields && form.fields.length > 0) {
+                form.fields.forEach((field, index) => {
+                    console.log("field: ", field, "index: ", index);
 
-                const fieldLabel = document.createElement("label");
-                fieldLabel.htmlFor = `field_${index}`;
-                const fieldSpan = document.createElement("span");
-                fieldSpan.textContent = field.question;
-                if (field.required) {
-                    fieldSpan.textContent += " *";
-                }
-                fieldLabel.appendChild(fieldSpan);
+                    const formFields = document.createElement("div");
+                    formFields.className = "FormFields";
 
-                let inputElement;
-                
-                // Create appropriate input based on field_type
-                switch(field.field_type) {
-                    case 'number':
-                        inputElement = document.createElement("input");
-                        inputElement.type = "number";
-                        inputElement.id = `field_${index}`;
-                        inputElement.required = field.required;
-                        break;
-                    case 'date':
-                        inputElement = document.createElement("input");
-                        inputElement.type = "date";
-                        inputElement.id = `field_${index}`;
-                        inputElement.required = field.required;
-                        break;
-                    case 'array':
-                        inputElement = document.createElement("textarea");
-                        inputElement.id = `field_${index}`;
-                        inputElement.required = field.required;
-                        inputElement.placeholder = "Enter items separated by commas";
-                        break;
-                    case 'object':
-                        inputElement = document.createElement("textarea");
-                        inputElement.id = `field_${index}`;
-                        inputElement.required = field.required;
-                        inputElement.placeholder = "Enter JSON object";
-                        break;
-                    case 'text':
-                    default:
-                        inputElement = document.createElement("input");
-                        inputElement.type = "text";
-                        inputElement.id = `field_${index}`;
-                        inputElement.required = field.required;
-                        break;
-                }
+                    const fieldLabel = document.createElement("label");
+                    fieldLabel.htmlFor = `field_${index}`;
+                    const fieldSpan = document.createElement("span");
+                    fieldSpan.textContent = field.question;
+                    if (field.required === "true" || field.required === true) {
+                        fieldSpan.textContent += " *";
+                    }
+                    fieldLabel.appendChild(fieldSpan);
 
-                formFields.appendChild(fieldLabel);
-                formFields.appendChild(inputElement);
-                formElement.appendChild(formFields);
+                    let inputElement;
+
+                    // Create appropriate input based on field_type
+                    switch (field.field_type) {
+                        case 'number':
+                            inputElement = document.createElement("input");
+                            inputElement.type = "number";
+                            inputElement.id = `field_${index}`;
+                            inputElement.required = field.required === "true" || field.required === true;
+                            break;
+                        case 'date':
+                            inputElement = document.createElement("input");
+                            inputElement.type = "date";
+                            inputElement.id = `field_${index}`;
+                            inputElement.required = field.required === "true" || field.required === true;
+                            break;
+                        case 'array':
+                            inputElement = document.createElement("textarea");
+                            inputElement.id = `field_${index}`;
+                            inputElement.required = field.required === "true" || field.required === true;
+                            inputElement.placeholder = "Enter items separated by commas";
+                            break;
+                        case 'object':
+                            inputElement = document.createElement("textarea");
+                            inputElement.id = `field_${index}`;
+                            inputElement.required = field.required === "true" || field.required === true;
+                            inputElement.placeholder = "Enter JSON object";
+                            break;
+                        case 'text':
+                        default:
+                            inputElement = document.createElement("input");
+                            inputElement.type = "text";
+                            inputElement.id = `field_${index}`;
+                            inputElement.required = field.required === "true" || field.required === true;
+                            break;
+                    }
+
+                    inputElement.name = `field_${index}`
+                    formFields.appendChild(fieldLabel);
+                    formFields.appendChild(inputElement);
+                    formElement.appendChild(formFields);
+                });
+            }
+
+            if (form.upload) { // Add upload button only if the form requires them
+
+                // Add file upload section
+                const uploadDiv = document.createElement("div");
+                uploadDiv.className = "FormUpload";
+
+                const uploadSpan = document.createElement("span");
+                uploadSpan.textContent = "Supporting Documents";
+
+                const uploadLabel = document.createElement("label");
+                uploadLabel.htmlFor = "UploadButton";
+                uploadLabel.textContent = "Upload File";
+
+                const uploadInput = document.createElement("input");
+                uploadInput.type = "file";
+                uploadInput.id = "UploadButton";
+                uploadInput.multiple = true;
+
+                const uploadContainer = document.createElement("div");
+                uploadContainer.id = "UploadedFilesContainer";
+
+                uploadDiv.appendChild(uploadSpan);
+                uploadDiv.appendChild(uploadLabel);
+                uploadDiv.appendChild(uploadInput);
+                uploadDiv.appendChild(uploadContainer);
+                formElement.appendChild(uploadDiv);
+            }
+
+            let buttonContainers = document.createElement('div')
+            buttonContainers.classList.add('FormButtons')
+            buttonContainers.innerHTML = `
+                <button type="button" id="CancelForm">Cancel</button>
+                <button type="submit" id="SubmitForm">Submit Form</button>
+            `
+            formElement.appendChild(buttonContainers)
+        },
+        requirementsArray: requirementsArray,
+        formatTitle: formatTitle,
+        getFormById: function (formId, requirementName) {
+            return requirementsArray.find(f =>
+                f.form_id === formId && f.requirement_name === requirementName
+            );
+        }
+    };
+
+    async function handleSubmit(event) {
+        event.preventDefault();
+        console.log("Submitting form");
+        
+        const popup = document.querySelector(".PopupForm");
+        const requirementName = popup.dataset.requirementName
+        console.log("Requirement anme from handle submit: ", requirementName);
+        const formElement = popup.querySelector(".Form");
+
+        if (!requirementName) {
+            console.error("No requirement name found in popup.dataset");
+            return;
+        }
+
+        const formData = new FormData();
+        let orgName = localStorage.getItem('org_name')
+        console.log("Form filled out by: ", orgName);
+        
+        formData.append('org_name',orgName)
+        // ✅ Collect all text inputs and textareas
+        const textInputs = formElement.querySelectorAll("input[name^='field_'], textarea[name^='field_']");
+        textInputs.forEach(input => {
+            formData.append(input.name, input.value);
+        });
+
+        // ✅ Collect all file inputs
+        const fileInputs = formElement.querySelectorAll("input[type='file'][name^='file_']");
+        fileInputs.forEach(input => {
+            if (input.files.length > 0) {
+                formData.append(input.name, input.files[0]);
+            }
+        });
+
+        try {
+            const response = await fetch(`${HOST}:${PORT}/api/orgs/requirements/${encodeURIComponent(requirementName)}`, {
+                method: "PUT",
+                body: formData,
+                credentials: "include" // ✅ important for session cookies
             });
 
-            // Add file upload section
-            const uploadDiv = document.createElement("div");
-            uploadDiv.className = "FormUpload";
+            const result = await response.json();
+            console.log("Server response:", result);
 
-            const uploadSpan = document.createElement("span");
-            uploadSpan.textContent = "Supporting Documents";
+            if (result.success) {
+                alert("Form submitted successfully");
+                popup.style.display = "none"; // close popup
+            } else {
+                alert("Failed to submit form: " + result.message);
+            }
 
-            const uploadLabel = document.createElement("label");
-            uploadLabel.htmlFor = "UploadButton";
-            uploadLabel.textContent = "Upload File";
+        } catch (err) {
+            console.error("Error submitting form:", err);
+            alert("An error occurred while submitting the form.");
+        }
+    }
 
-            const uploadInput = document.createElement("input");
-            uploadInput.type = "file";
-            uploadInput.id = "UploadButton";
-            uploadInput.multiple = true;
-
-            const uploadContainer = document.createElement("div");
-            uploadContainer.id = "UploadedFilesContainer";
-
-            uploadDiv.appendChild(uploadSpan);
-            uploadDiv.appendChild(uploadLabel);
-            uploadDiv.appendChild(uploadInput);
-            uploadDiv.appendChild(uploadContainer);
-            formElement.appendChild(uploadDiv);
-        },
-        forms: forms
-    };
 }
 
 // this fucntion is currently reading all requirements from
@@ -466,15 +537,18 @@ async function loadHistory() {
     }
 }
 
-
-
 function openForm(formId) {
     const popup = document.querySelector(".PopupForm");
     const overlay = document.getElementById("PopupOverlay");
+
     if (popup && overlay) {
         popup.style.display = "block";
-        overlay.classList.add("show");     // make overlay visible
-        document.body.classList.add("modal-open"); // optional: disable scroll
+        overlay.classList.add("show");
+        document.body.classList.add("modal-open");
+    } else {
+        console.error("Popup or overlay element not found!");
+        if (!popup) console.error("Missing .PopupForm element");
+        if (!overlay) console.error("Missing #PopupOverlay element");
     }
 }
 
@@ -504,7 +578,7 @@ function toggleFilter() {
 function clearFilters() {
     const dropdown = document.querySelectorAll('#FilterDropdown');
     dropdown.forEach(select => select.selectedIndex = 0);
-    
+
     if (filters && filters.clearFilters) {
         filters.clearFilters();
     } else {
@@ -524,7 +598,7 @@ let selectedFiles = [];
 
 function fileAction(e) {
     const files = Array.from(e.target.files);
-            
+
     files.forEach(file => {
         if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
             selectedFiles.push(file);
@@ -535,23 +609,23 @@ function fileAction(e) {
 
 function createCardFile(file, index) {
     const container = document.getElementById('UploadedFilesContainer');
-            
+
     const fileSelected = document.createElement('div');
     fileSelected.className = 'FileSelectedCard';
     fileSelected.id = `File-${index}`;
-            
+
     const fileName = document.createElement('span');
     fileName.className = 'FileName';
     let newFileName = `AttachedFile${index}`;
-    let renamedFile = new File([file], newFileName, {type: file.type});
+    let renamedFile = new File([file], newFileName, { type: file.type });
     fileName.textContent = renamedFile.name;
 
     const preview = document.createElement('div');
     preview.className = 'FilePreview';
-    
+
     if (file.type.startsWith('image/')) {
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             preview.innerHTML = `<img src="${e.target.result}" alt="${file.name}">`;
         };
         reader.readAsDataURL(file);
@@ -561,19 +635,19 @@ function createCardFile(file, index) {
         else if (file.type.includes('video')) icon = '🎥';
         else if (file.type.includes('audio')) icon = '🎵';
         else if (file.type.includes('zip') || file.type.includes('compressed')) icon = '📦';
-                
+
         preview.innerHTML = `<span class="file-icon">${icon}</span>`;
     }
-    
+
     const removeBtn = document.createElement('button');
     removeBtn.className = 'RemoveButton';
     removeBtn.innerHTML = '×';
     removeBtn.onclick = () => removeFile(index);
-    
+
     fileSelected.appendChild(fileName);
     fileSelected.appendChild(preview);
     fileSelected.appendChild(removeBtn);
-    
+
     container.appendChild(fileSelected);
 }
 
@@ -581,36 +655,60 @@ function removeFile(index) {
     selectedFiles.splice(index, 1);
     reDisplayFiles();
 }
-        
+
 function reDisplayFiles() {
     const container = document.getElementById('UploadedFilesContainer');
     container.innerHTML = '';
     selectedFiles.forEach((file, index) => {
-        showFile(file, index);
+        createCardFile(file, index);
     });
+}
+
+function styleButtonEventListener(e) {
+    const button = e.target.closest(".StyledButton");
+    const popup = document.querySelector(".PopupForm");
+    console.log(button);
+
+    if (button.dataset.formId) {
+
+        const formId = button.dataset.formId;``
+        const requirementName = button.dataset.requirementName;
+        console.log("Requirement name: ", requirementName);
+        
+        popup.dataset.requirementName = requirementName
+
+        if (formModule && formModule.getFormById) {
+            const formData = formModule.getFormById(formId, requirementName);
+
+            if (formData) {
+                if (formModule.populatePopupForm) {
+                    formModule.populatePopupForm(formData);
+                    openForm(formData.form_id);
+                } else {
+                    console.error("populatePopupForm not available");
+                }
+            } else {
+                console.error("Form data not found for ID:", formId);
+                console.log("Available forms:", formModule.requirementsArray);
+            }
+        } else {
+            console.error("formModule not loaded");
+        }
+    } else {
+        // For buttons without form data (like history view buttons)
+        console.log("Non-form button clicked");
+    }
 }
 
 // Assign event handlers for navigation
 if (dashboard) dashboard.addEventListener('click', loadDashboard)
-if (forms) forms.addEventListener('click', async () => {formModule = await loadForms();})
+if (forms) forms.addEventListener('click', async () => { formModule = await loadForms(); })
 if (history) history.addEventListener('click', loadHistory)
 
 // EventHandlers for the forms
 document.addEventListener("click", (e) => {
     if (e.target.closest(".StyledButton")) {
-        const button = e.target.closest(".StyledButton");
-        const formId = button.dataset.formId;
-        
-        if (formId && formModule) {
-            // Find the form in the cached forms data
-            const selectedForm = formModule.forms.find(f => f._id === formId);
-            
-            if (selectedForm) {
-                formModule.populatePopupForm(selectedForm);
-            }
-        }
-
-        openForm(formId);
+        styleButtonEventListener(e);
     }
     if (e.target.id === "CancelForm") {
         closeForm();
@@ -628,13 +726,16 @@ document.addEventListener("click", (e) => {
     if (e.target.id === "ClearFilterButton") {
         clearFilters();
     }
-    if (e.target.id === "UploadButton") {
-        fileAction(e);
-    }
     if (e.target.id === "SubmitForm") {
         closeForm();
         // Submit form data to database
         // Remove form card from assigned forms
+    }
+});
+
+document.addEventListener("change", (e) => {
+    if (e.target.id === "UploadButton") {
+        fileAction(e);
     }
 });
 
