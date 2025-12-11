@@ -19,8 +19,8 @@
   width: 100%;
   padding: 10px; 
   margin-top: 5px;
+  color: #000;
   margin-bottom: 15px; 
-  color: var(--text-color);
   border-radius: 6px;
 }
 

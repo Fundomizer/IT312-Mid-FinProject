@@ -1,7 +1,123 @@
 import { checkOSA } from "./osa_auth.js";
 
 const HOST = window.location.origin;
+async function loadDashboard() {
+  const orgResponse = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`);
+  const orgs = await orgResponse.json();
 
+
+  const formResponse = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=forms`);
+  const forms = await formResponse.json();
+
+
+  document.getElementById('active-org-count').textContent = orgs.length;
+
+
+  const totalRequirements = orgs.reduce(
+    (sum, org) => sum + (org.requirements ? Object.keys(org.requirements).length : 0),
+    0
+  );
+  document.getElementById('all-time-submission-count').textContent = totalRequirements;
+
+  const now = new Date();
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(now.getDate() - 30);
+
+  let recentCount = 0;
+  orgs.forEach(org => {
+    if (org.requirements) {
+      Object.values(org.requirements).forEach(req => {
+        if (req.last_updated && new Date(req.last_updated) >= thirtyDaysAgo) {
+          recentCount++;
+        }
+      });
+    }
+  });
+  document.getElementById('new-submissions-count').textContent = totalRequirements;
+  document.getElementById('active_form_count').textContent = forms.length;
+}
+
+
+
+// Update Progress Bars
+async function updateProgressBars() {
+  const orgResponse = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`);
+  const orgs = await orgResponse.json();
+
+
+  const typeCounts = {};
+  let totalRequirements = 0;
+
+
+  orgs.forEach(org => {
+    if (org.requirements) {
+      Object.entries(org.requirements).forEach(([reqType]) => {
+        typeCounts[reqType] = (typeCounts[reqType] || 0) + 1;
+        totalRequirements++;
+      });
+    }
+  });
+
+
+
+
+  const topContainer = document.querySelector('.charts-section .chart-container:first-child');
+  topContainer.innerHTML = `<h2>Top Submissions</h2><p class="chart-header">Most common requirement types</p>`;
+  Object.entries(typeCounts)
+    .sort((a, b) => b[1] - a[1])
+    .forEach(([type, count]) => {
+      const percent = Math.min(Math.round((count / Math.max(...Object.values(typeCounts))) * 100), 100);
+      topContainer.innerHTML += `
+        <div class="progress-header">
+          <p>${type.replace(/_/g, " ")}</p>
+          <div class="progress-label">${count}</div>
+        </div>
+        <div class="progress-bar">
+          <div class="progress" style="width: ${percent}%;"></div>
+        </div>
+      `;
+    });
+
+
+
+
+const totalContainer = document.querySelector('.charts-section .chart-container:last-child');
+totalContainer.innerHTML = `
+  <h2>Total Requirements</h2>
+  <p class="chart-header">All requirements across organizations</p>
+  <div class="progress-header"><p>Total</p><div class="progress-label">${totalRequirements}</div></div>
+  <div class="progress-bar"><div class="progress" style="width: 100%;"></div></div>
+`;
+
+// ----- New Statistic: Most Active Organizations -----
+const orgCounts = {};
+orgs.forEach(org => {
+  const count = org.requirements ? Object.keys(org.requirements).length : 0;
+  orgCounts[org.org_name] = count;
+});
+
+totalContainer.innerHTML += `
+  <h2>Most Active Organizations</h2>
+  <p class="chart-header">Organizations with most submissions</p>
+`;
+
+Object.entries(orgCounts)
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 5) // top 5 organizations
+  .forEach(([orgName, count]) => {
+    const percent = Math.min(Math.round((count / Math.max(...Object.values(orgCounts))) * 100), 100);
+    totalContainer.innerHTML += `
+      <div class="progress-header">
+        <p>${orgName}</p>
+        <div class="progress-label">${count}</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress" style="width: ${percent}%;"></div>
+      </div>
+    `;
+  });
+
+}
 // Load Organizations
 async function loadOrganizations() {
   const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`, { credentials: "include" });
@@ -170,7 +286,11 @@ async function loadRecentSubmissions() {
 }
 
 // Initialize
-loadOrganizations().then(() => {
-  document.getElementById("orgSearchInput").addEventListener("input", filterOrganizations);
-  loadRecentSubmissions();
-});
+loadDashboard()
+  .then(() => loadOrganizations())
+  .then(() => {
+    updateProgressBars();
+    loadRecentSubmissions();
+        document.getElementById("orgSearchInput")
+            .addEventListener("input", filterOrganizations);
+  });
