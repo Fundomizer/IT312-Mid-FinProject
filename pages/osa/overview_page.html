@@ -39,7 +39,7 @@
                     <img src="../../assets/images/osa_dashboard_icons/forms_icon.png" alt="forms" class="card-img">
                     <h3>Active Forms</h3>
                     <p class="num" id="active_form_count">0</p>
-                    <p>1(s) draft forms</p>
+                    <p>Forms Assigned to Organizations</p>
                 </div>
             </div>
             <div class="charts-section">
@@ -74,18 +74,10 @@
                         <div class="progress" style="width: 0%;"></div>
                     </div>
                 </div>
-                <div class="chart-container">
-                    <h3>Academic Year Distribution </h3>
-                    <p class="chart-header">Requirements by Academic Year</p>
-                    <div class="progress-header">
-                        <p>
-                            2024-2025
-                        </p>
-                        <div class="progress-label">0</div>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress" style="width: 70%;"></div>
-                    </div>
+
+                <div class="chart-container" id="most-active-orgs">
+                     <h3>Most Active Organizations</h3>
+                     <p class="chart-header">Organizations with most submissions</p>
                 </div>
 
 
@@ -108,8 +100,12 @@
             </div>
         </div>
         <div class="active-organization-section">
+
             <div class="organizations-container" id="organizations-list">
+
                 <h2>Active Organizations</h2>
+                <input type="text" id="orgSearchInput" placeholder="Search organization..."  >
+
                 <div class="organization-item">
                     <div class="org-header">
                         <div class="org-title">

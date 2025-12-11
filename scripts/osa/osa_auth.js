@@ -1,7 +1,6 @@
 const HOST = window.location.origin;
 
 export async function checkOSA() {
-    const usernameLabel = document.getElementById("UsernameLabel");
 
     try {
         // checks session validity if inactive or no active session
@@ -27,9 +26,6 @@ export async function checkOSA() {
             return;
         }
 
-        if (usernameLabel) {
-            usernameLabel.textContent = data.user?.email || "OSA User";
-        }
 
     } catch (err) {
         console.error("Session check failed:", err);

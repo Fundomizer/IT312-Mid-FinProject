@@ -23,9 +23,22 @@ async function loadDashboard() {
     0
   );
   document.getElementById('all-time-submission-count').textContent = totalRequirements;
+
+  const now = new Date();
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(now.getDate() - 30);
+
+  let recentCount = 0;
+  orgs.forEach(org => {
+    if (org.requirements) {
+      Object.values(org.requirements).forEach(req => {
+        if (req.last_updated && new Date(req.last_updated) >= thirtyDaysAgo) {
+          recentCount++;
+        }
+      });
+    }
+  });
   document.getElementById('new-submissions-count').textContent = totalRequirements;
-
-
   document.getElementById('active_form_count').textContent = forms.length;
 }
 
@@ -73,13 +86,42 @@ async function updateProgressBars() {
 
 
 
-  const totalContainer = document.querySelector('.charts-section .chart-container:last-child');
-  totalContainer.innerHTML = `
-    <h2>Total Requirements</h2>
-    <p class="chart-header">All requirements across organizations</p>
-    <div class="progress-header"><p>Total</p><div class="progress-label">${totalRequirements}</div></div>
-    <div class="progress-bar"><div class="progress" style="width: 100%;"></div></div>
-  `;
+const totalContainer = document.querySelector('.charts-section .chart-container:last-child');
+totalContainer.innerHTML = `
+  <h2>Total Requirements</h2>
+  <p class="chart-header">All requirements across organizations</p>
+  <div class="progress-header"><p>Total</p><div class="progress-label">${totalRequirements}</div></div>
+  <div class="progress-bar"><div class="progress" style="width: 100%;"></div></div>
+`;
+
+// ----- New Statistic: Most Active Organizations -----
+const orgCounts = {};
+orgs.forEach(org => {
+  const count = org.requirements ? Object.keys(org.requirements).length : 0;
+  orgCounts[org.org_name] = count;
+});
+
+totalContainer.innerHTML += `
+  <h2>Most Active Organizations</h2>
+  <p class="chart-header">Organizations with most submissions</p>
+`;
+
+Object.entries(orgCounts)
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 5) // top 5 organizations
+  .forEach(([orgName, count]) => {
+    const percent = Math.min(Math.round((count / Math.max(...Object.values(orgCounts))) * 100), 100);
+    totalContainer.innerHTML += `
+      <div class="progress-header">
+        <p>${orgName}</p>
+        <div class="progress-label">${count}</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress" style="width: ${percent}%;"></div>
+      </div>
+    `;
+  });
+
 }
 
 
@@ -98,7 +140,6 @@ async function loadRecentSubmissions() {
 
   let allRequirements = [];
 
-// Gather all requirements from all organizations
   orgs.forEach(org => {
     const reqs = org.requirements || {};
     Object.entries(reqs).forEach(([type, info]) => {
@@ -192,9 +233,11 @@ async function loadOrganizations() {
 
   const orgContainer = document.getElementById("organizations-list");
   const orgHeader = orgContainer.querySelector("h2");
+  const searchBar = orgContainer.querySelector("#orgSearchInput");
+
   orgContainer.innerHTML = "";
   orgContainer.appendChild(orgHeader);
-
+ orgContainer.appendChild(searchBar);
   orgs.forEach(org => {
     const card = document.createElement('div');
     card.className = 'organization-item';
@@ -246,6 +289,21 @@ async function loadOrganizations() {
 }
 
 
+function filterOrganizations() {
+  const term = document.getElementById("orgSearchInput").value.toLowerCase();
+  const items = document.querySelectorAll(".organization-item");
+
+  items.forEach(item => {
+    const name = item.querySelector(".name")?.textContent.toLowerCase() || "";
+    const short = item.querySelector(".short")?.textContent.toLowerCase() || "";
+
+    if (name.includes(term) || short.includes(term)) {
+      item.style.display = "block";
+    } else {
+      item.style.display = "none";
+    }
+  });
+}
 
 
 
@@ -254,4 +312,9 @@ loadDashboard()
   .then(() => {
     updateProgressBars();
     loadRecentSubmissions();
+        document.getElementById("orgSearchInput")
+            .addEventListener("input", filterOrganizations);
   });
+
+
+  

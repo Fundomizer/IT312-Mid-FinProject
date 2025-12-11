@@ -163,17 +163,7 @@ document.getElementById("submitFormBtn").addEventListener("click", async (event)
   const requirement_name = document.getElementById("formTitle").value.trim();
   const description = document.getElementById("formDescription").value.trim();
 
-
-
-
   if (!requirement_name) return alert("Please enter a form title.");
-
-
-
-
-
-
-
 
     const formFieldsElements = [...document.querySelectorAll(".form-field")];
 
@@ -183,6 +173,8 @@ document.getElementById("submitFormBtn").addEventListener("click", async (event)
     if (formFieldsElements.length === 0) {
       return alert("Please add at least one question.");
     }
+    const confirmSubmit = confirm("Are you sure you want to create this form?");
+    if (!confirmSubmit) return; 
 const fields = [...document.querySelectorAll(".form-field")].map((field) => {
   const question = field.querySelector(".field-title").value.trim();
   const field_type = field.dataset.type || "text";

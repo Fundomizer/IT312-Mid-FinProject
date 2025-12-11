@@ -57,7 +57,7 @@ async function loadActiveForms() {
     `;
 
     formItem.appendChild(fieldsContainer);
-    formsContainer.appendChild(formItem);
+    formsContainer.prepend(formItem);
 
     formItem.querySelector(".view-fields-btn").addEventListener("click", () => {
         checkOSA();
