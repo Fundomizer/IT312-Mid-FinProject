@@ -45,7 +45,8 @@ exports.login = async (req, res) => {
             success: true,
             role: user.role.toLowerCase(),
             redirect: redirect,
-            username: user.name
+            username: user.name,
+            ...(user.organization && { organization: user.organization })
         });
     } catch (err) {
         console.error(err);

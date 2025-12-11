@@ -154,3 +154,102 @@ exports.deleteOrganization = async (req, res) => {
     }
     touchSession(req)
 };
+
+exports.getRequirements = async (req, res) => {
+    try {
+        const orgs = db.collection("student_organization");
+        const { name } = req.params;
+
+        const org = await orgs.findOne(
+            { org_name: name },
+            { projection: { _id: 0, requirements: 1 } }
+        );
+
+        if (!org) {
+            return res.status(404).json({
+                success: false,
+                message: "Organization not found"
+            });
+        }
+
+        res.json({
+            success: true,
+            requirements: org.requirements
+        });
+
+    } catch (err) {
+        console.error("Error fetching requirements:", err);
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+};
+
+exports.fillRequirements = async (req, res) => {
+    try {
+        const orgName = req.params.orgName;
+        const requirementKey = req.params.requirementKey;
+
+        const orgs = db.collection("student_organization");
+
+        // 1. Parse text fields
+        const updatedFields = [];
+
+        Object.keys(req.body).forEach(key => {
+            if (key.startsWith("field_")) {
+                const index = key.split("_")[1];
+                updatedFields[index] = {
+                    content: req.body[key]
+                };
+            }
+        });
+
+        // 2. Parse file uploads (express-fileupload)
+        if (req.files) {
+            Object.keys(req.files).forEach(fileKey => {
+                if (fileKey.startsWith("file_")) {
+                    const index = fileKey.split("_")[1];
+                    const file = req.files[fileKey];
+
+                    // Save file to /uploads
+                    const savePath = `./uploads/${Date.now()}_${file.name}`;
+
+                    file.mv(savePath, err => {
+                        if (err) {
+                            console.error("File upload error:", err);
+                        }
+                    });
+
+                    // Store file metadata
+                    updatedFields[index] = {
+                        ...updatedFields[index],
+                        file: {
+                            filename: file.name,
+                            saved_as: savePath,
+                            mimetype: file.mimetype,
+                            size: file.size
+                        }
+                    };
+                }
+            });
+        }
+
+        // 3. Update the requirement in MongoDB
+        await orgs.updateOne(
+            { org_name: orgName },
+            {
+                $set: {
+                    [`requirements.${requirementKey}.fields`]: updatedFields,
+                    [`requirements.${requirementKey}.last_updated`]: new Date().toISOString().split("T")[0]
+                }
+            }
+        );
+
+        res.json({
+            success: true,
+            message: "Requirement updated successfully"
+        });
+
+    } catch (err) {
+        console.error("Update error:", err);
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+}
