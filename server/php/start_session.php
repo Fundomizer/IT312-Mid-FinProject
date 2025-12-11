@@ -13,12 +13,12 @@ if (!$email) {
     echo json_encode(["success" => false, "error" => "Missing email"]);
     exit;
 }
-
+$_SESSION['last_activity'] = time();
 $_SESSION['loggedIn'] = true;
 $_SESSION['user'] = [
     "email" => $email,
     "role" => "OSA"
 ];
-
+console.log("Session started for OSA:", $_SESSION['user']);
 echo json_encode(["success" => true]);
 ?>
