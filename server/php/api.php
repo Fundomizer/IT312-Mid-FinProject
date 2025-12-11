@@ -29,7 +29,7 @@ if ($_SESSION['user']['role'] !== 'OSA') {
 
 
 try {
-    $uri = "mongodb+srv://testuser:test321@cluster0.lbsrw5e.mongodb.net/"; // change to local if needed
+    $uri = "mongodb://localhost:27017/"; // change to local if needed
     $client = new MongoDB\Client($uri);
     $db = $client->OrganizationManagementDatabase;
 

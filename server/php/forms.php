@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 // MongoDB connection
 try {
-    $client = new MongoDB\Client("mongodb+srv://testuser:test321@cluster0.lbsrw5e.mongodb.net/"); // currently using local for easier testing and deletinng
+    $client = new MongoDB\Client("mongodb://localhost:27017/"); 
     $db = $client->OrganizationManagementDatabase;
     $collection = $db->forms;
 
