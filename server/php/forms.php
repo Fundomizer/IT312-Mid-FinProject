@@ -48,7 +48,7 @@ try {
                 "fields" => $data["fields"] ?? [],
                 "tags" => $data["tags"] ?? [],
                 "assigned_to" => $data["assigned_to"] ?? ["all"],
-
+                "upload" => $data["upload"] ?? false
 
             ]);
 
@@ -71,7 +71,9 @@ case 'PUT':
             "description" => $data["description"] ?? null,
             "fields" => $data["fields"] ?? null,
             "tags" => $data["tags"] ?? null,
-            "assigned_to" => $data["assigned_to"] ?? ["all"]
+            "assigned_to" => $data["assigned_to"] ?? ["all"],
+            "upload" => $data["upload"] ?? false 
+
         ]]
     );
     echo json_encode(["success" => true, "modified_count" => $updateResult->getModifiedCount()]);

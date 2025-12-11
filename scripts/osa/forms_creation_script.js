@@ -32,6 +32,7 @@ async function loadOrganizations() {
 
 
 
+
 loadOrganizations();
 
 
@@ -200,6 +201,8 @@ const fields = [...document.querySelectorAll(".form-field")].map((field) => {
     .filter(tag => tag);
 
 
+  const fileRequiredCheckbox = document.getElementById("formFileRequired");
+  const upload = fileRequiredCheckbox.checked;
 
 
   const selectedOrgOptions = [...document.getElementById("orgSelect").selectedOptions];
@@ -210,7 +213,7 @@ const fields = [...document.querySelectorAll(".form-field")].map((field) => {
 
 
 
-  const formData = { requirement_name, description, fields, tags, assigned_to,
+  const formData = { requirement_name, description, fields, tags, assigned_to,upload
   };
 
 
@@ -243,6 +246,7 @@ const fields = [...document.querySelectorAll(".form-field")].map((field) => {
       document.getElementById("formFields").innerHTML = "";
       document.getElementById("tagInput").value = "";
       document.getElementById("orgSelect").selectedIndex = -1;
+      document.getElementById("formFileRequired").checked = false;
     } else {
       alert("Error saving form: " + (result.error || "Unknown error"));
     }

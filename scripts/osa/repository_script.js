@@ -180,5 +180,25 @@ clearFiltersBtn.addEventListener("click", () => {
   document.getElementById("dateTo").value = "";
   filterResults();
 });
+async function loadOrganizationsForFilter() {
+  try {
+    const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`, {
+      credentials: "include"
+    });
+    const orgs = await response.json();
+
+    filterLocation.innerHTML = `<option value="">All Orgs</option>`;
+
+    orgs.forEach(org => {
+      const option = document.createElement("option");
+      option.value = org.short_name;
+      option.textContent = org.org_name;
+      filterLocation.appendChild(option);
+    });
+  } catch (err) {
+    console.error("Error loading organizations for filter:", err);
+  }
+}
+loadOrganizationsForFilter();
 
 loadItems();
