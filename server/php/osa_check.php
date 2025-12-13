@@ -3,7 +3,7 @@ ini_set('session.cookie_lifetime', 0);
 session_start();
 header("Content-Type: application/json");
 // Session timeout check (3 minutes of inactivity)
-$timeout = 180; 
+$timeout = 360; 
 
 if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $timeout) {
     echo json_encode([
