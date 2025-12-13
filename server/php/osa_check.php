@@ -1,6 +1,8 @@
 <?php
 ini_set('session.cookie_lifetime', 0);
 session_start();
+header("Access-Control-Allow-Origin: http://localhost:8123");
+header("Access-Control-Allow-Credentials: true");
 header("Content-Type: application/json");
 // Session timeout check (3 minutes of inactivity)
 $timeout = 360; 

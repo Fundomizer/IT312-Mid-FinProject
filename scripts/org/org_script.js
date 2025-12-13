@@ -1,4 +1,4 @@
-import { HOST, PORT } from "../config.js"
+import { HOST} from "../config.js"
 import { fetchCollection, loadPage } from "../utilities.js"
 
 const dashboard = document.getElementById("dashboardButton")
@@ -412,7 +412,7 @@ async function loadForms() {
         });
 
         try {
-            const response = await fetch(`${HOST}:${PORT}/api/orgs/requirements/${encodeURIComponent(requirementName)}`, {
+            const response = await fetch(`${HOST}/api/orgs/requirements/${encodeURIComponent(requirementName)}`, {
                 method: "PUT",
                 body: formData,
                 credentials: "include" // ✅ important for session cookies

@@ -1,9 +1,11 @@
 <?php
+ini_set('session.cookie_lifetime', 0);
 session_start();
 require './vendor/autoload.php';
 
 //CORS headers 
-header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Origin: http://localhost:8123");
+header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header('Content-Type: application/json');

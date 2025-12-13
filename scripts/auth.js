@@ -1,11 +1,11 @@
-import { API_BASE_URL } from "./config.js";
+import { HOST } from "./config.js";
 
 /**
  * Check if the session is still valid
  */
 async function checkSession() {
     try {
-        const res = await fetch(`${API_BASE_URL}/api/auth/profile`, {
+        const res = await fetch(`${HOST}/api/auth/profile`, {
             credentials: "include",
             method: "POST"
         });

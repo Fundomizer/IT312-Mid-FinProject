@@ -1,6 +1,6 @@
  import { checkOSA } from "./osa_auth.js";
 
- const HOST = window.location.origin;
+import { PHP_HOST } from "../config.js";
 
 const searchInput = document.getElementById("searchInput");
 const filterLocation = document.getElementById("filterLocation");
@@ -12,7 +12,7 @@ let allItems = [];
 // Load Items into Table
 async function loadItems() {
    try {
-    const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`, {
+    const response = await fetch(`${PHP_HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`, {
       credentials: "include" 
     });
     const data = await response.json();
@@ -189,7 +189,7 @@ function showFormDetails(org, reqType, reqData) {
       downloadBtn.style.cursor = "pointer";
       downloadBtn.addEventListener("click", () => {
         const link = document.createElement("a");
-        link.href = `${HOST}/IT312-Mid-FinProject/uploads/${reqData.filename}`;
+        link.href = `${PHP_HOST}/IT312-Mid-FinProject/uploads/${reqData.filename}`;
         link.download = reqData.filename;
         link.click();
       });
@@ -209,13 +209,13 @@ function showFormDetails(org, reqType, reqData) {
       const ext = reqData.filename.split('.').pop().toLowerCase();
       if (ext === "pdf") {
         const iframe = document.createElement("iframe");
-        iframe.src = `${HOST}/IT312-Mid-FinProject/uploads/${reqData.filename}`;
+        iframe.src = `${PHP_HOST}/IT312-Mid-FinProject/uploads/${reqData.filename}`;
         iframe.style.width = "100%";
         iframe.style.height = "100%";
         content.appendChild(iframe);
       } else if (["png","jpg","jpeg","gif"].includes(ext)) {
         const img = document.createElement("img");
-        img.src = `${HOST}/IT312-Mid-FinProject/uploads/${reqData.filename}`;
+        img.src = `${PHP_HOST}/IT312-Mid-FinProject/uploads/${reqData.filename}`;
         img.style.maxWidth = "100%";
         img.style.maxHeight = "100%";
         content.appendChild(img);
@@ -269,7 +269,7 @@ clearFiltersBtn.addEventListener("click", () => {
 });
 async function loadOrganizationsForFilter() {
   try {
-    const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`, {
+    const response = await fetch(`${PHP_HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`, {
       credentials: "include"
     });
     const orgs = await response.json();

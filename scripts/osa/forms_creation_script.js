@@ -1,6 +1,6 @@
 import { checkOSA } from "./osa_auth.js";
 
-const HOST = window.location.origin;
+import { PHP_HOST } from "../config.js";
 
 
 
@@ -10,7 +10,7 @@ async function loadOrganizations() {
 
 //request to fetch organizations
    try {
-    const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`, {
+    const response = await fetch(`${PHP_HOST }/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`, {
       credentials: "include"
     });
     const orgs = await response.json();
@@ -188,8 +188,7 @@ const fields = [...document.querySelectorAll(".form-field")].map((field) => {
 
 
   try {
-    const HOST = window.location.origin;
-    const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/forms.php`, {
+    const response = await fetch(`${PHP_HOST }/IT312-Mid-FinProject/server/php/forms.php`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),

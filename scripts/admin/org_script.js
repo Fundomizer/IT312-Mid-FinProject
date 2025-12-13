@@ -1,6 +1,6 @@
 import { fetchCollection, setupPopup } from "../utilities.js";
 import { createTableRow, createButton } from "../components.js";
-import { API_BASE_URL } from "../config.js";
+import { HOST } from "../config.js";
 
 let orgs = []
 
@@ -162,7 +162,7 @@ async function handleAddOrg(e) {
     };
 
     try {
-        const res = await fetch(`${API_BASE_URL}/api/orgs`, {
+        const res = await fetch(`${HOST}/api/orgs`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
@@ -238,7 +238,7 @@ async function handleSaveEditOrg(e) {
     };
 
     try {
-        const res = await fetch(`${API_BASE_URL}/api/orgs/${orgId}`, {
+        const res = await fetch(`${HOST}/api/orgs/${orgId}`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
@@ -279,7 +279,7 @@ function deleteOrganization(id) {
     const confirmed = window.confirm("Are you sure you want to delete this organization?");
     if (!confirmed) return;
 
-    fetch(`${API_BASE_URL}/api/orgs/${id}`, {
+    fetch(`${HOST}/api/orgs/${id}`, {
         method: 'DELETE'
     })
         .then(res => res.json())

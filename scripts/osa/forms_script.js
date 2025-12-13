@@ -1,11 +1,11 @@
 import { checkOSA } from "./osa_auth.js";
 
-const HOST = window.location.origin;
+import { PHP_HOST } from "../config.js";
 let selectedForm = null;
 
 //loading active forms
 async function loadActiveForms() {
-  const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=forms`, {
+  const response = await fetch(`${PHP_HOST}/IT312-Mid-FinProject/server/php/api.php?collection=forms`, {
     credentials: "include",
   });
   const forms = await response.json();
@@ -69,7 +69,7 @@ async function loadActiveForms() {
       checkOSA();
       if (!confirm(`Delete form "${form.requirement_name}"?`)) return;
 
-      const res = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/forms.php`, {
+      const res = await fetch(`${PHP_HOST}/IT312-Mid-FinProject/server/php/forms.php`, {
         method: "DELETE",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -208,7 +208,7 @@ document.getElementById("modal-update-btn").addEventListener("click", async () =
     assigned_to: document.getElementById("modal-assigned").value.split(",").map(x => x.trim()).filter(x => x) || ["all"]
   };
 
-  const res = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/forms.php`, {
+  const res = await fetch(`${PHP_HOST}/IT312-Mid-FinProject/server/php/forms.php`, {
     method: "PUT",
     credentials: "include",
     headers: { "Content-Type": "application/json" },

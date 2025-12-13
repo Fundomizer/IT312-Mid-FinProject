@@ -1,6 +1,6 @@
 import { loadPage, fetchCollection, setupPopup } from "../utilities.js"
 import { createButton, createTableRow } from "../components.js"
-import { HOST, API_BASE_URL } from "../config.js"
+import { HOST } from "../config.js"
 import { displayOrgs } from "./org_script.js"
 
 const dashbaordNavBut = document.getElementById("dashboardButton")
@@ -151,7 +151,7 @@ async function loadUsersPage() {
             const data = Object.fromEntries(new FormData(form).entries());
 
 
-            fetch(`${API_BASE_URL}/api/users/${userId}`, {
+            fetch(`${HOST}/api/users/${userId}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data)
@@ -170,7 +170,7 @@ async function loadUsersPage() {
 
             let userId = button.dataset.userId
 
-            fetch(`${API_BASE_URL}/api/users/${userId}`, {
+            fetch(`${HOST}/api/users/${userId}`, {
                 method: "DELETE"
             }).then(response => response.json())
                 .then(result => alert(result['message']))
