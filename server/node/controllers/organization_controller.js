@@ -219,7 +219,8 @@ exports.fillRequirements = async (req, res) => {
                     required: field.required,
                     options: field.options || [],
                     content: ""
-                }))
+                })),
+                done: false
             };
         }
 
@@ -235,7 +236,8 @@ exports.fillRequirements = async (req, res) => {
                 field_type: templateField.field_type || field.field_type,
                 required: templateField.required !== undefined ? templateField.required : field.required,
                 options: templateField.options || field.options || [],
-                content: content
+                content: content,
+                done: true
             };
         });
 
@@ -254,7 +256,8 @@ exports.fillRequirements = async (req, res) => {
             [`requirements.${internalKey}.fields`]: updatedFields,
             [`requirements.${internalKey}.last_updated`]: new Date().toISOString().split("T")[0],
             [`requirements.${internalKey}.tags`]: formTemplate.tags || [],
-            [`requirements.${internalKey}.form_id`]: formTemplate._id
+            [`requirements.${internalKey}.form_id`]: formTemplate._id,
+            [`requirements.${internalKey}.done`]: true
         };
 
         // Add file metadata if files were uploaded

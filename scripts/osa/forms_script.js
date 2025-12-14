@@ -3,7 +3,7 @@ import { checkOSA } from "./osa_auth.js";
 import { PHP_HOST } from "../config.js";
 let selectedForm = null;
 function logAction(code, details = "", activity = "") {
-    fetch(`${HOST}/IT312-Mid-FinProject/server/php/log_event.php`, {
+    fetch(`${PHP_HOST}/IT312-Mid-FinProject/server/php/log_event.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code, details, activity }) 

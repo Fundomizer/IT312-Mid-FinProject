@@ -190,6 +190,7 @@ function appendFormFields(container, fields) {
   });
 }
 
+
 function createFieldLabel(field, index) {
   const label = document.createElement("label");
   label.htmlFor = `field_${index}`;
@@ -209,6 +210,36 @@ function createFieldInput(field, index) {
   const isRequired = field.required === "true" || field.required === true;
   const inputId = `field_${index}`;
 
+  if (field.field_type === "radio" || field.field_type === "checkbox") {
+    const container = document.createElement("div");
+    container.className = field.field_type === "radio" ? "RadioGroup" : "CheckboxGroup";
+
+    if (field.options && field.options.length > 0) {
+      field.options.forEach((option, optIndex) => {
+        const optionId = `${inputId}_${optIndex}`;
+        const wrapper = document.createElement("div");
+
+        const input = document.createElement("input");
+        input.type = field.field_type;
+        input.name = inputId;
+        input.id = optionId;
+        input.value = option;
+        input.required = isRequired && field.field_type === "radio"; // only radio requires
+
+        const label = document.createElement("label");
+        label.htmlFor = optionId;
+        label.textContent = option;
+
+        wrapper.appendChild(input);
+        wrapper.appendChild(label);
+        container.appendChild(wrapper);
+      });
+    }
+
+    return container;
+  }
+
+  // fallback to original types
   const inputConfig = {
     number: () => createInput("number", inputId, isRequired),
     date: () => createInput("date", inputId, isRequired),
@@ -219,9 +250,9 @@ function createFieldInput(field, index) {
 
   const input = (inputConfig[field.field_type] || inputConfig.text)();
   input.name = `field_${index}`;
-
   return input;
 }
+
 
 function createInput(type, id, required) {
   const input = document.createElement("input");
@@ -275,10 +306,13 @@ async function handleFormSubmit(event) {
     return;
   }
 
+  const confirmSubmit = confirm("Are you sure you want to submit this form?");
+  if (!confirmSubmit) return; 
+
   const formData = collectFormData(popup);
 
   try {
-    console.log("It stops here"); // Here
+    console.log("Submitting form..."); 
     const response = await submitForm(objForm.orgName, requirementName, formData);
     handleSubmitResponse(response, popup);
   } catch (error) {
@@ -287,15 +321,22 @@ async function handleFormSubmit(event) {
   }
 }
 
+
 function collectFormData(popup) {
   const formElement = popup.querySelector(".Form");
   const formData = new FormData();
 
-  // Collect text inputs
-  formElement.querySelectorAll("input[name^='field_'], textarea[name^='field_']")
-    .forEach(input => formData.append(input.name, input.value));
+  formElement.querySelectorAll("input[name^='field_'], textarea[name^='field_']").forEach(input => {
+    if (input.type === "radio" || input.type === "checkbox") {
+      if (input.checked) {
+        formData.append(input.name, input.value);
+      }
+    } else {
+      formData.append(input.name, input.value);
+    }
+  });
 
-  // Collect files from objForm.selectedFiles (the files you selected via UploadButton)
+  // Append uploaded files
   objForm.selectedFiles.forEach((file, index) => {
     formData.append(`file_${index}`, file);
   });

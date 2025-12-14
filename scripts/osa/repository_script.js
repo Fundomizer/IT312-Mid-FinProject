@@ -142,7 +142,7 @@ function showFormDetails(org, reqType, reqData) {
   reqDiv.innerHTML = `
     <h3>${reqType.replace(/_/g, " ")}</h3>
     <p><strong>Tags:</strong> ${(reqData.tags || []).join(", ")}</p>
-    <p><strong>Last Updated:</strong> ${reqData.last_updated || "N/A"}</p>
+    <p><strong>Submitted:</strong> ${reqData.last_updated || "N/A"}</p>
     <div><strong>Fields:</strong></div>
   `;
 
