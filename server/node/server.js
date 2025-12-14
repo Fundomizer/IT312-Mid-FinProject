@@ -63,9 +63,9 @@ async function startServer() {
     app.use('/api/auth', require('./routes/auth'))
     app.use('/api/users', require('./routes/users'))
     app.use('/api/orgs', require('./routes/organization'))
-app.use((req, res) => {
-    res.sendFile(path.join(__dirname, '../../', 'index.html'));
-});
+    app.use((req, res) => {
+        res.sendFile(path.join(__dirname, '../../', 'index.html'));
+    });
 
     app.listen(port, "0.0.0.0", () => {
         console.log(`Node server running on port ${port}`);

@@ -186,6 +186,39 @@ exports.getRequirements = async (req, res) => {
     }
 };
 
+exports.getHistory = async (req, res) => {
+
+    console.log(`Org ${req.params.org_name} requesting history`);
+
+    const { org_name } = req.params
+    const orgsForms = db.collection("student_organization");
+
+    const history = await orgsForms.findOne(
+        {
+            $or: [
+                { org_name: org_name },
+                { short_name: org_name }
+            ]
+        },
+        {
+            projection: { _id: 0, requirements: 1 }
+        }
+    )
+
+    if (!history) {
+        return res.status(404).json({
+            success: false,
+            message: `Unknown organization ${org_name}`
+        });
+    }
+
+    res.json({
+        success: true,
+        history: history
+    })
+
+}
+
 exports.fillRequirements = async (req, res) => {
     console.log("Filling out the requirements");
 
