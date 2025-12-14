@@ -4,6 +4,7 @@ const sideNavButton = document.getElementById("ToggleSideNavButton");
 const sideNav = document.getElementById("SideNav");
 const logoutButton = document.getElementById("Logout");
 const usernameLabel = document.getElementById('UsernameLabel');
+usernameLabel.innerText = localStorage.getItem("username") || "";
 
 // Toggle SideNav + overlay
 sideNavButton.addEventListener("click", () => {
@@ -48,3 +49,5 @@ if (logoutButton) logoutButton.addEventListener("click", () => {
       alert("Unexpected logout error");
     });
 });
+
+usernameLabel.innerText = localStorage.getItem("username") || '';

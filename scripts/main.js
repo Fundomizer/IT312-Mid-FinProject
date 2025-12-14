@@ -30,8 +30,10 @@ loginForm.addEventListener('submit', async (e) => {
             alert(auth.message || "Invalid credentials");
             return;
         }
-
+        localStorage.setItem("username", auth.username);
+        console.log(localStorage.getItem("username"))
         if (auth.role === 'osa') {
+            localStorage.setItem("email", auth.email);
             try {
                 const phpResponse = await fetch(`${PHP_HOST}/IT312-Mid-FinProject/server/php/start_session.php`, {
                     method: "POST",
@@ -40,6 +42,7 @@ loginForm.addEventListener('submit', async (e) => {
                     body: JSON.stringify({ email: data.email })
                 });
 
+                
                 if (!phpResponse.ok) {
                     console.error("PHP session error:", await phpResponse.text());
                     alert("Failed to start PHP session.");
@@ -58,6 +61,8 @@ loginForm.addEventListener('submit', async (e) => {
             // Non-OSA users redirect
             window.location.href = `${HOST}${auth.redirect}`;
         }
+
+        if (auth.organization) localStorage.setItem("org_name", auth.organization);
 
     } catch (err) {
         console.error("Login fetch error:", err);

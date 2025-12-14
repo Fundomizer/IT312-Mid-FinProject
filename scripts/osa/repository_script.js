@@ -24,8 +24,15 @@ async function loadItems() {
     data.forEach(org => {
       if (org.requirements) {
         for (const [reqType, reqData] of Object.entries(org.requirements)) {
-          const row = document.createElement("tr");
-          row.setAttribute("data-location", org.short_name || "");
+        const row = document.createElement("tr");
+        row.setAttribute("data-location", org.short_name || "");
+
+        const contentText = (reqData.fields || [])
+          .map(f => `${f.question} ${f.content || ""}`)
+          .join(" ");
+
+        row.dataset.content = contentText.toLowerCase();
+        row.dataset.filename = (reqData.filename || "").toLowerCase();
 
           const nameCell = document.createElement("td");
           nameCell.textContent = reqType.replace(/_/g, " ");
@@ -90,10 +97,16 @@ function filterResults() {
     const dateText = cells[4].textContent;
     const dateVal = dateText !== "N/A" ? new Date(dateText) : null;
 
-    const matchesSearch =
-      name.includes(searchQuery) ||
-      org.includes(searchQuery) ||
-      tagText.includes(searchQuery);
+    const content = item.dataset.content || "";
+      const filename = item.dataset.filename || "";
+
+      const matchesSearch =
+        name.includes(searchQuery) ||
+        org.includes(searchQuery) ||
+        tagText.includes(searchQuery) ||
+        content.includes(searchQuery) ||
+        filename.includes(searchQuery);
+
 
     const matchesLocation =
       !selectedLocation || location === selectedLocation;
