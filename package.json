@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Fundomizer/IT312-Mid-FinProject#readme",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "connect-mongo": "^6.0.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",

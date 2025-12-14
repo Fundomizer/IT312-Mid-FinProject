@@ -1,6 +1,7 @@
 const { connectToDB } = require('../database/connect.js')
 const { ObjectId } = require('mongodb')
 const { sanitizeObject, touchSession } = require('../utilities.js')
+const bcrypt = require("bcrypt");
 
 let db;
 
@@ -50,16 +51,22 @@ exports.createUser = async (req, res) => {
     try {
         const newUser = sanitizeObject(req.body);
 
+        if (newUser.password) {
+            const saltRounds = 10;
+            newUser.password = await bcrypt.hash(newUser.password, saltRounds);
+        }
+
         // Add date
         newUser.date_created = new Date().toISOString().split("T")[0];
 
         const result = await db.collection("users").insertOne(newUser);
 
         if (result.acknowledged) {
-            touchSession(req)
+            touchSession(req);
             return res.status(201).json({ message: "User successfully created", status: true });
         }
 
+        touchSession(req);
         res.status(500).json({ message: "Could not create user", status: false });
 
     } catch (err) {
@@ -70,12 +77,10 @@ exports.createUser = async (req, res) => {
         }
 
         console.error(err);
-        res
-            .status(500)
-            .json({ message: "Server error", status: false });
+        res.status(500).json({ message: "Server error", status: false });
     }
-    touchSession(req)
 };
+
 
 exports.updateUser = async (req, res) => {
     console.log(`${req.session.user.name} is updating a user`);
@@ -83,12 +88,12 @@ exports.updateUser = async (req, res) => {
         const userId = req.params.id;
         const updatedData = sanitizeObject(req.body);
 
-        // Find the current user document
         const currentUser = await db.collection("users").findOne({ _id: new ObjectId(userId) });
         if (!currentUser) {
             return res.status(404).json({ message: "User not found", status: false });
         }
 
+        // ✅ Check email uniqueness
         if (updatedData.email && updatedData.email !== currentUser.email) {
             const existing = await db.collection("users").findOne({
                 email: updatedData.email,
@@ -99,12 +104,20 @@ exports.updateUser = async (req, res) => {
             }
         }
 
+        // ✅ Detect changes (password always counts as a change)
         const hasChanges = Object.keys(updatedData).some(key => {
+            if (key === "password") return true;
             return updatedData[key] !== currentUser[key];
         });
 
         if (!hasChanges) {
             return res.status(200).json({ message: "No changes saved", status: false });
+        }
+
+        // ✅ Hash password if provided
+        if (updatedData.password) {
+            const saltRounds = 10;
+            updatedData.password = await bcrypt.hash(updatedData.password, saltRounds);
         }
 
         updatedData.last_updated = new Date().toISOString().split("T")[0];
@@ -114,12 +127,13 @@ exports.updateUser = async (req, res) => {
             { $set: updatedData }
         );
 
+        touchSession(req);
+
         if (result.modifiedCount > 0) {
             res.status(200).json({ message: "User updated successfully", status: true });
         } else {
             res.status(500).json({ message: "Update failed", status: false });
         }
-
 
     } catch (err) {
         console.error(err);
@@ -129,8 +143,8 @@ exports.updateUser = async (req, res) => {
             res.status(500).json({ message: "Error updating user", status: false });
         }
     }
-    touchSession(req)
-}
+};
+
 
 exports.deleteUser = async (req, res) => {
     console.log(`${req.session.user.name} is deleting a user`);
@@ -152,7 +166,6 @@ exports.deleteUser = async (req, res) => {
         console.error(err);
         res.status(500).json({ message: "Error deleting user", status: false });
     }
-    touchSession(req)
 }
 
 exports.createOrganization = async (req, res) => {
@@ -201,7 +214,6 @@ exports.createOrganization = async (req, res) => {
         console.error("Error creating organization:", err);
         res.status(500).json({ message: "Server error", success: false });
     }
-    touchSession(req)
 }
 
 exports.updateOrganization = async (req, res) => {
@@ -305,5 +317,4 @@ exports.deleteOrganization = async (req, res) => {
         console.error("Error deleting organization:", err);
         res.status(500).json({ message: "Server error", success: false });
     }
-    touchSession(req)
 };

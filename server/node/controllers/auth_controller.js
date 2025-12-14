@@ -1,5 +1,6 @@
 const { connectToDB } = require('../database/connect.js')
 const { sanitizeObject } = require('../utilities.js')
+const bcrypt = require("bcrypt");
 
 let db;
 
@@ -15,16 +16,26 @@ exports.login = async (req, res) => {
     try {
         const user = await users.findOne({ email });
 
-        console.log(`${user} has logged in`);
-
-
-        if (!user || user.password !== password) {
+        if (!user) {
             return res.status(400).json({
                 message: "Invalid email or password",
                 status: false
             });
         }
-        console.log(`${user.email} has logged in`);
+
+        console.log(`Login attempt for: ${user.email}`);
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+
+        if (!isPasswordValid) {
+            return res.status(400).json({
+                message: "Invalid email or password",
+                status: false
+            });
+        }
+
+        console.log(`${user.email} has logged in successfully`);
+
         // If user already has a session, destroy it
         if (req.session.userId && req.session.userId !== user._id.toString()) {
             req.session.destroy(() => { });
@@ -39,9 +50,9 @@ exports.login = async (req, res) => {
             organization: user.organization || null
         }
 
-
         let role = user.role.toLowerCase()
         let redirect = ""
+
         if (role === 'admin') {
             redirect = '/pages/admin/admin_page.html'
         } else if (role === 'student organization user') {
@@ -49,21 +60,26 @@ exports.login = async (req, res) => {
         } else if (role === 'osa') {
             redirect = '/pages/osa/osa_page.html'
         } else {
-            return res.status(500).json({ message: "Server error", status: false });
+            return res.status(500).json({
+                message: "Invalid role",
+                status: false
+            });
         }
 
         res.json({
             message: "Login successful",
             success: true,
             redirect: redirect,
-            username: user.name ,
+            username: user.name,
             role: role
-            
         });
 
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Server error", status: false });
+        console.error("Login error:", err);
+        res.status(500).json({
+            message: "Server error",
+            status: false
+        });
     }
 }
 

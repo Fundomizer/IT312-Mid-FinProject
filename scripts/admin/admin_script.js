@@ -155,17 +155,43 @@ async function loadUsersPage() {
         function handleSave(e) {
             e.preventDefault();
             const userId = form.dataset.userId;
-            const data = Object.fromEntries(new FormData(form).entries());
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
 
+            // Remove password field if it's empty (don't update password)
+            if (!data.password || data.password.trim() === '') {
+                delete data.password;
+            }
 
-            fetch(`/api/admin/user/crt/${userId}`, {
+            // Remove empty fields to avoid overwriting with nulls
+            Object.keys(data).forEach(key => {
+                if (data[key] === '' || data[key] === null) {
+                    delete data[key];
+                }
+            });
+
+            console.log("Sending update data:", data);
+
+            fetch(`/api/admin/user/upd/${userId}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
+                credentials: "include",
                 body: JSON.stringify(data)
-            }).then(response => response.json())
-                .then(result => alert(result['message']))
-                .catch(err => console.error("Error:", err));
-
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    alert(result['message']);
+                    loadUsersPage()
+                })
+                .catch(err => {
+                    console.error("Error:", err);
+                    alert("Failed to update user: " + err.message);
+                });
         }
 
         function handleDelete(button) {
@@ -177,10 +203,13 @@ async function loadUsersPage() {
 
             let userId = button.dataset.userId
 
-            fetch(`/api/admin/user/del${userId}`, {
+            fetch(`/api/admin/user/del/${userId}`, {
                 method: "DELETE"
             }).then(response => response.json())
-                .then(result => alert(result['message']))
+                .then(result => {
+                    alert(result['message'])
+                    loadUsersPage()
+                })
                 .catch(err => console.error("Error:", err));
         }
 
