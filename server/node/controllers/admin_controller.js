@@ -8,6 +8,39 @@ let db;
     db = await connectToDB();
 })();
 
+exports.getUsers = async (req, res) => {
+    try {
+        const users = db.collection("users");
+        const data = await users.find().toArray();
+
+        res.json({ success: true, users: data });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+}
+
+exports.getStudentOrgs = async (req, res) => {
+    try {
+        const orgs = db.collection("student_organization");
+        const data = await orgs.find().toArray();
+
+        res.json({ success: true, organizations: data });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+};
+
+exports.getLogs = async (req, res) => {
+    try {
+        const logs = db.collection("log");
+        const data = await logs.find().toArray();
+
+        res.json({ success: true, logs: data });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+};
+
 exports.createUser = async (req, res) => {
 
     try {
