@@ -29,7 +29,7 @@ if (!$email || !$password) {
 }
 
 try {
-    $client = new Client("mongodb+srv://testuser:test321@cluster0.lbsrw5e.mongodb.net/");
+    $client = new Client("mongodb://localhost:27017/");
     $collection = $client->OrganizationManagementDatabase->users;
 
     $user = $collection->findOne(["email" => $email]);
