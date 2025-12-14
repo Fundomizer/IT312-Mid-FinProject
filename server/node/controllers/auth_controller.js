@@ -15,7 +15,7 @@ exports.login = async (req, res) => {
     try {
         const user = await users.findOne({ email });
 
-        console.log(`${user} has logged in`);
+
         
 
         if (!user || user.password !== password) {
@@ -24,7 +24,7 @@ exports.login = async (req, res) => {
                 status: false
             });
         }
-
+        console.log(`${user.email} has logged in`);
         // If user already has a session, destroy it
         if (req.session.userId && req.session.userId !== user._id.toString()) {
             req.session.destroy(() => { });
@@ -49,13 +49,16 @@ exports.login = async (req, res) => {
         } else if (role === 'osa') {
             redirect = '/pages/osa/osa_page.html'
         } else {
-            res.status(500).json({ message: "Server error", status: false });
+            return res.status(500).json({ message: "Server error", status: false });
         }
 
         res.json({
             message: "Login successful",
             success: true,
             redirect: redirect,
+            username: user.name ,
+            role: role
+            
         });
 
     } catch (err) {
@@ -73,6 +76,7 @@ exports.getProfile = (req, res) => {
 
     res.json({
         success: true,
+        loggedIn: true,
         user: req.session.user
     });
 };

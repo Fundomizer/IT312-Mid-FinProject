@@ -5,7 +5,7 @@ import { HOST, PORT } from "./config.js";
  */
 async function checkSession() {
     try {
-        const res = await fetch(`${HOST}:${PORT}/api/auth/profile`, {
+        const res = await fetch(`${HOST}/api/auth/profile`, {
             credentials: "include",
             method: "POST"
         });
@@ -14,7 +14,7 @@ async function checkSession() {
 
         if (!data.loggedIn) {
             alert("Your session has expired. Please log in again.");
-            window.location.href = "/IT312-Mid-FinProject/index.html";
+            window.location.href = `${HOST}`;
         }
     } catch (err) {
         console.error("Session check failed:", err);
