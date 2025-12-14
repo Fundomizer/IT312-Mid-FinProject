@@ -1,5 +1,5 @@
 import { setupPopup } from "../utilities.js"
-import { HOST} from "../config.js"
+import { HOST, PORT } from "../config.js"
 const popupContainer = document.getElementById("AddPopup")
 const addUserButton = document.getElementById("AddUserButton")
 const userForm = document.getElementById("UserForm")
@@ -37,7 +37,7 @@ userForm.addEventListener('submit', (e) => {
     const filtered = entries.filter(([key, value]) => value && value.trim() !== "");
     const obj = Object.fromEntries(filtered);
 
-    fetch(`${HOST}/api/users`, {
+    fetch(`${HOST}:${PORT}/api/users`, { // TODO fix up HOST later on
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(obj)

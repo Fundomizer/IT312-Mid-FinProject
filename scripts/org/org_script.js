@@ -1,4 +1,4 @@
-import { HOST} from "../config.js"
+import { HOST, PORT } from "../config.js"
 import { fetchCollection, loadPage } from "../utilities.js"
 
 const dashboard = document.getElementById("dashboardButton")
@@ -381,7 +381,7 @@ async function loadForms() {
     async function handleSubmit(event) {
         event.preventDefault();
         console.log("Submitting form");
-        
+
         const popup = document.querySelector(".PopupForm");
         const requirementName = popup.dataset.requirementName
         console.log("Requirement anme from handle submit: ", requirementName);
@@ -395,8 +395,8 @@ async function loadForms() {
         const formData = new FormData();
         let orgName = localStorage.getItem('org_name')
         console.log("Form filled out by: ", orgName);
-        
-        formData.append('org_name',orgName)
+
+        formData.append('org_name', orgName)
         // ✅ Collect all text inputs and textareas
         const textInputs = formElement.querySelectorAll("input[name^='field_'], textarea[name^='field_']");
         textInputs.forEach(input => {
@@ -412,7 +412,7 @@ async function loadForms() {
         });
 
         try {
-            const response = await fetch(`${HOST}/api/orgs/requirements/${encodeURIComponent(requirementName)}`, {
+            const response = await fetch(`${HOST}:${PORT}/api/orgs/requirements/${encodeURIComponent(requirementName)}`, { // TODO fix up HOST later on
                 method: "PUT",
                 body: formData,
                 credentials: "include" // ✅ important for session cookies
@@ -671,10 +671,10 @@ function styleButtonEventListener(e) {
 
     if (button.dataset.formId) {
 
-        const formId = button.dataset.formId;``
+        const formId = button.dataset.formId; ``
         const requirementName = button.dataset.requirementName;
         console.log("Requirement name: ", requirementName);
-        
+
         popup.dataset.requirementName = requirementName
 
         if (formModule && formModule.getFormById) {
