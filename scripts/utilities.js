@@ -1,4 +1,4 @@
-import { HOST, API_BASE_URL } from "./config.js";
+import { HOST } from "./config.js";
 
 /**
  * Dynamically loads and injects a HTML file into the container, "Content". Provide the file name for the style and script if you intend to use a different file for them.
@@ -84,7 +84,7 @@ export async function fetchCollection(collection, URI = "", Port = 8123) {
   const HOST = window.location.origin; // Host machine's IP
   const endpoint =
     URI ||
-    `${HOST}:${Port}/api/${collection}`;
+    `${HOST}/api/${collection}`;
 
 
   return fetch(endpoint)

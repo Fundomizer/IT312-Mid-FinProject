@@ -1,7 +1,8 @@
 import { loadPage, fetchCollection, setupPopup } from "../utilities.js"
 import { createButton, createTableRow } from "../components.js"
-import { HOST, API_BASE_URL } from "../config.js"
+import { HOST, PORT } from "../config.js"
 import { displayOrgs } from "./org_script.js"
+import { renderDashboard } from "./dashboard_script.js"
 
 const dashbaordNavBut = document.getElementById("dashboardButton")
 const usersNavBut = document.getElementById("usersButton")
@@ -10,27 +11,33 @@ const orgsBut = document.getElementById("orgsButton")
 let users = []
 let logs = []
 
+async function getProfile() {
+    let me = await fetch("/api/auth/profile", {
+        method: "POST",
+        credentials: "include"
+    })
+        .then(res => res.json())
+
+    return me
+}
+
 async function loadDashboardPage() {
 
     loadPage("admin", "dashboard_page.html")
-
-    let users = await fetchCollection('users')
-    let logs = await fetchCollection('log')
-
-    const totalUsers = document.querySelector("#TotalUsers b");
-    const totalLogs = document.querySelector("#ActivityLogs b");
-
-    totalUsers.textContent = users.length;
-    totalLogs.textContent = logs.length;
+    renderDashboard()
+    handleLogout()
 }
 
 async function loadUsersPage() {
 
     loadPage("admin", "users_page.html", "", "users_script.js")
 
-    users = await fetchCollection('users')
+    users = await fetch("/api/admin/rsc/users", {
+        method: "GET",
+        credentials: "include"
+    }).then(res => res.json())
 
-    displayUsers(users)
+    displayUsers(users.users)
 
     // Hook functions to filtering stuff
     document.getElementById('SearchInput').addEventListener('input', handleFilter)
@@ -148,17 +155,43 @@ async function loadUsersPage() {
         function handleSave(e) {
             e.preventDefault();
             const userId = form.dataset.userId;
-            const data = Object.fromEntries(new FormData(form).entries());
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
 
+            // Remove password field if it's empty (don't update password)
+            if (!data.password || data.password.trim() === '') {
+                delete data.password;
+            }
 
-            fetch(`${API_BASE_URL}/api/users/${userId}`, {
+            // Remove empty fields to avoid overwriting with nulls
+            Object.keys(data).forEach(key => {
+                if (data[key] === '' || data[key] === null) {
+                    delete data[key];
+                }
+            });
+
+            console.log("Sending update data:", data);
+
+            fetch(`/api/admin/user/upd/${userId}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
+                credentials: "include",
                 body: JSON.stringify(data)
-            }).then(response => response.json())
-                .then(result => alert(result['message']))
-                .catch(err => console.error("Error:", err));
-
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    alert(result['message']);
+                    loadUsersPage()
+                })
+                .catch(err => {
+                    console.error("Error:", err);
+                    alert("Failed to update user: " + err.message);
+                });
         }
 
         function handleDelete(button) {
@@ -170,10 +203,13 @@ async function loadUsersPage() {
 
             let userId = button.dataset.userId
 
-            fetch(`${API_BASE_URL}/api/users/${userId}`, {
+            fetch(`/api/admin/user/del/${userId}`, {
                 method: "DELETE"
             }).then(response => response.json())
-                .then(result => alert(result['message']))
+                .then(result => {
+                    alert(result['message'])
+                    loadUsersPage()
+                })
                 .catch(err => console.error("Error:", err));
         }
 
@@ -187,9 +223,9 @@ async function loadUsersPage() {
         const startDate = document.getElementById('StartDate').value
         const endDate = document.getElementById('EndDate').value
 
-        let filtered = users;
+        let filtered = users.users;
 
-        filtered = users.filter(user =>
+        filtered = users.users.filter(user =>
             user['name']?.toLowerCase().includes(term) ||
             user['email']?.toLowerCase().includes(term) ||
             user['organization']?.toLowerCase().includes(term) ||
@@ -249,7 +285,10 @@ async function loadLogsPage() {
 
     loadPage("admin", "logs_page.html")
 
-    logs = await fetchCollection('log')
+    logs = await fetch("/api/admin/rsc/log", {
+        method: "GET",
+        credentials: "include"
+    }).then(res => res.json())
 
     let searchInput = document.getElementById('SearchInput')
     let dateFilter = document.getElementById('DateFilter')
@@ -263,7 +302,7 @@ async function loadLogsPage() {
     startDateFilter.addEventListener('change', handleFilter)
     endDateFilter.addEventListener('change', handleFilter)
 
-    displayLog(logs)
+    displayLog(logs.logs)
 
     /**
      * Displays the list of logs, appends a "Log" into the "Logs" div
@@ -293,7 +332,7 @@ async function loadLogsPage() {
         const startDate = startDateFilter.value
         const endDate = endDateFilter.value
 
-        let filtered = logs
+        let filtered = logs.logs
 
         if (term) {
             filtered = filtered.filter(log =>
@@ -339,6 +378,39 @@ async function loadOrgsPage() {
 
 }
 
+function handleLogout() {
+    let logoutButton = document.getElementById('LogoutButton')
+    logoutButton.addEventListener('click', async () => {
+        try {
+            const res = await fetch('/api/auth/logout', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await res.json();
+            console.log(data);
+
+            if (res.ok && data.success) {
+                window.location.href = '/';
+            } else {
+                alert('Logout failed.');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('An error occurred while logging out.');
+        }
+    });
+
+}
+
+async function setTexts() {
+    const profile = await getProfile()
+    document.getElementById('UsernameLabel').innerHTML = profile.user.email
+}
+
 dashbaordNavBut.addEventListener('click', loadDashboardPage)
 
 usersNavBut.addEventListener('click', loadUsersPage)
@@ -348,3 +420,4 @@ logsNavBut.addEventListener('click', loadLogsPage)
 orgsBut.addEventListener('click', loadOrgsPage)
 
 loadDashboardPage()
+setTexts()

@@ -1,10 +1,10 @@
-const HOST = window.location.origin;
+import { PHP_HOST,HOST, PORT } from "../config.js";
 
 export async function checkOSA() {
 
     try {
         // checks session validity if inactive or no active session
-        const res = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/osa_check.php`, {
+        const res = await fetch(`${PHP_HOST}/IT312-Mid-FinProject/server/php/osa_check.php`, {
             credentials: "include",
             method: "POST"
         });
@@ -14,7 +14,7 @@ export async function checkOSA() {
             data = await res.json();
         } catch (jsonErr) {
             alert("Your session is invalid. Please log in again.");
-            window.location.href = "/IT312-Mid-FinProject/index.html";
+            window.location.href = HOST + ":" + PORT;
             return;
         }
 
@@ -22,15 +22,15 @@ export async function checkOSA() {
 
         if (!data.loggedIn) {
             alert(data.error ?? "Your session has expired or doesnt exist Please log in again.");
-            window.location.href = "/IT312-Mid-FinProject/index.html";
+            window.location.href = HOST + ":" + PORT;
             return;
         }
 
-
+    
     } catch (err) {
         console.error("Session check failed:", err);
         alert("Unable to verify your session. Please log in again.");
-        window.location.href = "/IT312-Mid-FinProject/index.html";
+        window.location.href = HOST + ":" + PORT;
     }
 }
 checkOSA();

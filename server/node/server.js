@@ -5,6 +5,7 @@ const { connectToDB, url } = require('./database/connect');
 const { default: MongoStore } = require('connect-mongo');
 const { exposeEndpoints } = require('./endpoints');
 const fileUpload = require("express-fileupload");
+const path = require('path');
 
 const port = 8123
 const app = express();
@@ -19,22 +20,9 @@ app.use(fileUpload({
 
 // Cross origin access
 app.use(cors({
-    origin: function (origin, callback) {
-        // allow requests with no origin (like curl or mobile apps)
-        if (!origin) return callback(null, true);
-
-        // allow LAN IPs: 192.168.x.x or 10.x.x.x
-        if (/^http:\/\/192\.168\.\d+\.\d+(:\d+)?$/.test(origin) ||
-            /^http:\/\/10\.\d+\.\d+\.\d+(:\d+)?$/.test(origin) ||
-            origin === "http://localhost" ||
-            origin === "http://127.0.0.1") {
-            callback(null, true);
-        } else {
-            callback(new Error("Not allowed by CORS"));
-        }
-    },
+    origin: true,      // allow all origins
     credentials: true
-}))
+}));
 
 // Caching settings
 app.use((req, res, next) => {
@@ -45,6 +33,15 @@ app.use((req, res, next) => {
 
     next();
 });
+
+// Static resources
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../index.html'));
+});
+app.use("/uploads", express.static(path.join(__dirname, "../../uploads")));
+app.use('/assets', express.static(path.join(__dirname, '../../assets')));
+app.use('/styles', express.static(path.join(__dirname, '../../styles')));
+app.use('/scripts', express.static(path.join(__dirname, '../../scripts')));
 
 app.use(session({ // Configure session handling 
     secret: "KeepThisSecretToYourself", // Secret :P
@@ -69,8 +66,12 @@ async function startServer() {
 
     // Register routes
     app.use('/api/auth', require('./routes/auth'))
-    app.use('/api/users', require('./routes/users'))
+    app.use('/api/admin', require('./routes/admin'))
     app.use('/api/orgs', require('./routes/organization'))
+    app.use("/pages", require("./routes/pages"));
+    app.use((req, res) => {
+        res.sendFile(path.join(__dirname, '../../', 'index.html'));
+    });
 
     app.listen(port, "0.0.0.0", () => {
         console.log(`Node server running on port ${port}`);

@@ -1,9 +1,6 @@
 <?php
-ini_set('session.cookie_lifetime', 0);
+
 session_start();
-
-
-
 
 
 // Authorization check
@@ -13,10 +10,12 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] !== true || ($_SESSIO
     exit;
 }
 
+
 require './vendor/autoload.php';
-header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Origin: http://localhost:8123");
 header("Access-Control-Allow-Methods: POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Access-Control-Allow-Credentials: true");
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {

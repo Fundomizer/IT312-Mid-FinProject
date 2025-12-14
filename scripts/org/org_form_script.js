@@ -10,23 +10,40 @@ const objForm = {
   orgName: null
 };
 
+async function getProfile() {
+  let me = await fetch("/api/auth/profile", {
+    method: "POST",
+    credentials: "include"
+  })
+    .then(res => res.json())
+
+  return me
+}
+
 //---------------------------------------------------------------------------
 // Setup Forms
 async function createForms() {
   loadPage('org', 'assigned_form_page.html');
-  
-  objForm.orgName = localStorage.getItem('org_name');
-  console.log("Organization:", objForm.orgName);
 
-  const response = await fetchCollection(`orgs/requirements/${encodeURIComponent(objForm.orgName)}`);
-  
+  let profile = await getProfile()
+  objForm.orgName = profile.user.organization
+  console.log(profile);
+
+  const response = await await fetch(`/api/orgs/rsc/forms/${profile.user.organization}`, {
+    method: "GET",
+    credentials: "include"
+  })
+    .then(res => res.json());
+
+  console.log("Organization forms:", response);
+
   if (!response.success) {
     console.error("Failed to fetch forms");
     return null;
   }
 
   objForm.requirements = requirementsToArray(response.requirements);
-  
+
   renderForms(objForm.requirements);
   setupFilters(objForm.requirements, response.requirements);
   setupEventListeners();
@@ -37,10 +54,15 @@ async function createForms() {
 //---------------------------------------------------------------------------
 // Transform values
 function requirementsToArray(requirements) {
-  return Object.entries(requirements).map(([key, value]) => ({
+  const result = Object.entries(requirements).map(([key, value]) => ({
     requirement_name: key,
     ...value
   }));
+
+  // Debug: Log the transformed array
+  console.log("Requirements Array:", result);
+
+  return result;
 }
 
 function formatTitle(text) {
@@ -66,8 +88,8 @@ function renderForms(forms) {
 }
 
 function createFormCard(form) {
-  const { requirement_name, description, fields, tags, last_updated, form_id } = form;
-  
+  const { requirement_name, description, fields, tags, last_updated, _id } = form;
+
   return `
     <div class="SubCard Form">
       <div class="FormDetails">
@@ -90,11 +112,11 @@ function createFormCard(form) {
           ${tags.map(tag => `<p class="Tag">${tag}</p>`).join("")}
         </div>
         
-        <p class="LastUpdated">Last updated: ${last_updated}</p>
+        ${last_updated ? `<p class="LastUpdated">Last updated: ${last_updated}</p>` : ""}
       </div>
       
       <div>
-        <button class="StyledButton" data-form-id="${form_id}" data-requirement-name="${requirement_name}">
+        <button class="StyledButton" data-form-id="${_id}" data-requirement-name="${requirement_name}">
           <span>
             <img src="../../assets/images/icons/forms_icon.png" alt="Form icon">
           </span>
@@ -110,35 +132,37 @@ function createFormCard(form) {
 function populateFormPopup(formData) {
   const popup = document.querySelector(".PopupForm");
   const formElement = popup?.querySelector(".Form");
-  
+
   if (!popup || !formElement) {
     console.error("Popup or form element not found");
     return;
   }
 
-  popup.dataset.formId = formData.form_id;
-  popup.dataset.requirementName = formData.requirement_name;
-  
+  // Store both _id and requirement_name in popup dataset
+  // Use data-form-id and data-requirement-name as attributes
+  popup.setAttribute('data-form-id', formData._id);
+  popup.setAttribute('data-requirement-name', formData.requirement_name);
+
   formElement.innerHTML = '';
-  
+
   appendFormHeader(formElement, formData);
   appendFormFields(formElement, formData.fields);
-  
+
   if (formData.upload) {
     appendFileUpload(formElement);
   }
-  
+
   appendFormButtons(formElement);
 }
 
 function appendFormHeader(container, formData) {
   const titleLabel = document.createElement("label");
   titleLabel.htmlFor = "FormTitle";
-  
+
   const title = document.createElement("h3");
   title.textContent = formatTitle(formData.requirement_name);
   titleLabel.appendChild(title);
-  
+
   container.appendChild(titleLabel);
   container.appendChild(document.createElement("br"));
 
@@ -166,17 +190,18 @@ function appendFormFields(container, fields) {
   });
 }
 
+
 function createFieldLabel(field, index) {
   const label = document.createElement("label");
   label.htmlFor = `field_${index}`;
-  
+
   const span = document.createElement("span");
   span.textContent = field.question;
-  
+
   if (field.required === "true" || field.required === true) {
     span.textContent += " *";
   }
-  
+
   label.appendChild(span);
   return label;
 }
@@ -184,7 +209,37 @@ function createFieldLabel(field, index) {
 function createFieldInput(field, index) {
   const isRequired = field.required === "true" || field.required === true;
   const inputId = `field_${index}`;
-  
+
+  if (field.field_type === "radio" || field.field_type === "checkbox") {
+    const container = document.createElement("div");
+    container.className = field.field_type === "radio" ? "RadioGroup" : "CheckboxGroup";
+
+    if (field.options && field.options.length > 0) {
+      field.options.forEach((option, optIndex) => {
+        const optionId = `${inputId}_${optIndex}`;
+        const wrapper = document.createElement("div");
+
+        const input = document.createElement("input");
+        input.type = field.field_type;
+        input.name = inputId;
+        input.id = optionId;
+        input.value = option;
+        input.required = isRequired && field.field_type === "radio"; // only radio requires
+
+        const label = document.createElement("label");
+        label.htmlFor = optionId;
+        label.textContent = option;
+
+        wrapper.appendChild(input);
+        wrapper.appendChild(label);
+        container.appendChild(wrapper);
+      });
+    }
+
+    return container;
+  }
+
+  // fallback to original types
   const inputConfig = {
     number: () => createInput("number", inputId, isRequired),
     date: () => createInput("date", inputId, isRequired),
@@ -195,9 +250,9 @@ function createFieldInput(field, index) {
 
   const input = (inputConfig[field.field_type] || inputConfig.text)();
   input.name = `field_${index}`;
-  
   return input;
 }
+
 
 function createInput(type, id, required) {
   const input = document.createElement("input");
@@ -241,19 +296,24 @@ function appendFormButtons(container) {
 // Form Submission
 async function handleFormSubmit(event) {
   event.preventDefault();
-  
+
   const popup = document.querySelector(".PopupForm");
   const requirementName = popup.dataset.requirementName;
-  
-  if (!requirementName) {
-    console.error("No requirement name found");
+
+  if (!objForm.orgName || !requirementName) {
+    console.error("Missing org name or requirement", { org: objForm.orgName, requirementName });
+    alert("Missing organization or requirement name.");
     return;
   }
 
+  const confirmSubmit = confirm("Are you sure you want to submit this form?");
+  if (!confirmSubmit) return; 
+
   const formData = collectFormData(popup);
-  
+
   try {
-    const response = await submitForm(requirementName, formData);
+    console.log("Submitting form..."); 
+    const response = await submitForm(objForm.orgName, requirementName, formData);
     handleSubmitResponse(response, popup);
   } catch (error) {
     console.error("Form submission error:", error);
@@ -261,37 +321,39 @@ async function handleFormSubmit(event) {
   }
 }
 
+
 function collectFormData(popup) {
   const formElement = popup.querySelector(".Form");
   const formData = new FormData();
-  
-  formData.append('org_name', objForm.orgName);
 
-  // Collect text inputs
-  formElement.querySelectorAll("input[name^='field_'], textarea[name^='field_']")
-    .forEach(input => formData.append(input.name, input.value));
-
-  // Collect file inputs
-  formElement.querySelectorAll("input[type='file'][name^='file_']")
-    .forEach(input => {
-      if (input.files.length > 0) {
-        formData.append(input.name, input.files[0]);
+  formElement.querySelectorAll("input[name^='field_'], textarea[name^='field_']").forEach(input => {
+    if (input.type === "radio" || input.type === "checkbox") {
+      if (input.checked) {
+        formData.append(input.name, input.value);
       }
-    });
+    } else {
+      formData.append(input.name, input.value);
+    }
+  });
+
+  // Append uploaded files
+  objForm.selectedFiles.forEach((file, index) => {
+    formData.append(`file_${index}`, file);
+  });
 
   return formData;
 }
 
-async function submitForm(requirementName, formData) {
+async function submitForm(orgName, requirementName, formData) {
   const response = await fetch(
-    `${HOST}:${PORT}/api/orgs/requirements/${encodeURIComponent(requirementName)}`,
+    `/api/orgs/requirements/${encodeURIComponent(orgName)}/${encodeURIComponent(requirementName)}`,
     {
       method: "PUT",
       body: formData,
       credentials: "include"
     }
   );
-  
+
   return response.json();
 }
 
@@ -300,6 +362,7 @@ function handleSubmitResponse(result, popup) {
 
   if (result.success) {
     alert("Form submitted successfully");
+    objForm.selectedFiles = []; // Clear the files array
     closeFormPopup();
   } else {
     alert("Failed to submit form: " + result.message);
@@ -308,7 +371,7 @@ function handleSubmitResponse(result, popup) {
 
 //---------------------------------------------------------------------------
 // Popup Functions
-function openFormPopup(formId) {
+function openFormPopup(requirementName) {
   const popup = document.querySelector(".PopupForm");
   const overlay = document.getElementById("PopupOverlay");
 
@@ -325,7 +388,7 @@ function openFormPopup(formId) {
 function closeFormPopup() {
   const popup = document.querySelector(".PopupForm");
   const overlay = document.getElementById("PopupOverlay");
-  
+
   if (popup && overlay) {
     popup.style.display = "none";
     overlay.classList.remove("show");
@@ -347,7 +410,7 @@ function handleFileSelection(event) {
 }
 
 function isFileDuplicate(file) {
-  return objForm.selectedFiles.some(f => 
+  return objForm.selectedFiles.some(f =>
     f.name === file.name && f.size === file.size
   );
 }
@@ -407,7 +470,7 @@ function getFileIcon(fileType) {
   if (fileType.includes('video')) return icons.video;
   if (fileType.includes('audio')) return icons.audio;
   if (fileType.includes('zip') || fileType.includes('compressed')) return icons.archive;
-  
+
   return '📄';
 }
 
@@ -457,10 +520,10 @@ function setupEventListeners() {
 
   // Delegate all clicks to a single handler
   document.addEventListener("click", handleDocumentClick);
-  
+
   // Handle file input changes
   document.addEventListener("change", handleDocumentChange);
-  
+
   // Close popup when clicking overlay
   const overlay = document.getElementById("PopupOverlay");
   if (overlay) {
@@ -495,21 +558,21 @@ function handleDocumentChange(event) {
 
 function handleFormButtonClick(event) {
   const button = event.target.closest(".StyledButton");
-  const formId = button.dataset.formId;
   const requirementName = button.dataset.requirementName;
 
-  if (!formId || !objForm.formModule) {
+  if (!requirementName || !objForm.formModule) {
     console.error("Form data or module not available");
     return;
   }
 
-  const formData = objForm.formModule.getFormById(formId, requirementName);
-  
+  // Find form by requirement_name only
+  const formData = objForm.formModule.getFormByName(requirementName);
+
   if (formData) {
     objForm.formModule.populatePopupForm(formData);
-    openFormPopup(formData.form_id);
+    openFormPopup(requirementName);
   } else {
-    console.error("Form not found:", formId);
+    console.error("Form not found:", requirementName);
   }
 }
 
@@ -520,10 +583,8 @@ function getFormFunctions() {
     populatePopupForm: populateFormPopup,
     requirementsArray: objForm.requirements,
     formatTitle: formatTitle,
-    getFormById: (formId, requirementName) => {
-      return objForm.requirements.find(f =>
-        f.form_id === formId && f.requirement_name === requirementName
-      );
+    getFormByName: (requirementName) => {
+      return objForm.requirements.find(f => f.requirement_name === requirementName);
     }
   };
 }

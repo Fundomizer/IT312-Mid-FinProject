@@ -1,33 +1,26 @@
-import { API_BASE_URL } from "./config.js";
+import { HOST, PORT } from "./config.js";
 
 /**
  * Check if the session is still valid
  */
 async function checkSession() {
     try {
-        const res = await fetch(`${API_BASE_URL}/api/auth/profile`, {
-            credentials: "include",
-            method: "POST"
+        const res = await fetch(`/api/auth/profile`, {
+            method: "POST",
+            credentials: "include"
         });
 
-        const data = await res.json();
-
-        if (!data.loggedIn) {
-            alert("Your session has expired. Please log in again.");
-            window.location.href = "/IT312-Mid-FinProject/index.html";
+        console.log("Session is still valid");
+        if (res.status === 401) {
+            // Boot out if the session is now invalid or "expired"
+            window.location.href = "/";
+            return;
         }
     } catch (err) {
-        console.error("Session check failed:", err);
+        console.error("Heartbeat error:", err);
     }
 }
 
-checkSession();
-let seconds = 60;
+// Periodically check if the session is still valid
+let seconds = 30;
 setInterval(checkSession, 1000 * seconds); // This in miliseconds
-
-window.addEventListener("pageshow", function (event) {
-    if (event.persisted) {
-        // Page was restored from bfcache
-        window.location.reload();
-    }
-});

@@ -1,6 +1,6 @@
  import { checkOSA } from "./osa_auth.js";
 
- const HOST = window.location.origin;
+import { PHP_HOST } from "../config.js";
 
 const searchInput = document.getElementById("searchInput");
 const filterLocation = document.getElementById("filterLocation");
@@ -12,7 +12,7 @@ let allItems = [];
 // Load Items into Table
 async function loadItems() {
    try {
-    const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`, {
+    const response = await fetch(`${PHP_HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`, {
       credentials: "include" 
     });
     const data = await response.json();
@@ -21,41 +21,50 @@ async function loadItems() {
     const tbody = document.querySelector("#submissions-table tbody");
     tbody.innerHTML = "";
 
-    data.forEach(org => {
-      if (org.requirements) {
-        for (const [reqType, reqData] of Object.entries(org.requirements)) {
-          const row = document.createElement("tr");
-          row.setAttribute("data-location", org.short_name || "");
+   data.forEach(org => {
+  if (org.requirements) {
+    for (const [reqType, reqData] of Object.entries(org.requirements)) {
+      const row = document.createElement("tr");
+      row.setAttribute("data-location", org.short_name || "");
 
-          const nameCell = document.createElement("td");
-          nameCell.textContent = reqType.replace(/_/g, " ");
-          row.appendChild(nameCell);
+      const contentText = (reqData.fields || [])
+        .map(f => `${f.question} ${f.content || ""}`)
+        .join(" ");
 
-          const tagCell = document.createElement("td");
-          tagCell.textContent = (reqData.tags || []).join(", ");
-          row.appendChild(tagCell);
+      row.dataset.content = contentText.toLowerCase();
+      row.dataset.filenames = JSON.stringify(reqData.filenames || []);
+      row.dataset.filepaths = JSON.stringify(reqData.filepaths || []);
 
-          const orgCell = document.createElement("td");
-          orgCell.textContent = org.org_name;
-          row.appendChild(orgCell);
 
-          const shortCell = document.createElement("td");
-          shortCell.textContent = org.short_name;
-          row.appendChild(shortCell);
+      const nameCell = document.createElement("td");
+      nameCell.textContent = reqType.replace(/_/g, " ");
+      row.appendChild(nameCell);
 
-          const dateCell = document.createElement("td");
-          dateCell.textContent = reqData.last_updated || "N/A";
-          row.appendChild(dateCell);
+      const tagCell = document.createElement("td");
+      tagCell.textContent = (reqData.tags || []).join(", ");
+      row.appendChild(tagCell);
 
-          tbody.appendChild(row);
+      const orgCell = document.createElement("td");
+      orgCell.textContent = org.org_name;
+      row.appendChild(orgCell);
 
-          row.addEventListener("click", () => {
-              checkOSA();
-            showFormDetails(org, reqType, reqData);
-          });
-        }
-      }
-    });
+      const shortCell = document.createElement("td");
+      shortCell.textContent = org.short_name;
+      row.appendChild(shortCell);
+
+      const dateCell = document.createElement("td");
+      dateCell.textContent = reqData.last_updated || "N/A";
+      row.appendChild(dateCell);
+
+      tbody.appendChild(row);
+
+      row.addEventListener("click", () => {
+        checkOSA();
+        showFormDetails(org, reqType, reqData);
+      });
+    }
+  }
+});
 
     allItems = Array.from(document.querySelectorAll("#submissions-table tbody tr"));
 
@@ -90,10 +99,19 @@ function filterResults() {
     const dateText = cells[4].textContent;
     const dateVal = dateText !== "N/A" ? new Date(dateText) : null;
 
+   const content = item.dataset.content || "";
+    const filenames = JSON.parse(item.dataset.filenames || "[]").map(f => f.toLowerCase());
+    const filepaths = JSON.parse(item.dataset.filepaths || "[]").map(f => f.toLowerCase());
+
     const matchesSearch =
-      name.includes(searchQuery) ||
-      org.includes(searchQuery) ||
-      tagText.includes(searchQuery);
+  name.includes(searchQuery) ||
+  org.includes(searchQuery) ||
+  tagText.includes(searchQuery) ||
+  content.includes(searchQuery) ||
+  filenames.some(f => f.includes(searchQuery)) ||
+  filepaths.some(f => f.includes(searchQuery));
+
+
 
     const matchesLocation =
       !selectedLocation || location === selectedLocation;
@@ -124,7 +142,7 @@ function showFormDetails(org, reqType, reqData) {
   reqDiv.innerHTML = `
     <h3>${reqType.replace(/_/g, " ")}</h3>
     <p><strong>Tags:</strong> ${(reqData.tags || []).join(", ")}</p>
-    <p><strong>Last Updated:</strong> ${reqData.last_updated || "N/A"}</p>
+    <p><strong>Submitted:</strong> ${reqData.last_updated || "N/A"}</p>
     <div><strong>Fields:</strong></div>
   `;
 
@@ -139,20 +157,22 @@ function showFormDetails(org, reqType, reqData) {
     });
   }
 
-  // Uploaded file section with viewer
-  if (reqData.filename) {
-    const filesDiv = document.createElement("div");
-    filesDiv.innerHTML = `<strong>Uploaded File:</strong>`; 
+  if (reqData.filepaths && reqData.filepaths.length) {
+  const filesDiv = document.createElement("div");
+  filesDiv.innerHTML = `<strong>Uploaded Files:</strong>`;
+
+  reqData.filepaths.forEach((filePath, i) => {
+    const filename = reqData.filenames[i] || "View File";
+    const path = filePath.replace(/^\.\/uploads/, `${PHP_HOST}/IT312-Mid-FinProject/uploads`);
 
     const fileButton = document.createElement("button");
-    fileButton.textContent = reqData.filename;
+    fileButton.textContent = filename;
     fileButton.style.display = "block";
     fileButton.style.marginTop = "4px";
     fileButton.style.padding = "6px 12px";
     fileButton.style.cursor = "pointer";
 
     fileButton.addEventListener("click", () => {
-      // Overlay
       const overlay = document.createElement("div");
       overlay.style.position = "fixed";
       overlay.style.top = 0;
@@ -165,7 +185,6 @@ function showFormDetails(org, reqType, reqData) {
       overlay.style.alignItems = "center";
       overlay.style.zIndex = 3000;
 
-      // File viewer container
       const viewer = document.createElement("div");
       viewer.style.background = "#fff";
       viewer.style.padding = "10px";
@@ -176,54 +195,47 @@ function showFormDetails(org, reqType, reqData) {
       viewer.style.flexDirection = "column";
       viewer.style.position = "relative";
 
-      // Toolbar for print/download
       const toolbar = document.createElement("div");
       toolbar.style.display = "flex";
       toolbar.style.justifyContent = "flex-end";
       toolbar.style.gap = "10px";
       toolbar.style.marginBottom = "5px";
 
-
       const downloadBtn = document.createElement("button");
       downloadBtn.textContent = "Download";
       downloadBtn.style.cursor = "pointer";
       downloadBtn.addEventListener("click", () => {
         const link = document.createElement("a");
-        link.href = `${HOST}/IT312-Mid-FinProject/uploads/${reqData.filename}`;
-        link.download = reqData.filename;
+        link.href = path;
+        link.download = filename;
         link.click();
       });
-
-
       toolbar.appendChild(downloadBtn);
 
-      // Content container
-      const content = document.createElement("div");
-      content.style.flex = "1";
-      content.style.overflow = "auto";
-      content.style.display = "flex";
-      content.style.justifyContent = "center";
-      content.style.alignItems = "center";
+      const contentDiv = document.createElement("div");
+      contentDiv.style.flex = "1";
+      contentDiv.style.overflow = "auto";
+      contentDiv.style.display = "flex";
+      contentDiv.style.justifyContent = "center";
+      contentDiv.style.alignItems = "center";
 
-      // Embed PDF or message
-      const ext = reqData.filename.split('.').pop().toLowerCase();
+      const ext = filename.split('.').pop().toLowerCase();
       if (ext === "pdf") {
         const iframe = document.createElement("iframe");
-        iframe.src = `${HOST}/IT312-Mid-FinProject/uploads/${reqData.filename}`;
+        iframe.src = path;
         iframe.style.width = "100%";
         iframe.style.height = "100%";
-        content.appendChild(iframe);
+        contentDiv.appendChild(iframe);
       } else if (["png","jpg","jpeg","gif"].includes(ext)) {
         const img = document.createElement("img");
-        img.src = `${HOST}/IT312-Mid-FinProject/uploads/${reqData.filename}`;
+        img.src = path;
         img.style.maxWidth = "100%";
         img.style.maxHeight = "100%";
-        content.appendChild(img);
+        contentDiv.appendChild(img);
       } else {
-        content.textContent = "Cannot preview this file type.";
+        contentDiv.textContent = "Cannot preview this file type.";
       }
 
-      // Close button
       const closeBtn = document.createElement("button");
       closeBtn.textContent = "Close";
       closeBtn.style.position = "absolute";
@@ -234,15 +246,17 @@ function showFormDetails(org, reqType, reqData) {
       closeBtn.addEventListener("click", () => overlay.remove());
 
       viewer.appendChild(toolbar);
-      viewer.appendChild(content);
+      viewer.appendChild(contentDiv);
       viewer.appendChild(closeBtn);
       overlay.appendChild(viewer);
       document.body.appendChild(overlay);
     });
 
     filesDiv.appendChild(fileButton);
-    reqDiv.appendChild(filesDiv);
-  }
+  });
+
+  reqDiv.appendChild(filesDiv);
+}
 
   document.getElementById("formDetailsModal").style.display = "flex";
   document.getElementById("closeModal").addEventListener("click", () => {
@@ -269,7 +283,7 @@ clearFiltersBtn.addEventListener("click", () => {
 });
 async function loadOrganizationsForFilter() {
   try {
-    const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`, {
+    const response = await fetch(`${PHP_HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`, {
       credentials: "include"
     });
     const orgs = await response.json();

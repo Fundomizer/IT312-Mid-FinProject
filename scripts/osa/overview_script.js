@@ -1,12 +1,16 @@
 import { checkOSA } from "./osa_auth.js";
 
-const HOST = window.location.origin;
+import { PHP_HOST } from "../config.js";
 async function loadDashboard() {
-  const orgResponse = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`);
+  const orgResponse = await fetch(`${PHP_HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`, {
+    credentials: "include"
+});
   const orgs = await orgResponse.json();
 
 
-  const formResponse = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=forms`);
+  const formResponse = await fetch(`${PHP_HOST}/IT312-Mid-FinProject/server/php/api.php?collection=forms`, {
+    credentials: "include"
+});
   const forms = await formResponse.json();
 
 
@@ -41,7 +45,7 @@ async function loadDashboard() {
 
 // Update Progress Bars
 async function updateProgressBars() {
-  const orgResponse = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`);
+  const orgResponse = await fetch(`${PHP_HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`);
   const orgs = await orgResponse.json();
 
 
@@ -120,7 +124,7 @@ Object.entries(orgCounts)
 }
 // Load Organizations
 async function loadOrganizations() {
-  const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`, { credentials: "include" });
+  const response = await fetch(`${PHP_HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`, { credentials: "include" });
   const orgs = await response.json();
 
   const orgContainer = document.getElementById("organizations-list");
@@ -239,7 +243,7 @@ function filterOrganizations() {
   });
 }
 async function loadRecentSubmissions() {
-  const response = await fetch(`${HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`, { credentials: "include" });
+  const response = await fetch(`${PHP_HOST}/IT312-Mid-FinProject/server/php/api.php?collection=student_organization`, { credentials: "include" });
   const orgs = await response.json();
 
   const submissionsContainer = document.getElementById("submissions-list");

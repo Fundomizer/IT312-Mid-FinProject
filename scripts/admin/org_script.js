@@ -1,12 +1,16 @@
 import { fetchCollection, setupPopup } from "../utilities.js";
 import { createTableRow, createButton } from "../components.js";
-import { API_BASE_URL } from "../config.js";
+import { HOST, PORT } from "../config.js";
 
 let orgs = []
 
 export async function displayOrgs() {
-    orgs = await fetchCollection("student_organization")
-    renderOrgs(orgs)
+    orgs = await fetch("/api/admin/rsc/orgs", {
+        method: "GET",
+        credentials: "include"
+    }).then(res => res.json())
+    
+    renderOrgs(orgs.organizations)
 }
 
 function renderOrgs(orgs) {
@@ -81,7 +85,7 @@ function handleView(button) {
     const orgId = button.dataset.orgId;
 
     // Find the org object from the stored list
-    const org = orgs.find(o => o._id === orgId);
+    const org = orgs.organizations.find(o => o._id === orgId);
 
     if (!org) {
         console.error("Org not found:", orgId);
@@ -162,7 +166,7 @@ async function handleAddOrg(e) {
     };
 
     try {
-        const res = await fetch(`${API_BASE_URL}/api/orgs`, {
+        const res = await fetch(`/api/admin/org/crt`, { // TODO fix up HOST later on
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
@@ -238,7 +242,7 @@ async function handleSaveEditOrg(e) {
     };
 
     try {
-        const res = await fetch(`${API_BASE_URL}/api/orgs/${orgId}`, {
+        const res = await fetch(`/api/admin/org/upd/${orgId}`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
@@ -279,7 +283,7 @@ function deleteOrganization(id) {
     const confirmed = window.confirm("Are you sure you want to delete this organization?");
     if (!confirmed) return;
 
-    fetch(`${API_BASE_URL}/api/orgs/${id}`, {
+    fetch(`/api/admin/org/del/${id}`, {
         method: 'DELETE'
     })
         .then(res => res.json())
@@ -303,9 +307,9 @@ async function handleFilter() {
     const school = document.getElementById('SchoolFilter').value.toLowerCase()
     const orgType = document.getElementById('OrgTypeFilter').value.toLowerCase()
 
-    let filtered = orgs
+    let filtered = orgs.organizations
 
-    filtered = orgs.filter(org =>
+    filtered = orgs.organizations.filter(org =>
         org['org_name']?.toLowerCase().includes(term) ||
         org['short_name']?.toLowerCase().includes(term) ||
         org['official_email']?.toLowerCase().includes(term) ||
