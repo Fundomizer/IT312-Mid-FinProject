@@ -36,6 +36,7 @@ async function loadDashboard() {
     totalSubs.textContent = Object.keys(totalSubmissions.history.requirements).length;
     totalAssForms.textContent = forms.requirements.length;
     document.getElementById('OrgName').innerHTML = profile.user.organization
+    handleLogout()
 }
 
 
@@ -158,6 +159,33 @@ async function setTexts() {
     document.getElementById('UsernameLabel').innerHTML = profile.user.email
 }
 
-setTexts()
+function handleLogout() {
+    let logoutButton = document.getElementById('LogoutButton')
+    logoutButton.addEventListener('click', async () => {
+        try {
+            const res = await fetch('/api/auth/logout', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await res.json();
+            console.log(data);
+
+            if (res.ok && data.success) {
+                window.location.href = '/';
+            } else {
+                alert('Logout failed.');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('An error occurred while logging out.');
+        }
+    });
+
+}
 
 loadDashboard() // Load dashboard by default
+setTexts()

@@ -78,7 +78,9 @@ exports.getProfile = (req, res) => {
 };
 
 exports.logout = (req, res) => {
-    console.log(`${req.session.user.name} logged out`);
+    const username = req.session?.user?.name || "Unknown user";
+    console.log(`${username} logged out`);
+
     req.session.destroy(err => {
         if (err) {
             return res.status(500).json({ message: "Logout failed", success: false });

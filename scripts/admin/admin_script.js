@@ -11,10 +11,21 @@ const orgsBut = document.getElementById("orgsButton")
 let users = []
 let logs = []
 
+async function getProfile() {
+    let me = await fetch("/api/auth/profile", {
+        method: "POST",
+        credentials: "include"
+    })
+        .then(res => res.json())
+
+    return me
+}
+
 async function loadDashboardPage() {
 
     loadPage("admin", "dashboard_page.html")
     renderDashboard()
+    handleLogout()
 }
 
 async function loadUsersPage() {
@@ -338,6 +349,39 @@ async function loadOrgsPage() {
 
 }
 
+function handleLogout() {
+    let logoutButton = document.getElementById('LogoutButton')
+    logoutButton.addEventListener('click', async () => {
+        try {
+            const res = await fetch('/api/auth/logout', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await res.json();
+            console.log(data);
+
+            if (res.ok && data.success) {
+                window.location.href = '/';
+            } else {
+                alert('Logout failed.');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('An error occurred while logging out.');
+        }
+    });
+
+}
+
+async function setTexts() {
+    const profile = await getProfile()
+    document.getElementById('UsernameLabel').innerHTML = profile.user.email
+}
+
 dashbaordNavBut.addEventListener('click', loadDashboardPage)
 
 usersNavBut.addEventListener('click', loadUsersPage)
@@ -347,3 +391,4 @@ logsNavBut.addEventListener('click', loadLogsPage)
 orgsBut.addEventListener('click', loadOrgsPage)
 
 loadDashboardPage()
+setTexts()
