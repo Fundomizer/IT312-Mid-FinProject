@@ -140,12 +140,63 @@ async function loadHistory() {
 
             button.appendChild(imgWrapper);
             button.appendChild(label);
+
+            button.addEventListener("click", () => {
+            showRequirementModal(requirement);
+             });
+
             buttonWrapper.appendChild(button);
 
             return buttonWrapper;
         }
     }
 }
+
+function showRequirementModal(requirement) {
+    const modal = document.createElement("div");
+    modal.className = "ModalOverlay";
+
+    modal.innerHTML = `
+        <div class="ModalContent">
+            <span class="ModalClose">&times;</span>
+
+            <h2>${requirement.name}</h2>
+            <p><b>Last Updated:</b> ${requirement.last_updated || "N/A"}</p>
+
+            <div class="Tags">
+                ${(requirement.tags || [])
+                    .map(tag => `<span class="Tag">${tag}</span>`)
+                    .join("")}
+            </div>
+
+            <hr />
+
+            <h3>Submitted Fields</h3>
+            ${(requirement.fields || []).map(field => `
+                <div class="FieldBlock">
+                    <p><b>${field.question}</b></p>
+                    <p>${field.content || "<i>No content</i>"}</p>
+                </div>
+            `).join("")}
+
+            ${requirement.filename
+                ? `<hr />
+                   <h3>Uploaded File</h3>
+                   <a href="/uploads/${requirement.filename}" target="_blank">
+                       View uploaded file
+                   </a>`
+                : ""}
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    modal.querySelector(".ModalClose").onclick = () => modal.remove();
+    modal.onclick = e => {
+        if (e.target === modal) modal.remove();
+    };
+}
+
 
 
 // Assign event handlers for navigation
