@@ -2,25 +2,39 @@ import { fetchCollection, loadPage } from "../utilities.js"
 
 const dashboard = document.getElementById("dashboardButton")
 const history = document.getElementById("historyButton")
+async function getProfile() {
+    let me = await fetch("/api/auth/profile", {
+        method: "POST",
+        credentials: "include"
+    })
+        .then(res => res.json())
+
+    return me
+}
 
 async function loadDashboard() {
     loadPage('org', 'dashboard_page.html')
 
-    let orgs = await fetchCollection('student_organization');
-    let totalSubmissions = 0;
-    orgs.forEach(org => {
-        const reqs = org.requirements || {};
-        totalSubmissions += Object.keys(reqs).length;
-    });
+    const profile = await getProfile()
 
-    let assignedForms = await fetchCollection('forms')
+    let forms = await fetch(`/api/orgs/rsc/forms/${profile.user.organization}`, {
+        method: "GET",
+        credentials: "include"
+    })
+        .then(res => res.json());
+
+    let totalSubmissions = await fetch(`/api/orgs/rsc/history/${profile.user.organization}`, {
+        method: "GET",
+        credentials: "include"
+    })
+        .then(res => res.json());
 
     const totalSubs = document.querySelector("#TotalSubmissions b");
     const totalAssForms = document.querySelector("#AssignedForms b");
 
-    totalSubs.textContent = totalSubmissions;
-    totalAssForms.textContent = assignedForms.length;
-    document.getElementById('OrgName').innerText = localStorage.getItem('org_name')
+    totalSubs.textContent = Object.keys(totalSubmissions.history.requirements).length;
+    totalAssForms.textContent = forms.requirements.length;
+    document.getElementById('OrgName').innerText = await profile.name
 }
 
 
