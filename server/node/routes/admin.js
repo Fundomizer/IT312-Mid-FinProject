@@ -10,11 +10,14 @@ const {
     getUsers,
     getStudentOrgs
 } = require('../controllers/admin_controller');
+const { requireRole } = require('../middleware/gatekeeper')
+
 const router = express.Router();
 
-router.get('/rsc/log', getLogs)
-router.get('/rsc/users', getUsers)
-router.get('/rsr/orgs', getStudentOrgs)
+router.get('/rsc/log', requireRole("admin"), getLogs)
+router.get('/rsc/users', requireRole("admin"), getUsers)
+router.get('/rsr/orgs', requireRole("admin"), getStudentOrgs)
+//
 router.post('/crtuser', createUser)
 router.put('/upduser/:id', updateUser)
 router.delete('/deluser/:id', deleteUser)
