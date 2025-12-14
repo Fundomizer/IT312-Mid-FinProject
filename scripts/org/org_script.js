@@ -1,4 +1,5 @@
 import { fetchCollection, loadPage } from "../utilities.js";
+import {HOST} from "../config.js"
 
 const dashboard = document.getElementById("dashboardButton");
 const history = document.getElementById("historyButton");
@@ -162,7 +163,7 @@ async function setTexts() {
 }
 
 function handleLogout() {
-    let logoutButton = document.getElementById('LogoutButton')
+    let logoutButton = document.getElementById('Logout')
     logoutButton.addEventListener('click', async () => {
         try {
             const res = await fetch('/api/auth/logout', {
@@ -191,7 +192,7 @@ function handleLogout() {
 function showRequirementModal(requirement) {
     const modal = document.createElement("div");
     modal.className = "ModalOverlay";
-
+    modal.style.zIndex = 1000; 
     modal.innerHTML = `
         <div class="ModalContent">
             <span class="ModalClose">&times;</span>
@@ -209,35 +210,125 @@ function showRequirementModal(requirement) {
 
             <h3>Submitted Fields</h3>
             ${(requirement.fields || [])
-                .map(
-                    field => `
-                <div class="FieldBlock">
-                    <p><b>${field.question}</b></p>
-                    <p>${field.content || "<i>No content</i>"}</p>
-                </div>
-            `
-                )
-                .join("")}
-
-            ${
-                      requirement.file_path
-                         ? `<hr />
-                           <h3>Uploaded File</h3>
-                             <a href="${requirement.file_path}" target="_blank">
-                                View uploaded file
-           </a>`
-        : ""
-            }
+                .map(field => `
+                    <div class="FieldBlock">
+                        <p><b>${field.question}</b></p>
+                        <p>${field.content || "<i>No content</i>"}</p>
+                    </div>
+                `).join("")}
         </div>
     `;
+
+    // Add uploaded files section
+    if (requirement.filepaths && requirement.filepaths.length) {
+        const filesDiv = document.createElement("div");
+        filesDiv.innerHTML = `<hr /><h3>Uploaded Files</h3>`;
+        
+        requirement.filepaths.forEach((path, i) => {
+            // Fix relative path to absolute URL
+            const filename = requirement.filenames[i] || "View File";
+            const absolutePath = path.replace(/^\.\/uploads/, `${HOST}/uploads`);
+            
+            const fileButton = document.createElement("button");
+            fileButton.textContent = filename;
+            fileButton.style.display = "block";
+            fileButton.style.marginTop = "4px";
+            fileButton.style.padding = "6px 12px";
+            fileButton.style.cursor = "pointer";
+
+            fileButton.addEventListener("click", () => {
+                const overlay = document.createElement("div");
+                overlay.style.position = "fixed";
+                overlay.style.top = 0;
+                overlay.style.left = 0;
+                overlay.style.width = "100%";
+                overlay.style.height = "100%";
+                overlay.style.background = "rgba(0,0,0,0.8)";
+                overlay.style.display = "flex";
+                overlay.style.justifyContent = "center";
+                overlay.style.alignItems = "center";
+                overlay.style.zIndex = 3000;
+
+                const viewer = document.createElement("div");
+                viewer.style.background = "#fff";
+                viewer.style.padding = "10px";
+                viewer.style.borderRadius = "10px";
+                viewer.style.width = "90%";
+                viewer.style.height = "90%";
+                viewer.style.display = "flex";
+                viewer.style.flexDirection = "column";
+                viewer.style.position = "relative";
+
+                // Toolbar with download button
+                const toolbar = document.createElement("div");
+                toolbar.style.display = "flex";
+                toolbar.style.justifyContent = "flex-end";
+                toolbar.style.gap = "10px";
+                toolbar.style.marginBottom = "5px";
+
+                const downloadBtn = document.createElement("button");
+                downloadBtn.textContent = "Download";
+                downloadBtn.style.cursor = "pointer";
+                downloadBtn.addEventListener("click", () => {
+                    const link = document.createElement("a");
+                    link.href = absolutePath;
+                    link.download = filename;
+                    link.click();
+                });
+                toolbar.appendChild(downloadBtn);
+
+                const contentDiv = document.createElement("div");
+                contentDiv.style.flex = "1";
+                contentDiv.style.overflow = "auto";
+                contentDiv.style.display = "flex";
+                contentDiv.style.justifyContent = "center";
+                contentDiv.style.alignItems = "center";
+
+                const ext = filename.split('.').pop().toLowerCase();
+                if (ext === "pdf") {
+                    const iframe = document.createElement("iframe");
+                    iframe.src = absolutePath;
+                    iframe.style.width = "100%";
+                    iframe.style.height = "100%";
+                    contentDiv.appendChild(iframe);
+                } else if (["png","jpg","jpeg","gif"].includes(ext)) {
+                    const img = document.createElement("img");
+                    img.src = absolutePath;
+                    img.style.maxWidth = "100%";
+                    img.style.maxHeight = "100%";
+                    contentDiv.appendChild(img);
+                } else {
+                    contentDiv.textContent = "Cannot preview this file type.";
+                }
+
+                const closeBtn = document.createElement("button");
+                closeBtn.textContent = "Close";
+                closeBtn.style.position = "absolute";
+                closeBtn.style.top = "10px";
+                closeBtn.style.right = "10px";
+                closeBtn.style.padding = "6px 12px";
+                closeBtn.style.cursor = "pointer";
+                closeBtn.addEventListener("click", () => overlay.remove());
+
+                viewer.appendChild(toolbar);
+                viewer.appendChild(contentDiv);
+                viewer.appendChild(closeBtn);
+                overlay.appendChild(viewer);
+                document.body.appendChild(overlay);
+            });
+
+            filesDiv.appendChild(fileButton);
+        });
+
+        modal.querySelector(".ModalContent").appendChild(filesDiv);
+    }
 
     document.body.appendChild(modal);
 
     modal.querySelector(".ModalClose").onclick = () => modal.remove();
-    modal.onclick = e => {
-        if (e.target === modal) modal.remove();
-    };
+    modal.onclick = e => { if (e.target === modal) modal.remove(); };
 }
+
 
 if (dashboard) dashboard.addEventListener("click", loadDashboard);
 if (history) history.addEventListener("click", loadHistory);

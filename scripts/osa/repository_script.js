@@ -32,8 +32,9 @@ async function loadItems() {
         .join(" ");
 
       row.dataset.content = contentText.toLowerCase();
-      row.dataset.filename = (reqData.filename || "").toLowerCase();
-      row.dataset.filepath = (reqData.file_path || "").toLowerCase();
+      row.dataset.filenames = JSON.stringify(reqData.filenames || []);
+      row.dataset.filepaths = JSON.stringify(reqData.filepaths || []);
+
 
       const nameCell = document.createElement("td");
       nameCell.textContent = reqType.replace(/_/g, " ");
@@ -99,16 +100,17 @@ function filterResults() {
     const dateVal = dateText !== "N/A" ? new Date(dateText) : null;
 
    const content = item.dataset.content || "";
-    const filename = item.dataset.filename || "";
-    const filepath = item.dataset.filepath || "";
+    const filenames = JSON.parse(item.dataset.filenames || "[]").map(f => f.toLowerCase());
+    const filepaths = JSON.parse(item.dataset.filepaths || "[]").map(f => f.toLowerCase());
 
     const matchesSearch =
   name.includes(searchQuery) ||
   org.includes(searchQuery) ||
   tagText.includes(searchQuery) ||
   content.includes(searchQuery) ||
-  filename.includes(searchQuery) ||
-  filepath.includes(searchQuery);
+  filenames.some(f => f.includes(searchQuery)) ||
+  filepaths.some(f => f.includes(searchQuery));
+
 
 
     const matchesLocation =
@@ -155,98 +157,104 @@ function showFormDetails(org, reqType, reqData) {
     });
   }
 
-  if (reqData.file_path) {
+  if (reqData.filepaths && reqData.filepaths.length) {
   const filesDiv = document.createElement("div");
-  filesDiv.innerHTML = `<strong>Uploaded File:</strong>`; 
+  filesDiv.innerHTML = `<strong>Uploaded Files:</strong>`;
 
-  const fileButton = document.createElement("button");
-  fileButton.textContent = reqData.filename || "View File";
-  fileButton.style.display = "block";
-  fileButton.style.marginTop = "4px";
-  fileButton.style.padding = "6px 12px";
-  fileButton.style.cursor = "pointer";
+  reqData.filepaths.forEach((filePath, i) => {
+    const filename = reqData.filenames[i] || "View File";
+    const path = filePath.replace(/^\.\/uploads/, `${PHP_HOST}/IT312-Mid-FinProject/uploads`);
 
-  fileButton.addEventListener("click", () => {
-    const overlay = document.createElement("div");
-    overlay.style.position = "fixed";
-    overlay.style.top = 0;
-    overlay.style.left = 0;
-    overlay.style.width = "100%";
-    overlay.style.height = "100%";
-    overlay.style.background = "rgba(0,0,0,0.8)";
-    overlay.style.display = "flex";
-    overlay.style.justifyContent = "center";
-    overlay.style.alignItems = "center";
-    overlay.style.zIndex = 3000;
+    const fileButton = document.createElement("button");
+    fileButton.textContent = filename;
+    fileButton.style.display = "block";
+    fileButton.style.marginTop = "4px";
+    fileButton.style.padding = "6px 12px";
+    fileButton.style.cursor = "pointer";
 
-    const viewer = document.createElement("div");
-    viewer.style.background = "#fff";
-    viewer.style.padding = "10px";
-    viewer.style.borderRadius = "10px";
-    viewer.style.width = "90%";
-    viewer.style.height = "90%";
-    viewer.style.display = "flex";
-    viewer.style.flexDirection = "column";
-    viewer.style.position = "relative";
+    fileButton.addEventListener("click", () => {
+      const overlay = document.createElement("div");
+      overlay.style.position = "fixed";
+      overlay.style.top = 0;
+      overlay.style.left = 0;
+      overlay.style.width = "100%";
+      overlay.style.height = "100%";
+      overlay.style.background = "rgba(0,0,0,0.8)";
+      overlay.style.display = "flex";
+      overlay.style.justifyContent = "center";
+      overlay.style.alignItems = "center";
+      overlay.style.zIndex = 3000;
 
-    const toolbar = document.createElement("div");
-    toolbar.style.display = "flex";
-    toolbar.style.justifyContent = "flex-end";
-    toolbar.style.gap = "10px";
-    toolbar.style.marginBottom = "5px";
+      const viewer = document.createElement("div");
+      viewer.style.background = "#fff";
+      viewer.style.padding = "10px";
+      viewer.style.borderRadius = "10px";
+      viewer.style.width = "90%";
+      viewer.style.height = "90%";
+      viewer.style.display = "flex";
+      viewer.style.flexDirection = "column";
+      viewer.style.position = "relative";
 
-    const downloadBtn = document.createElement("button");
-    downloadBtn.textContent = "Download";
-    downloadBtn.style.cursor = "pointer";
-    downloadBtn.addEventListener("click", () => {
-      const link = document.createElement("a");
-      link.href = reqData.file_path;
-      link.download = reqData.filename;
-      link.click();
+      const toolbar = document.createElement("div");
+      toolbar.style.display = "flex";
+      toolbar.style.justifyContent = "flex-end";
+      toolbar.style.gap = "10px";
+      toolbar.style.marginBottom = "5px";
+
+      const downloadBtn = document.createElement("button");
+      downloadBtn.textContent = "Download";
+      downloadBtn.style.cursor = "pointer";
+      downloadBtn.addEventListener("click", () => {
+        const link = document.createElement("a");
+        link.href = path;
+        link.download = filename;
+        link.click();
+      });
+      toolbar.appendChild(downloadBtn);
+
+      const contentDiv = document.createElement("div");
+      contentDiv.style.flex = "1";
+      contentDiv.style.overflow = "auto";
+      contentDiv.style.display = "flex";
+      contentDiv.style.justifyContent = "center";
+      contentDiv.style.alignItems = "center";
+
+      const ext = filename.split('.').pop().toLowerCase();
+      if (ext === "pdf") {
+        const iframe = document.createElement("iframe");
+        iframe.src = path;
+        iframe.style.width = "100%";
+        iframe.style.height = "100%";
+        contentDiv.appendChild(iframe);
+      } else if (["png","jpg","jpeg","gif"].includes(ext)) {
+        const img = document.createElement("img");
+        img.src = path;
+        img.style.maxWidth = "100%";
+        img.style.maxHeight = "100%";
+        contentDiv.appendChild(img);
+      } else {
+        contentDiv.textContent = "Cannot preview this file type.";
+      }
+
+      const closeBtn = document.createElement("button");
+      closeBtn.textContent = "Close";
+      closeBtn.style.position = "absolute";
+      closeBtn.style.top = "10px";
+      closeBtn.style.right = "10px";
+      closeBtn.style.padding = "6px 12px";
+      closeBtn.style.cursor = "pointer";
+      closeBtn.addEventListener("click", () => overlay.remove());
+
+      viewer.appendChild(toolbar);
+      viewer.appendChild(contentDiv);
+      viewer.appendChild(closeBtn);
+      overlay.appendChild(viewer);
+      document.body.appendChild(overlay);
     });
-    toolbar.appendChild(downloadBtn);
 
-    const contentDiv = document.createElement("div");
-    contentDiv.style.flex = "1";
-    contentDiv.style.overflow = "auto";
-    contentDiv.style.display = "flex";
-    contentDiv.style.justifyContent = "center";
-    contentDiv.style.alignItems = "center";
-
-    const ext = reqData.filename?.split('.').pop().toLowerCase();
-    if (ext === "pdf") {
-      const iframe = document.createElement("iframe");
-      iframe.src = reqData.file_path;
-      iframe.style.width = "100%";
-      iframe.style.height = "100%";
-      contentDiv.appendChild(iframe);
-    } else if (["png","jpg","jpeg","gif"].includes(ext)) {
-      const img = document.createElement("img");
-      img.src = reqData.file_path;
-      img.style.maxWidth = "100%";
-      img.style.maxHeight = "100%";
-      contentDiv.appendChild(img);
-    } else {
-      contentDiv.textContent = "Cannot preview this file type.";
-    }
-
-    const closeBtn = document.createElement("button");
-    closeBtn.textContent = "Close";
-    closeBtn.style.position = "absolute";
-    closeBtn.style.top = "10px";
-    closeBtn.style.right = "10px";
-    closeBtn.style.padding = "6px 12px";
-    closeBtn.style.cursor = "pointer";
-    closeBtn.addEventListener("click", () => overlay.remove());
-
-    viewer.appendChild(toolbar);
-    viewer.appendChild(contentDiv);
-    viewer.appendChild(closeBtn);
-    overlay.appendChild(viewer);
-    document.body.appendChild(overlay);
+    filesDiv.appendChild(fileButton);
   });
 
-  filesDiv.appendChild(fileButton);
   reqDiv.appendChild(filesDiv);
 }
 
