@@ -56,8 +56,7 @@ loginForm.addEventListener('submit', async (e) => {
 
         } else {
             // Non-OSA users redirect
-            console.log(`${HOST}${auth.redirect}`);
-            window.location.href = redirectURL;
+            window.location.href = `${HOST}${auth.redirect}`;
         }
 
         localStorage.setItem("username", auth.username);

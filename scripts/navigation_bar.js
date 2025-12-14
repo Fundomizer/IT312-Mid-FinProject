@@ -48,7 +48,8 @@ logoutButton.addEventListener("click", async () => {
 
       window.location.href = `${HOST}:${PORT}`;
     } else {
-      const nodeLogout = await fetch(`${HOST}:${PORT}/api/auth/logout`, { // TODO fix up HOST later on
+      // FOR NODE SERVER
+      const nodeLogout = await fetch(`/api/auth/logout`, {
         method: "POST",
         credentials: "include"
       });
