@@ -158,41 +158,43 @@ exports.deleteOrganization = async (req, res) => {
 exports.getRequirements = async (req, res) => {
     try {
 
-        console.log("Received requirements: ", req);
+        console.log(`Org ${req.params.org_name} requesting requirements`);
 
-        const orgs = db.collection("student_organization");
-        const { name } = req.params;
+        const orgsForms = db.collection("forms");
+        const { org_name } = req.params;
 
-        const org = await orgs.findOne(
-            { org_name: name },
-            { projection: { _id: 0, requirements: 1 } }
-        );
+        const requirements = await orgsForms.find(
+            { assigned_to: { $in: [org_name, "all"] } }
+        ).toArray();
 
-        if (!org) {
+        console.log(`Requirements ${requirements}`);
+
+        if (!requirements) {
             return res.status(404).json({
                 success: false,
-                message: "Organization not found"
+                message: `Unknown organization ${org_name}`
             });
         }
 
         res.json({
             success: true,
-            requirements: org.requirements
+            requirements: requirements
         });
 
     } catch (err) {
-        console.error("Error fetching requirements:", err);
         res.status(500).json({ success: false, message: "Server error" });
     }
 };
 
 exports.fillRequirements = async (req, res) => {
+    console.log("Filling out the requirements");
+
     try {
         const orgName = req.body.org_name;          // from FormData
         const requirementKey = req.params.requirement; // you said it's now in body
 
         console.log("Received: ", req.body);
-        
+
         if (!orgName || !requirementKey) {
             return res.status(400).json({
                 success: false,
@@ -289,4 +291,3 @@ exports.fillRequirements = async (req, res) => {
         });
     }
 };
-
