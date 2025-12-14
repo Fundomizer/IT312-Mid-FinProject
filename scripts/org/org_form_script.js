@@ -53,10 +53,15 @@ async function createForms() {
 //---------------------------------------------------------------------------
 // Transform values
 function requirementsToArray(requirements) {
-  return Object.entries(requirements).map(([key, value]) => ({
+  const result = Object.entries(requirements).map(([key, value]) => ({
     requirement_name: key,
     ...value
   }));
+  
+  // Debug: Log the transformed array
+  console.log("Requirements Array:", result);
+  
+  return result;
 }
 
 function formatTitle(text) {
@@ -82,7 +87,7 @@ function renderForms(forms) {
 }
 
 function createFormCard(form) {
-  const { requirement_name, description, fields, tags, last_updated, form_id } = form;
+  const { requirement_name, description, fields, tags, last_updated, _id } = form;
 
   return `
     <div class="SubCard Form">
@@ -110,7 +115,7 @@ function createFormCard(form) {
       </div>
       
       <div>
-        <button class="StyledButton" data-form-id="${form_id}" data-requirement-name="${requirement_name}">
+        <button class="StyledButton" data-form-id="${_id}" data-requirement-name="${requirement_name}">
           <span>
             <img src="../../assets/images/icons/forms_icon.png" alt="Form icon">
           </span>
@@ -132,8 +137,10 @@ function populateFormPopup(formData) {
     return;
   }
 
-  popup.dataset.formId = formData.form_id;
-  popup.dataset.requirementName = formData.requirement_name;
+  // Store both _id and requirement_name in popup dataset
+  // Use data-form-id and data-requirement-name as attributes
+  popup.setAttribute('data-form-id', formData._id);
+  popup.setAttribute('data-requirement-name', formData.requirement_name);
 
   formElement.innerHTML = '';
 
@@ -259,17 +266,20 @@ async function handleFormSubmit(event) {
   event.preventDefault();
 
   const popup = document.querySelector(".PopupForm");
+  const id = popup.dataset.formId;
   const requirementName = popup.dataset.requirementName;
 
-  if (!requirementName) {
-    console.error("No requirement name found");
+  if (!id || !requirementName) {
+    console.error("No ID or requirement name found", { id, requirementName });
+    alert(`Missing data - ID: ${id}, Requirement: ${requirementName}`);
     return;
   }
 
   const formData = collectFormData(popup);
 
   try {
-    const response = await submitForm(requirementName, formData);
+    console.log("It stops here"); // Here
+    const response = await submitForm(id, requirementName, formData);
     handleSubmitResponse(response, popup);
   } catch (error) {
     console.error("Form submission error:", error);
@@ -298,9 +308,9 @@ function collectFormData(popup) {
   return formData;
 }
 
-async function submitForm(requirementName, formData) {
+async function submitForm(id, requirementName, formData) {
   const response = await fetch(
-    `/api/orgs/requirements/${encodeURIComponent(requirementName)}`,
+    `/api/orgs/requirements/${encodeURIComponent(id)}/${encodeURIComponent(requirementName)}`,
     {
       method: "PUT",
       body: formData,
@@ -324,7 +334,7 @@ function handleSubmitResponse(result, popup) {
 
 //---------------------------------------------------------------------------
 // Popup Functions
-function openFormPopup(formId) {
+function openFormPopup(requirementName) {
   const popup = document.querySelector(".PopupForm");
   const overlay = document.getElementById("PopupOverlay");
 
@@ -511,21 +521,21 @@ function handleDocumentChange(event) {
 
 function handleFormButtonClick(event) {
   const button = event.target.closest(".StyledButton");
-  const formId = button.dataset.formId;
   const requirementName = button.dataset.requirementName;
 
-  if (!formId || !objForm.formModule) {
+  if (!requirementName || !objForm.formModule) {
     console.error("Form data or module not available");
     return;
   }
 
-  const formData = objForm.formModule.getFormById(formId, requirementName);
+  // Find form by requirement_name only
+  const formData = objForm.formModule.getFormByName(requirementName);
 
   if (formData) {
     objForm.formModule.populatePopupForm(formData);
-    openFormPopup(formData.form_id);
+    openFormPopup(requirementName);
   } else {
-    console.error("Form not found:", formId);
+    console.error("Form not found:", requirementName);
   }
 }
 
@@ -536,10 +546,8 @@ function getFormFunctions() {
     populatePopupForm: populateFormPopup,
     requirementsArray: objForm.requirements,
     formatTitle: formatTitle,
-    getFormById: (formId, requirementName) => {
-      return objForm.requirements.find(f =>
-        f.form_id === formId && f.requirement_name === requirementName
-      );
+    getFormByName: (requirementName) => {
+      return objForm.requirements.find(f => f.requirement_name === requirementName);
     }
   };
 }
