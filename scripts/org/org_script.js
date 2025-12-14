@@ -35,7 +35,7 @@ async function loadDashboard() {
 
     totalSubs.textContent = Object.keys(totalSubmissions.history.requirements).length;
     totalAssForms.textContent = forms.requirements.length;
-    document.getElementById('OrgName').innerText = await profile.name
+    document.getElementById('OrgName').innerHTML = profile.user.organization
 }
 
 
@@ -152,5 +152,12 @@ async function loadHistory() {
 if (dashboard) dashboard.addEventListener('click', loadDashboard)
 if (history) history.addEventListener('click', loadHistory)
 
+
+async function setTexts() {
+    const profile = await getProfile()
+    document.getElementById('UsernameLabel').innerHTML = profile.user.email
+}
+
+setTexts()
 
 loadDashboard() // Load dashboard by default

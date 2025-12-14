@@ -16,7 +16,7 @@ exports.login = async (req, res) => {
         const user = await users.findOne({ email });
 
         console.log(`${user} has logged in`);
-        
+
 
         if (!user || user.password !== password) {
             return res.status(400).json({
@@ -65,11 +65,11 @@ exports.login = async (req, res) => {
 }
 
 exports.getProfile = (req, res) => {
-    
+
     if (!req.session.user) {
         return res.status(401).json({ success: false, message: "Not logged in" });
     }
-    
+
     console.log(`Sent profile to ${req.session.user.name}`);
     res.json({
         success: true,
@@ -78,7 +78,7 @@ exports.getProfile = (req, res) => {
 };
 
 exports.logout = (req, res) => {
-console.log(`${req.session.user.name} logged out`);
+    console.log(`${req.session.user.name} logged out`);
     req.session.destroy(err => {
         if (err) {
             return res.status(500).json({ message: "Logout failed", success: false });
