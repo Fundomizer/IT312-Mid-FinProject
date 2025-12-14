@@ -16,7 +16,10 @@ exports.login = async (req, res) => {
         const user = await users.findOne({ email });
 
         if (!user || user.password !== password) {
-            return res.status(400).json({ message: "Invalid email or password", status: false });
+            return res.status(400).json({
+                message: "Invalid email or password",
+                status: false
+            });
         }
 
         // If user already has a session, destroy it
@@ -24,9 +27,14 @@ exports.login = async (req, res) => {
             req.session.destroy(() => { });
         }
 
-        // Create new session
-        req.session.userId = user._id.toString();
-        req.session.role = user.role;
+        // New session
+        req.session.user = {
+            id: user._id.toString(),
+            role: user.role.toLowerCase(),
+            name: user.name,
+            organization: user.organization || null
+        }
+
 
         let role = user.role.toLowerCase()
         let redirect = ""
@@ -43,11 +51,9 @@ exports.login = async (req, res) => {
         res.json({
             message: "Login successful",
             success: true,
-            role: user.role.toLowerCase(),
             redirect: redirect,
-            username: user.name,
-            ...(user.organization && { organization: user.organization })
         });
+
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "Server error", status: false });
