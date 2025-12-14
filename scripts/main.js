@@ -59,9 +59,6 @@ loginForm.addEventListener('submit', async (e) => {
             window.location.href = `${HOST}${auth.redirect}`;
         }
 
-        localStorage.setItem("username", auth.username);
-        if (auth.organization) localStorage.setItem("org_name", auth.organization);
-
     } catch (err) {
         console.error("Login fetch error:", err);
         alert("Login has hit an unexpected error. Check console for details.");

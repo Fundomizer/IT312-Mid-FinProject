@@ -13,7 +13,7 @@ exports.getUsers = async (req, res) => {
     try {
         const users = db.collection("users");
         const data = await users.find().toArray();
-
+        touchSession(req)
         res.json({ success: true, users: data });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
@@ -38,6 +38,7 @@ exports.getLogs = async (req, res) => {
         const logs = db.collection("log");
         const data = await logs.find().toArray();
 
+        touchSession(req)
         res.json({ success: true, logs: data });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
@@ -55,11 +56,11 @@ exports.createUser = async (req, res) => {
         const result = await db.collection("users").insertOne(newUser);
 
         if (result.acknowledged) {
+            touchSession(req)
             return res.status(201).json({ message: "User successfully created", status: true });
         }
 
         res.status(500).json({ message: "Could not create user", status: false });
-
 
     } catch (err) {
         if (err.code === 11000) {
@@ -141,6 +142,7 @@ exports.deleteUser = async (req, res) => {
         });
 
         if (result.deletedCount > 0) {
+            touchSession(req)
             res.json({ message: "User deleted successfully", status: true });
         } else {
             res.status(404).json({ message: "User not found", status: false });
@@ -187,6 +189,7 @@ exports.createOrganization = async (req, res) => {
 
         const result = await orgs.insertOne(newOrg);
 
+        touchSession(req)
         res.json({
             message: "Organization created successfully",
             success: true,
@@ -262,6 +265,7 @@ exports.updateOrganization = async (req, res) => {
             { returnDocument: "after" }
         );
 
+        touchSession(req)
         res.json({
             success: true,
             message: "Organization updated successfully",
@@ -291,6 +295,7 @@ exports.deleteOrganization = async (req, res) => {
             return res.status(404).json({ message: "Organization not found" });
         }
 
+        touchSession(req)
         res.json({
             message: "Organization deleted successfully",
             success: true

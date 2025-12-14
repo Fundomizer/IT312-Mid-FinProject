@@ -29,6 +29,8 @@ exports.getRequirements = async (req, res) => {
             });
         }
 
+        touchSession(req)
+
         res.json({
             success: true,
             requirements: requirements
@@ -65,6 +67,7 @@ exports.getHistory = async (req, res) => {
         });
     }
 
+    touchSession(req)
     res.json({
         success: true,
         history: history
@@ -165,6 +168,7 @@ exports.fillRequirements = async (req, res) => {
             }
         );
 
+        touchSession(req)
         res.json({
             success: true,
             message: "Requirement updated successfully"

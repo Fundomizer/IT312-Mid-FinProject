@@ -65,12 +65,12 @@ exports.login = async (req, res) => {
 }
 
 exports.getProfile = (req, res) => {
-    console.log(`Sent profile to ${req.session.user.name}`);
     
     if (!req.session.user) {
         return res.status(401).json({ success: false, message: "Not logged in" });
     }
-
+    
+    console.log(`Sent profile to ${req.session.user.name}`);
     res.json({
         success: true,
         user: req.session.user

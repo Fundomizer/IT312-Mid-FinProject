@@ -26,5 +26,6 @@ exports.sanitizeObject = (obj) => {
 exports.touchSession = (req) => {
     if (req.session) {
         req.session._lastSeen = Date.now(); // write something to mark activity
+        req.session.save();
     }
 }
