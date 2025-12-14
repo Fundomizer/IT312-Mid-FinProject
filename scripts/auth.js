@@ -21,6 +21,7 @@ async function checkSession() {
     }
 }
 
+// Periodically check if the session is still valid
 checkSession();
 let seconds = 60;
 setInterval(checkSession, 1000 * seconds); // This in miliseconds
