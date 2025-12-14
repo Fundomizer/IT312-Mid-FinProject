@@ -11,6 +11,10 @@ const router = express.Router();
 router.get("/rsc/forms/:org_name", requireRole('student organization user'), getRequirements);
 router.get("/rsc/history/:org_name", requireRole('student organization user'), getHistory);
 //
-router.put("/requirements/:requirement", requireRole('student organization user'), fillRequirements)
+router.put(
+    "/requirements/:org_name/:requirement",
+    requireRole("student organization user"),
+    fillRequirements
+);
 
 module.exports = router

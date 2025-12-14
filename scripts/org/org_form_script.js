@@ -26,6 +26,7 @@ async function createForms() {
   loadPage('org', 'assigned_form_page.html');
 
   let profile = await getProfile()
+  objForm.orgName = profile.user.organization
   console.log(profile);
 
   const response = await await fetch(`/api/orgs/rsc/forms/${profile.user.organization}`, {
@@ -57,10 +58,10 @@ function requirementsToArray(requirements) {
     requirement_name: key,
     ...value
   }));
-  
+
   // Debug: Log the transformed array
   console.log("Requirements Array:", result);
-  
+
   return result;
 }
 
@@ -266,12 +267,11 @@ async function handleFormSubmit(event) {
   event.preventDefault();
 
   const popup = document.querySelector(".PopupForm");
-  const id = popup.dataset.formId;
   const requirementName = popup.dataset.requirementName;
 
-  if (!id || !requirementName) {
-    console.error("No ID or requirement name found", { id, requirementName });
-    alert(`Missing data - ID: ${id}, Requirement: ${requirementName}`);
+  if (!objForm.orgName || !requirementName) {
+    console.error("Missing org name or requirement", { org: objForm.orgName, requirementName });
+    alert("Missing organization or requirement name.");
     return;
   }
 
@@ -279,7 +279,7 @@ async function handleFormSubmit(event) {
 
   try {
     console.log("It stops here"); // Here
-    const response = await submitForm(id, requirementName, formData);
+    const response = await submitForm(objForm.orgName, requirementName, formData);
     handleSubmitResponse(response, popup);
   } catch (error) {
     console.error("Form submission error:", error);
@@ -290,8 +290,6 @@ async function handleFormSubmit(event) {
 function collectFormData(popup) {
   const formElement = popup.querySelector(".Form");
   const formData = new FormData();
-
-  formData.append('org_name', objForm.orgName);
 
   // Collect text inputs
   formElement.querySelectorAll("input[name^='field_'], textarea[name^='field_']")
@@ -308,9 +306,9 @@ function collectFormData(popup) {
   return formData;
 }
 
-async function submitForm(id, requirementName, formData) {
+async function submitForm(orgName, requirementName, formData) {
   const response = await fetch(
-    `/api/orgs/requirements/${encodeURIComponent(id)}/${encodeURIComponent(requirementName)}`,
+    `/api/orgs/requirements/${encodeURIComponent(orgName)}/${encodeURIComponent(requirementName)}`,
     {
       method: "PUT",
       body: formData,

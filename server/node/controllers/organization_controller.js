@@ -79,12 +79,12 @@ exports.fillRequirements = async (req, res) => {
     console.log("Filling out the requirements");
 
     try {
-        const orgName = req.body.org_name;          // from FormData
-        const requirementKey = req.params.requirement; // you said it's now in body
+        const { org_name, requirement } = req.params;
 
-        console.log("Received: ", req.body);
+        console.log("Received the following form: ", req.body);
+        console.log(`Org name ${org_name}, requirement ${requirement}`);
 
-        if (!orgName || !requirementKey) {
+        if (!org_name || !requirement) {
             return res.status(400).json({
                 success: false,
                 message: "Missing org_name or requirement"
@@ -94,16 +94,29 @@ exports.fillRequirements = async (req, res) => {
         const orgs = db.collection("student_organization");
 
         // 1. Load existing organization and requirement
-        const org = await orgs.findOne({ org_name: orgName });
+        const org = await orgs.findOne(
+            {
+                $or: [
+                    { org_name: org_name },
+                    { short_name: org_name }
+                ]
+            }
+        );
 
-        if (!org || !org.requirements || !org.requirements[requirementKey]) {
+        const internalKey = requirement
+            .trim()
+            .toLowerCase()
+            .replace(/\s+/g, "_") + "_plan";
+        console.log(`Internal key \"${internalKey}\"`);
+
+        if (!org || !org.requirements || !org.requirements[internalKey]) {
             return res.status(404).json({
                 success: false,
                 message: "Organization or requirement not found"
             });
         }
 
-        const existingFields = org.requirements[requirementKey].fields || [];
+        const existingFields = org.requirements[internalKey].fields || [];
 
         // 2. Build partial updates by index from body + files
         const updatedFields = []; // holds only changes
@@ -158,11 +171,16 @@ exports.fillRequirements = async (req, res) => {
 
         // 4. Save merged fields back to MongoDB
         await orgs.updateOne(
-            { org_name: orgName },
+            {
+                $or: [
+                    { org_name: org_name },
+                    { short_name: org_name }
+                ]
+            },
             {
                 $set: {
-                    [`requirements.${requirementKey}.fields`]: mergedFields,
-                    [`requirements.${requirementKey}.last_updated`]:
+                    [`requirements.${internalKey}.fields`]: mergedFields,
+                    [`requirements.${internalKey}.last_updated`]:
                         new Date().toISOString().split("T")[0]
                 }
             }
@@ -177,7 +195,7 @@ exports.fillRequirements = async (req, res) => {
     } catch (err) {
         res.status(500).json({
             success: false,
-            message: "Server error"
+            message: `Server error ${err}`
         });
     }
 };
