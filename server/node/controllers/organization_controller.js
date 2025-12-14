@@ -121,32 +121,52 @@ exports.fillRequirements = async (req, res) => {
             org.requirements = {};
         }
 
-        // Auto-create requirement if missing
+        // Get the form template from forms collection
+        const formsCollection = db.collection("forms");
+        const formTemplate = await formsCollection.findOne({
+            requirement_name: requirement
+        });
+
+        if (!formTemplate) {
+            return res.status(404).json({
+                success: false,
+                message: "Form template not found"
+            });
+        }
+
+        // Auto-create or get existing requirement
         if (!org.requirements[internalKey]) {
             org.requirements[internalKey] = {
-                form_id: null,
-                tags: [],
+                form_id: formTemplate._id,
+                tags: formTemplate.tags || [],
                 last_updated: null,
-                fields: []
+                fields: formTemplate.fields.map(field => ({
+                    question: field.question,
+                    field_type: field.field_type,
+                    required: field.required,
+                    options: field.options || [],
+                    content: ""
+                }))
             };
         }
 
         const existingFields = org.requirements[internalKey].fields || [];
 
-        // 2. Build fields array from form data
-        const updatedFields = [];
+        // 2. Build fields array from form data - preserve all original field properties
+        const updatedFields = existingFields.map((field, index) => {
+            // Start with the original field structure from the form template
+            const templateField = formTemplate.fields[index] || {};
 
-        // Process text content (field_0, field_1, ...)
-        Object.keys(req.body).forEach(key => {
-            if (key.startsWith("field_")) {
-                const index = Number(key.split("_")[1]);
+            // Get content from request body if provided
+            const content = req.body[`field_${index}`] || field.content || "";
 
-                // Preserve existing field structure or create new
-                updatedFields[index] = {
-                    ...(existingFields[index] || {}),
-                    content: req.body[key]
-                };
-            }
+            return {
+                question: templateField.question || field.question,
+                field_type: templateField.field_type || field.field_type,
+                required: templateField.required !== undefined ? templateField.required : field.required,
+                options: templateField.options || field.options || [],
+                content: content
+            };
         });
 
         // 3. Handle supporting documents (files at requirement level)
@@ -163,9 +183,20 @@ exports.fillRequirements = async (req, res) => {
                 const files = Array.isArray(fileOrArray) ? fileOrArray : [fileOrArray];
 
                 files.forEach(file => {
-                    const savePath = `./uploads/${Date.now()}_${file.name}`;
+                    // Create timestamp in YYYY-MM-DD_HH:MM format
+                    const now = new Date();
+                    const dateStr = now.toISOString().split('T')[0]; // YYYY-MM-DD
+                    const timeStr = now.toTimeString().split(' ')[0].substring(0, 5); // HH:MM
 
-                    console.log(`Attempting to save file: ${file.name} to ${savePath}`);
+                    // Get file extension
+                    const fileExt = file.name.substring(file.name.lastIndexOf('.'));
+                    const fileNameWithoutExt = file.name.substring(0, file.name.lastIndexOf('.'));
+
+                    // Format: <YYYY-MM-DD>_<HH:MM>-<org-name>-<file name>
+                    const newFileName = `${dateStr}_${timeStr}-${org_name}-${fileNameWithoutExt}${fileExt}`;
+                    const savePath = `./uploads/${newFileName}`;
+
+                    console.log(`Attempting to save file: ${file.name} as ${newFileName} to ${savePath}`);
 
                     file.mv(savePath, (err) => {
                         if (err) {
@@ -177,9 +208,11 @@ exports.fillRequirements = async (req, res) => {
 
                     uploadedFiles.push({
                         filename: file.name,
-                        saved_as: savePath,
+                        saved_as: newFileName,
+                        filepath: savePath,
                         mimetype: file.mimetype,
-                        size: file.size
+                        size: file.size,
+                        uploaded_at: now.toISOString()
                     });
                 });
             });
@@ -190,17 +223,17 @@ exports.fillRequirements = async (req, res) => {
         // 4. Prepare update object
         const updateObject = {
             [`requirements.${internalKey}.fields`]: updatedFields,
-            [`requirements.${internalKey}.last_updated`]: new Date().toISOString().split("T")[0]
+            [`requirements.${internalKey}.last_updated`]: new Date().toISOString().split("T")[0],
+            [`requirements.${internalKey}.tags`]: formTemplate.tags || [],
+            [`requirements.${internalKey}.form_id`]: formTemplate._id
         };
 
         // Add files if any were uploaded
         if (uploadedFiles.length > 0) {
-            // If you want a single file (like your example):
-            updateObject[`requirements.${internalKey}.filename`] = uploadedFiles[0].filename;
-            updateObject[`requirements.${internalKey}.file_path`] = uploadedFiles[0].saved_as;
-
-            // Or if you want multiple files:
-            // updateObject[`requirements.${internalKey}.files`] = uploadedFiles;
+            // Store as arrays for multiple files
+            updateObject[`requirements.${internalKey}.filenames`] = uploadedFiles.map(f => f.saved_as);
+            updateObject[`requirements.${internalKey}.filepaths`] = uploadedFiles.map(f => f.filepath);
+            updateObject[`requirements.${internalKey}.files`] = uploadedFiles; // Full file metadata
         }
 
         // 5. Update MongoDB

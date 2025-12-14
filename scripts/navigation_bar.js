@@ -49,5 +49,3 @@ if (logoutButton) logoutButton.addEventListener("click", () => {
       alert("Unexpected logout error");
     });
 });
-
-usernameLabel.innerText = localStorage.getItem("username") || '';
