@@ -21,48 +21,49 @@ async function loadItems() {
     const tbody = document.querySelector("#submissions-table tbody");
     tbody.innerHTML = "";
 
-    data.forEach(org => {
-      if (org.requirements) {
-        for (const [reqType, reqData] of Object.entries(org.requirements)) {
-        const row = document.createElement("tr");
-        row.setAttribute("data-location", org.short_name || "");
+   data.forEach(org => {
+  if (org.requirements) {
+    for (const [reqType, reqData] of Object.entries(org.requirements)) {
+      const row = document.createElement("tr");
+      row.setAttribute("data-location", org.short_name || "");
 
-        const contentText = (reqData.fields || [])
-          .map(f => `${f.question} ${f.content || ""}`)
-          .join(" ");
+      const contentText = (reqData.fields || [])
+        .map(f => `${f.question} ${f.content || ""}`)
+        .join(" ");
 
-        row.dataset.content = contentText.toLowerCase();
-        row.dataset.filename = (reqData.filename || "").toLowerCase();
+      row.dataset.content = contentText.toLowerCase();
+      row.dataset.filename = (reqData.filename || "").toLowerCase();
+      row.dataset.filepath = (reqData.file_path || "").toLowerCase();
 
-          const nameCell = document.createElement("td");
-          nameCell.textContent = reqType.replace(/_/g, " ");
-          row.appendChild(nameCell);
+      const nameCell = document.createElement("td");
+      nameCell.textContent = reqType.replace(/_/g, " ");
+      row.appendChild(nameCell);
 
-          const tagCell = document.createElement("td");
-          tagCell.textContent = (reqData.tags || []).join(", ");
-          row.appendChild(tagCell);
+      const tagCell = document.createElement("td");
+      tagCell.textContent = (reqData.tags || []).join(", ");
+      row.appendChild(tagCell);
 
-          const orgCell = document.createElement("td");
-          orgCell.textContent = org.org_name;
-          row.appendChild(orgCell);
+      const orgCell = document.createElement("td");
+      orgCell.textContent = org.org_name;
+      row.appendChild(orgCell);
 
-          const shortCell = document.createElement("td");
-          shortCell.textContent = org.short_name;
-          row.appendChild(shortCell);
+      const shortCell = document.createElement("td");
+      shortCell.textContent = org.short_name;
+      row.appendChild(shortCell);
 
-          const dateCell = document.createElement("td");
-          dateCell.textContent = reqData.last_updated || "N/A";
-          row.appendChild(dateCell);
+      const dateCell = document.createElement("td");
+      dateCell.textContent = reqData.last_updated || "N/A";
+      row.appendChild(dateCell);
 
-          tbody.appendChild(row);
+      tbody.appendChild(row);
 
-          row.addEventListener("click", () => {
-              checkOSA();
-            showFormDetails(org, reqType, reqData);
-          });
-        }
-      }
-    });
+      row.addEventListener("click", () => {
+        checkOSA();
+        showFormDetails(org, reqType, reqData);
+      });
+    }
+  }
+});
 
     allItems = Array.from(document.querySelectorAll("#submissions-table tbody tr"));
 
@@ -97,15 +98,17 @@ function filterResults() {
     const dateText = cells[4].textContent;
     const dateVal = dateText !== "N/A" ? new Date(dateText) : null;
 
-    const content = item.dataset.content || "";
-      const filename = item.dataset.filename || "";
+   const content = item.dataset.content || "";
+    const filename = item.dataset.filename || "";
+    const filepath = item.dataset.filepath || "";
 
-      const matchesSearch =
-        name.includes(searchQuery) ||
-        org.includes(searchQuery) ||
-        tagText.includes(searchQuery) ||
-        content.includes(searchQuery) ||
-        filename.includes(searchQuery);
+    const matchesSearch =
+  name.includes(searchQuery) ||
+  org.includes(searchQuery) ||
+  tagText.includes(searchQuery) ||
+  content.includes(searchQuery) ||
+  filename.includes(searchQuery) ||
+  filepath.includes(searchQuery);
 
 
     const matchesLocation =
@@ -152,110 +155,100 @@ function showFormDetails(org, reqType, reqData) {
     });
   }
 
-  // Uploaded file section with viewer
-  if (reqData.filename) {
-    const filesDiv = document.createElement("div");
-    filesDiv.innerHTML = `<strong>Uploaded File:</strong>`; 
+  if (reqData.file_path) {
+  const filesDiv = document.createElement("div");
+  filesDiv.innerHTML = `<strong>Uploaded File:</strong>`; 
 
-    const fileButton = document.createElement("button");
-    fileButton.textContent = reqData.filename;
-    fileButton.style.display = "block";
-    fileButton.style.marginTop = "4px";
-    fileButton.style.padding = "6px 12px";
-    fileButton.style.cursor = "pointer";
+  const fileButton = document.createElement("button");
+  fileButton.textContent = reqData.filename || "View File";
+  fileButton.style.display = "block";
+  fileButton.style.marginTop = "4px";
+  fileButton.style.padding = "6px 12px";
+  fileButton.style.cursor = "pointer";
 
-    fileButton.addEventListener("click", () => {
-      // Overlay
-      const overlay = document.createElement("div");
-      overlay.style.position = "fixed";
-      overlay.style.top = 0;
-      overlay.style.left = 0;
-      overlay.style.width = "100%";
-      overlay.style.height = "100%";
-      overlay.style.background = "rgba(0,0,0,0.8)";
-      overlay.style.display = "flex";
-      overlay.style.justifyContent = "center";
-      overlay.style.alignItems = "center";
-      overlay.style.zIndex = 3000;
+  fileButton.addEventListener("click", () => {
+    const overlay = document.createElement("div");
+    overlay.style.position = "fixed";
+    overlay.style.top = 0;
+    overlay.style.left = 0;
+    overlay.style.width = "100%";
+    overlay.style.height = "100%";
+    overlay.style.background = "rgba(0,0,0,0.8)";
+    overlay.style.display = "flex";
+    overlay.style.justifyContent = "center";
+    overlay.style.alignItems = "center";
+    overlay.style.zIndex = 3000;
 
-      // File viewer container
-      const viewer = document.createElement("div");
-      viewer.style.background = "#fff";
-      viewer.style.padding = "10px";
-      viewer.style.borderRadius = "10px";
-      viewer.style.width = "90%";
-      viewer.style.height = "90%";
-      viewer.style.display = "flex";
-      viewer.style.flexDirection = "column";
-      viewer.style.position = "relative";
+    const viewer = document.createElement("div");
+    viewer.style.background = "#fff";
+    viewer.style.padding = "10px";
+    viewer.style.borderRadius = "10px";
+    viewer.style.width = "90%";
+    viewer.style.height = "90%";
+    viewer.style.display = "flex";
+    viewer.style.flexDirection = "column";
+    viewer.style.position = "relative";
 
-      // Toolbar for print/download
-      const toolbar = document.createElement("div");
-      toolbar.style.display = "flex";
-      toolbar.style.justifyContent = "flex-end";
-      toolbar.style.gap = "10px";
-      toolbar.style.marginBottom = "5px";
+    const toolbar = document.createElement("div");
+    toolbar.style.display = "flex";
+    toolbar.style.justifyContent = "flex-end";
+    toolbar.style.gap = "10px";
+    toolbar.style.marginBottom = "5px";
 
-
-      const downloadBtn = document.createElement("button");
-      downloadBtn.textContent = "Download";
-      downloadBtn.style.cursor = "pointer";
-      downloadBtn.addEventListener("click", () => {
-        const link = document.createElement("a");
-        link.href = `${PHP_HOST}/IT312-Mid-FinProject/uploads/${reqData.filename}`;
-        link.download = reqData.filename;
-        link.click();
-      });
-
-
-      toolbar.appendChild(downloadBtn);
-
-      // Content container
-      const content = document.createElement("div");
-      content.style.flex = "1";
-      content.style.overflow = "auto";
-      content.style.display = "flex";
-      content.style.justifyContent = "center";
-      content.style.alignItems = "center";
-
-      // Embed PDF or message
-      const ext = reqData.filename.split('.').pop().toLowerCase();
-      if (ext === "pdf") {
-        const iframe = document.createElement("iframe");
-        iframe.src = `${PHP_HOST}/IT312-Mid-FinProject/uploads/${reqData.filename}`;
-        iframe.style.width = "100%";
-        iframe.style.height = "100%";
-        content.appendChild(iframe);
-      } else if (["png","jpg","jpeg","gif"].includes(ext)) {
-        const img = document.createElement("img");
-        img.src = `${PHP_HOST}/IT312-Mid-FinProject/uploads/${reqData.filename}`;
-        img.style.maxWidth = "100%";
-        img.style.maxHeight = "100%";
-        content.appendChild(img);
-      } else {
-        content.textContent = "Cannot preview this file type.";
-      }
-
-      // Close button
-      const closeBtn = document.createElement("button");
-      closeBtn.textContent = "Close";
-      closeBtn.style.position = "absolute";
-      closeBtn.style.top = "10px";
-      closeBtn.style.right = "10px";
-      closeBtn.style.padding = "6px 12px";
-      closeBtn.style.cursor = "pointer";
-      closeBtn.addEventListener("click", () => overlay.remove());
-
-      viewer.appendChild(toolbar);
-      viewer.appendChild(content);
-      viewer.appendChild(closeBtn);
-      overlay.appendChild(viewer);
-      document.body.appendChild(overlay);
+    const downloadBtn = document.createElement("button");
+    downloadBtn.textContent = "Download";
+    downloadBtn.style.cursor = "pointer";
+    downloadBtn.addEventListener("click", () => {
+      const link = document.createElement("a");
+      link.href = reqData.file_path;
+      link.download = reqData.filename;
+      link.click();
     });
+    toolbar.appendChild(downloadBtn);
 
-    filesDiv.appendChild(fileButton);
-    reqDiv.appendChild(filesDiv);
-  }
+    const contentDiv = document.createElement("div");
+    contentDiv.style.flex = "1";
+    contentDiv.style.overflow = "auto";
+    contentDiv.style.display = "flex";
+    contentDiv.style.justifyContent = "center";
+    contentDiv.style.alignItems = "center";
+
+    const ext = reqData.filename?.split('.').pop().toLowerCase();
+    if (ext === "pdf") {
+      const iframe = document.createElement("iframe");
+      iframe.src = reqData.file_path;
+      iframe.style.width = "100%";
+      iframe.style.height = "100%";
+      contentDiv.appendChild(iframe);
+    } else if (["png","jpg","jpeg","gif"].includes(ext)) {
+      const img = document.createElement("img");
+      img.src = reqData.file_path;
+      img.style.maxWidth = "100%";
+      img.style.maxHeight = "100%";
+      contentDiv.appendChild(img);
+    } else {
+      contentDiv.textContent = "Cannot preview this file type.";
+    }
+
+    const closeBtn = document.createElement("button");
+    closeBtn.textContent = "Close";
+    closeBtn.style.position = "absolute";
+    closeBtn.style.top = "10px";
+    closeBtn.style.right = "10px";
+    closeBtn.style.padding = "6px 12px";
+    closeBtn.style.cursor = "pointer";
+    closeBtn.addEventListener("click", () => overlay.remove());
+
+    viewer.appendChild(toolbar);
+    viewer.appendChild(contentDiv);
+    viewer.appendChild(closeBtn);
+    overlay.appendChild(viewer);
+    document.body.appendChild(overlay);
+  });
+
+  filesDiv.appendChild(fileButton);
+  reqDiv.appendChild(filesDiv);
+}
 
   document.getElementById("formDetailsModal").style.display = "flex";
   document.getElementById("closeModal").addEventListener("click", () => {

@@ -63,25 +63,28 @@ async function loadHistory() {
         });
     }
 
-    function filterHistory() {
-        const term = searchInput.value.toLowerCase();
+   function filterHistory() {
+    const term = searchInput.value.toLowerCase();
 
-        const filtered = allRequirements.filter(req => {
-            const nameMatch = req.name?.toLowerCase().includes(term);
-            const tagMatch = (req.tags || []).some(tag =>
-                tag.toLowerCase().includes(term)
-            );
-            const fieldMatch = (req.fields || []).some(field =>
-                field.question?.toLowerCase().includes(term) ||
-                field.content?.toLowerCase().includes(term)
-            );
-            const fileMatch = req.filename?.toLowerCase().includes(term);
+    const filtered = allRequirements.filter(req => {
+        const nameMatch = req.name?.toLowerCase().includes(term);
+        const tagMatch = (req.tags || []).some(tag =>
+            tag.toLowerCase().includes(term)
+        );
+        const fieldMatch = (req.fields || []).some(field =>
+            field.question?.toLowerCase().includes(term) ||
+            field.content?.toLowerCase().includes(term)
+        );
+        const fileMatch =
+            req.filename?.toLowerCase().includes(term) ||
+            req.file_path?.toLowerCase().includes(term); 
 
-            return nameMatch || tagMatch || fieldMatch || fileMatch;
-        });
+        return nameMatch || tagMatch || fieldMatch || fileMatch;
+    });
 
-        displayHistory(filtered);
-    }
+    displayHistory(filtered);
+}
+
 
     searchInput.addEventListener("input", filterHistory);
 
@@ -217,13 +220,13 @@ function showRequirementModal(requirement) {
                 .join("")}
 
             ${
-                requirement.filename
-                    ? `<hr />
-                       <h3>Uploaded File</h3>
-                       <a href="/uploads/${requirement.filename}" target="_blank">
-                           View uploaded file
-                       </a>`
-                    : ""
+                      requirement.file_path
+                         ? `<hr />
+                           <h3>Uploaded File</h3>
+                             <a href="${requirement.file_path}" target="_blank">
+                                View uploaded file
+           </a>`
+        : ""
             }
         </div>
     `;
