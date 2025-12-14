@@ -18,6 +18,7 @@ if (!$email) {
 // Set session variables
 $_SESSION['last_activity'] = time();
 $_SESSION['loggedIn'] = true;
+
 $_SESSION['user'] = [
     "email" => $email,
     "role" => "OSA"

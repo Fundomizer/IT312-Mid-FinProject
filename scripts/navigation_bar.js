@@ -22,7 +22,7 @@ document.body.addEventListener("click", (e) => {
   }
 });
 
-// Logout button
+//logout button
 logoutButton.addEventListener("click", async () => {
   try {
     let role = null;
