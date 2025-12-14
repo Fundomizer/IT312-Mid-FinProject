@@ -2,7 +2,16 @@ import { checkOSA } from "./osa_auth.js";
 
 import { PHP_HOST } from "../config.js";
 let selectedForm = null;
-
+function logAction(code, details = "", activity = "") {
+    fetch(`${HOST}/IT312-Mid-FinProject/server/php/log_event.php`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code, details, activity }) 
+    })
+    .then(res => res.json())
+    .then(data => console.log("Log:", data))
+    .catch(err => console.error("Logging error:", err));
+}
 //loading active forms
 async function loadActiveForms() {
   const response = await fetch(`${PHP_HOST}/IT312-Mid-FinProject/server/php/api.php?collection=forms`, {
@@ -78,6 +87,7 @@ async function loadActiveForms() {
 
       if (res.ok) {
         alert("Form deleted successfully!");
+        logAction(4, `Deleted form: ${form.requirement_name}`, "Form Management");
         loadActiveForms();
       } else {
         alert("Failed to delete form.");
@@ -159,7 +169,11 @@ if (field.field_type === "checkbox" || field.field_type === "radio") {
       removeFieldBtn.type = "button";
       removeFieldBtn.classList.add("remove-field-btn");
       removeFieldBtn.textContent = "Remove Question";
-      removeFieldBtn.addEventListener("click", () => fieldDiv.remove());
+removeFieldBtn.addEventListener("click", () => {
+    logAction(4, `Removed question: ${fieldDiv.querySelector(".field-title").value}`, "Form Management");
+    fieldDiv.remove();
+});
+
       fieldDiv.appendChild(removeFieldBtn);
 
       fieldsContainer.appendChild(fieldDiv);
@@ -218,6 +232,7 @@ document.getElementById("modal-update-btn").addEventListener("click", async () =
   if (res.ok) {
     alert("Form updated successfully!");
     document.getElementById("form-modal").style.display = "none";
+    logAction(3, `Updated form: ${updatedForm.requirement_name}`, "Form Management");
     loadActiveForms();
   } else {
     alert("Failed to update form.");

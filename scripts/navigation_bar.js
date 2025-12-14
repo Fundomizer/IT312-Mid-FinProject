@@ -22,6 +22,31 @@ document.body.addEventListener("click", (e) => {
 });
 
 // Logout button
+logoutButton.addEventListener("click", () => {
+  localStorage.clear();
+  fetch(`${API_BASE_URL}/api/auth/logout`, {
+    method: "POST",
+    credentials: "include"
+  })
+    .then(res => res.json())
+    .then(async data => {
+      console.log(data);
+      if (data.success) {
+
+        await fetch(`${HOST}/IT312-Mid-FinProject/server/php/logout.php`, {
+          method: "POST",
+          credentials: "include"
+        });
+
+        window.location.href = "/IT312-Mid-FinProject/index.html";
+      } else {
+        alert("Logout failed");
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Unexpected logout error");
+    });
 logoutButton.addEventListener("click", async () => {
   try {
     let role = null;
