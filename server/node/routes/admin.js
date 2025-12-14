@@ -16,7 +16,7 @@ const router = express.Router();
 
 router.get('/rsc/log', requireRole("admin"), getLogs)
 router.get('/rsc/users', requireRole("admin"), getUsers)
-router.get('/rsr/orgs', requireRole("admin"), getStudentOrgs)
+router.get('/rsc/orgs', requireRole("admin"), getStudentOrgs)
 //
 router.post('/crtuser', createUser)
 router.put('/upduser/:id', updateUser)

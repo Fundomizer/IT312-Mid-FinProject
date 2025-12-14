@@ -2,6 +2,7 @@ import { loadPage, fetchCollection, setupPopup } from "../utilities.js"
 import { createButton, createTableRow } from "../components.js"
 import { HOST, PORT } from "../config.js"
 import { displayOrgs } from "./org_script.js"
+import { renderDashboard } from "./dashboard_script.js"
 
 const dashbaordNavBut = document.getElementById("dashboardButton")
 const usersNavBut = document.getElementById("usersButton")
@@ -13,24 +14,19 @@ let logs = []
 async function loadDashboardPage() {
 
     loadPage("admin", "dashboard_page.html")
-
-    let users = await fetchCollection('users')
-    let logs = await fetchCollection('log')
-
-    const totalUsers = document.querySelector("#TotalUsers b");
-    const totalLogs = document.querySelector("#ActivityLogs b");
-
-    totalUsers.textContent = users.length;
-    totalLogs.textContent = logs.length;
+    renderDashboard()
 }
 
 async function loadUsersPage() {
 
     loadPage("admin", "users_page.html", "", "users_script.js")
 
-    users = await fetchCollection('users')
+    users = await fetch("/api/admin/rsc/users", {
+        method: "GET",
+        credentials: "include"
+    }).then(res => res.json())
 
-    displayUsers(users)
+    displayUsers(users.users)
 
     // Hook functions to filtering stuff
     document.getElementById('SearchInput').addEventListener('input', handleFilter)
@@ -187,9 +183,9 @@ async function loadUsersPage() {
         const startDate = document.getElementById('StartDate').value
         const endDate = document.getElementById('EndDate').value
 
-        let filtered = users;
+        let filtered = users.users;
 
-        filtered = users.filter(user =>
+        filtered = users.users.filter(user =>
             user['name']?.toLowerCase().includes(term) ||
             user['email']?.toLowerCase().includes(term) ||
             user['organization']?.toLowerCase().includes(term) ||
@@ -249,7 +245,10 @@ async function loadLogsPage() {
 
     loadPage("admin", "logs_page.html")
 
-    logs = await fetchCollection('log')
+    logs = await fetch("/api/admin/rsc/log", {
+        method: "GET",
+        credentials: "include"
+    }).then(res => res.json())
 
     let searchInput = document.getElementById('SearchInput')
     let dateFilter = document.getElementById('DateFilter')
@@ -263,7 +262,7 @@ async function loadLogsPage() {
     startDateFilter.addEventListener('change', handleFilter)
     endDateFilter.addEventListener('change', handleFilter)
 
-    displayLog(logs)
+    displayLog(logs.logs)
 
     /**
      * Displays the list of logs, appends a "Log" into the "Logs" div
@@ -293,7 +292,7 @@ async function loadLogsPage() {
         const startDate = startDateFilter.value
         const endDate = endDateFilter.value
 
-        let filtered = logs
+        let filtered = logs.logs
 
         if (term) {
             filtered = filtered.filter(log =>

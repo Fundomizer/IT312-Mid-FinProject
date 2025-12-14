@@ -9,7 +9,7 @@ loginForm.addEventListener('submit', async (e) => {
     const data = Object.fromEntries(new FormData(loginForm).entries());
 
     try {
-        const response = await fetch(`${HOST}:${PORT}/api/auth/login`, { // TODO fix up HOST later on
+        const response = await fetch(`${HOST}/api/auth/login`, { // TODO fix up HOST later on
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
@@ -56,10 +56,7 @@ loginForm.addEventListener('submit', async (e) => {
 
         } else {
             // Non-OSA users redirect
-            let redirectURL = `${HOST}/IT312-Mid-FinProject${auth.redirect}`
-            console.log(redirectURL);
-            alert(redirectURL)
-
+            console.log(`${HOST}${auth.redirect}`);
             window.location.href = redirectURL;
         }
 

@@ -59,6 +59,10 @@ async function startServer() {
     const db = await connectToDB();
     exposeEndpoints(db, app)
 
+    // Set static resources
+    app.use(express.static('index.html'))
+    app.use(express.static('pages'))
+
     // Register routes
     app.use('/api/auth', require('./routes/auth'))
     app.use('/api/admin', require('./routes/admin'))

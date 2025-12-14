@@ -5,8 +5,12 @@ import { HOST, PORT } from "../config.js";
 let orgs = []
 
 export async function displayOrgs() {
-    orgs = await fetchCollection("student_organization")
-    renderOrgs(orgs)
+    orgs = await fetch("/api/admin/rsc/orgs", {
+        method: "GET",
+        credentials: "include"
+    }).then(res => res.json())
+    
+    renderOrgs(orgs.organizations)
 }
 
 function renderOrgs(orgs) {
@@ -81,7 +85,7 @@ function handleView(button) {
     const orgId = button.dataset.orgId;
 
     // Find the org object from the stored list
-    const org = orgs.find(o => o._id === orgId);
+    const org = orgs.organizations.find(o => o._id === orgId);
 
     if (!org) {
         console.error("Org not found:", orgId);
@@ -303,9 +307,9 @@ async function handleFilter() {
     const school = document.getElementById('SchoolFilter').value.toLowerCase()
     const orgType = document.getElementById('OrgTypeFilter').value.toLowerCase()
 
-    let filtered = orgs
+    let filtered = orgs.organizations
 
-    filtered = orgs.filter(org =>
+    filtered = orgs.organizations.filter(org =>
         org['org_name']?.toLowerCase().includes(term) ||
         org['short_name']?.toLowerCase().includes(term) ||
         org['official_email']?.toLowerCase().includes(term) ||
