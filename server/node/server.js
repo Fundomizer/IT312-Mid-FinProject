@@ -61,7 +61,7 @@ async function startServer() {
 
     // Register routes
     app.use('/api/auth', require('./routes/auth'))
-    app.use('/api/users', require('./routes/users'))
+    app.use('/api/users', require('./routes/admin'))
     app.use('/api/orgs', require('./routes/organization'))
     app.use((req, res) => {
         res.sendFile(path.join(__dirname, '../../', 'index.html'));

@@ -1,8 +1,5 @@
 const express = require('express');
 const { 
-    createOrganization,
-    updateOrganization,
-    deleteOrganization,
     getRequirements, 
     fillRequirements, 
     getHistory
@@ -10,9 +7,6 @@ const {
     = require('../controllers/organization_controller');
 const router = express.Router();
 
-router.post('/', createOrganization)
-router.patch('/:id', updateOrganization)
-router.delete('/:id', deleteOrganization)
 router.get("/reqforms/:org_name", getRequirements);
 router.get("/hisform/:org_name", getHistory);
 router.put("/requirements/:requirement", fillRequirements)
