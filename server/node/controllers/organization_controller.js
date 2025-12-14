@@ -82,6 +82,7 @@ exports.fillRequirements = async (req, res) => {
         const { org_name, requirement } = req.params;
 
         console.log("Received the following form: ", req.body);
+        console.log("Files received:", req.files);
         console.log(`Org name ${org_name}, requirement ${requirement}`);
 
         if (!org_name || !requirement) {
@@ -93,83 +94,116 @@ exports.fillRequirements = async (req, res) => {
 
         const orgs = db.collection("student_organization");
 
-        // 1. Load existing organization and requirement
-        const org = await orgs.findOne(
-            {
-                $or: [
-                    { org_name: org_name },
-                    { short_name: org_name }
-                ]
-            }
-        );
+        // 1. Load existing organization
+        const org = await orgs.findOne({
+            $or: [
+                { org_name: org_name },
+                { short_name: org_name }
+            ]
+        });
+
+        if (!org) {
+            return res.status(404).json({
+                success: false,
+                message: "Organization not found"
+            });
+        }
 
         const internalKey = requirement
             .trim()
             .toLowerCase()
-            .replace(/\s+/g, "_") + "_plan";
-        console.log(`Internal key \"${internalKey}\"`);
+            .replace(/\s+/g, "_");
 
-        if (!org || !org.requirements || !org.requirements[internalKey]) {
-            return res.status(404).json({
-                success: false,
-                message: "Organization or requirement not found"
-            });
+        console.log(`Internal key "${internalKey}"`);
+
+        // Ensure requirements object exists
+        if (!org.requirements) {
+            org.requirements = {};
+        }
+
+        // Auto-create requirement if missing
+        if (!org.requirements[internalKey]) {
+            org.requirements[internalKey] = {
+                form_id: null,
+                tags: [],
+                last_updated: null,
+                fields: []
+            };
         }
 
         const existingFields = org.requirements[internalKey].fields || [];
 
-        // 2. Build partial updates by index from body + files
-        const updatedFields = []; // holds only changes
+        // 2. Build fields array from form data
+        const updatedFields = [];
 
-        // 2a. Text content (field_0, field_1, ...)
+        // Process text content (field_0, field_1, ...)
         Object.keys(req.body).forEach(key => {
             if (key.startsWith("field_")) {
                 const index = Number(key.split("_")[1]);
-                if (!updatedFields[index]) updatedFields[index] = {};
 
-                // ✅ Add/replace only "content"
-                updatedFields[index].content = req.body[key];
+                // Preserve existing field structure or create new
+                updatedFields[index] = {
+                    ...(existingFields[index] || {}),
+                    content: req.body[key]
+                };
             }
         });
 
-        // 2b. Files (file_0, file_1, ...)
-        if (req.files) {
-            Object.keys(req.files).forEach(fileKey => {
-                if (fileKey.startsWith("file_")) {
-                    const index = Number(fileKey.split("_")[1]);
-                    const file = req.files[fileKey];
+        // 3. Handle supporting documents (files at requirement level)
+        let uploadedFiles = [];
 
+        console.log("Checking for files...", req.files);
+
+        if (req.files) {
+            // Check all possible file field names
+            Object.keys(req.files).forEach(fileKey => {
+                console.log(`Found file field: ${fileKey}`);
+
+                const fileOrArray = req.files[fileKey];
+                const files = Array.isArray(fileOrArray) ? fileOrArray : [fileOrArray];
+
+                files.forEach(file => {
                     const savePath = `./uploads/${Date.now()}_${file.name}`;
 
-                    file.mv(savePath, err => {
+                    console.log(`Attempting to save file: ${file.name} to ${savePath}`);
+
+                    file.mv(savePath, (err) => {
                         if (err) {
                             console.error("File upload error:", err);
+                        } else {
+                            console.log(`File saved successfully: ${savePath}`);
                         }
                     });
 
-                    if (!updatedFields[index]) updatedFields[index] = {};
-
-                    // ✅ Add/replace only "file"
-                    updatedFields[index].file = {
+                    uploadedFiles.push({
                         filename: file.name,
                         saved_as: savePath,
                         mimetype: file.mimetype,
                         size: file.size
-                    };
-                }
+                    });
+                });
             });
+        } else {
+            console.log("No files found in request");
         }
 
-        // 3. Merge updates into existing fields
-        const mergedFields = existingFields.map((field, index) => {
-            const updates = updatedFields[index] || {};
-            return {
-                ...field,   // keep question, field_type, required, tags, etc.
-                ...updates  // apply new content and/or file
-            };
-        });
+        // 4. Prepare update object
+        const updateObject = {
+            [`requirements.${internalKey}.fields`]: updatedFields,
+            [`requirements.${internalKey}.last_updated`]: new Date().toISOString().split("T")[0]
+        };
 
-        // 4. Save merged fields back to MongoDB
+        // Add files if any were uploaded
+        if (uploadedFiles.length > 0) {
+            // If you want a single file (like your example):
+            updateObject[`requirements.${internalKey}.filename`] = uploadedFiles[0].filename;
+            updateObject[`requirements.${internalKey}.file_path`] = uploadedFiles[0].saved_as;
+
+            // Or if you want multiple files:
+            // updateObject[`requirements.${internalKey}.files`] = uploadedFiles;
+        }
+
+        // 5. Update MongoDB
         await orgs.updateOne(
             {
                 $or: [
@@ -178,24 +212,23 @@ exports.fillRequirements = async (req, res) => {
                 ]
             },
             {
-                $set: {
-                    [`requirements.${internalKey}.fields`]: mergedFields,
-                    [`requirements.${internalKey}.last_updated`]:
-                        new Date().toISOString().split("T")[0]
-                }
+                $set: updateObject
             }
         );
 
-        touchSession(req)
+        touchSession(req);
+
         res.json({
             success: true,
-            message: "Requirement updated successfully"
+            message: "Requirement updated successfully",
+            uploaded_files: uploadedFiles.length
         });
 
     } catch (err) {
+        console.error("Server error:", err);
         res.status(500).json({
             success: false,
-            message: `Server error ${err}`
+            message: `Server error: ${err.message}`
         });
     }
 };

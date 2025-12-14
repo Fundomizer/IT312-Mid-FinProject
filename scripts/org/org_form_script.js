@@ -295,13 +295,10 @@ function collectFormData(popup) {
   formElement.querySelectorAll("input[name^='field_'], textarea[name^='field_']")
     .forEach(input => formData.append(input.name, input.value));
 
-  // Collect file inputs
-  formElement.querySelectorAll("input[type='file'][name^='file_']")
-    .forEach(input => {
-      if (input.files.length > 0) {
-        formData.append(input.name, input.files[0]);
-      }
-    });
+  // Collect files from objForm.selectedFiles (the files you selected via UploadButton)
+  objForm.selectedFiles.forEach((file, index) => {
+    formData.append(`file_${index}`, file);
+  });
 
   return formData;
 }
@@ -324,6 +321,7 @@ function handleSubmitResponse(result, popup) {
 
   if (result.success) {
     alert("Form submitted successfully");
+    objForm.selectedFiles = []; // Clear the files array
     closeFormPopup();
   } else {
     alert("Failed to submit form: " + result.message);
