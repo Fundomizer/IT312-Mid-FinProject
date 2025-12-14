@@ -42,7 +42,7 @@ loginForm.addEventListener('submit', async (e) => {
                     body: JSON.stringify({ email: data.email })
                 });
 
-                
+
                 if (!phpResponse.ok) {
                     console.error("PHP session error:", await phpResponse.text());
                     alert("Failed to start PHP session.");
