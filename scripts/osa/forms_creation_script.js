@@ -2,6 +2,16 @@ import { checkOSA } from "./osa_auth.js";
 
 const HOST = window.location.origin;
 
+function logAction(code, details = "", activity = "") {
+    fetch(`${HOST}/IT312-Mid-FinProject/server/php/log_event.php`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code, details, activity }) 
+    })
+    .then(res => res.json())
+    .then(data => console.log("Log:", data))
+    .catch(err => console.error("Logging error:", err));
+}
 
 
 // Load Organizations 
@@ -37,95 +47,108 @@ loadOrganizations();
 
 // Form Creation Logic
 function loadFormCreation() {
-  const formFields = document.getElementById("formFields");
-  const addFieldBtn = document.getElementById("addFieldBtn");
-  const fieldTypeSelect = document.getElementById("fieldType");
-  let fieldCounter = 0;
+    const formFields = document.getElementById("formFields");
+    const addFieldBtn = document.getElementById("addFieldBtn");
+    const fieldTypeSelect = document.getElementById("fieldType");
 
-  addFieldBtn.addEventListener("click", () => {
-    const fieldType = fieldTypeSelect.value;
-    const questionNumber = formFields.querySelectorAll(".form-field").length + 1;
+    addFieldBtn.addEventListener("click", () => {
+        const fieldType = fieldTypeSelect.value;
+        const questionNumber = formFields.querySelectorAll(".form-field").length + 1;
 
+        // Create field container
+        const field = document.createElement("div");
+        field.classList.add("form-field");
+        field.dataset.type = fieldType;
 
-    const field = document.createElement("div");
-    field.classList.add("form-field");
-    field.dataset.type = fieldType;
-
-
-
-
- let fieldHTML = `
-  <label>Question ${questionNumber}</label>  
-    <input type="text" placeholder="Enter question title" class="field-title" required>
-
-
-    <label class="required-toggle">
-      <input type="checkbox" class="required-checkbox">
-      Required
-    </label>
-  `;
-
-
-
-    if (fieldType === "textarea") {
-      fieldHTML += `<textarea disabled placeholder="Paragraph answer"></textarea>`;
-    } else if (fieldType === "checkbox" || fieldType === "radio") {
-      fieldHTML += `
-        <div class="options-container">
-          <div class="option-item">
-            <input type="${fieldType}" disabled>
-            <input type="text" class="option-text" placeholder="Option 1">
-            <button type="button" class="remove-option-btn">×</button>
-          </div>
-        </div>
-        <button type="button" class="add-option-btn">+ Add Option</button>
-      `;
-    } else {
-      fieldHTML += `<input type="text" disabled placeholder="Short answer">`;
-    }
-
-    fieldHTML += `<button class="remove-field-btn">Remove Question</button>`;
-    field.innerHTML = fieldHTML;
-    formFields.appendChild(field);
-
-field.querySelector(".remove-field-btn").addEventListener("click", () => {
-    checkOSA();
-    field.remove();
-});
-
-    if (fieldType === "checkbox" || fieldType === "radio") {
-      const optionsContainer = field.querySelector(".options-container");
-      const addOptionBtn = field.querySelector(".add-option-btn");
-
-      addOptionBtn.addEventListener("click", () => {
-                  checkOSA();
-        const optionCount = optionsContainer.children.length + 1;
-        const optionItem = document.createElement("div");
-        optionItem.classList.add("option-item");
-
-
-        optionItem.innerHTML = `
-          <input type="${fieldType}" disabled>
-          <input type="text" class="option-text" placeholder="Option ${optionCount}">
-          <button type="button" class="remove-option-btn">×</button>
+        // Build field HTML
+        let fieldHTML = `
+            <label>Question ${questionNumber}</label>
+            <input type="text" placeholder="Enter question title" class="field-title" required>
+            <label class="required-toggle">
+                <input type="checkbox" class="required-checkbox">
+                Required
+            </label>
         `;
-optionItem.querySelector(".remove-option-btn").addEventListener("click", () => {
-    checkOSA();
-    optionItem.remove();
-});
-        optionsContainer.appendChild(optionItem);
-      });
 
-      field.querySelector(".remove-option-btn").addEventListener("click", (e) => e.target.parentElement.remove());
-    }
-  });
+        if (fieldType === "textarea") {
+            fieldHTML += `<textarea disabled placeholder="Paragraph answer"></textarea>`;
+        } else if (fieldType === "checkbox" || fieldType === "radio") {
+            fieldHTML += `
+                <div class="options-container">
+                    <div class="option-item">
+                        <input type="${fieldType}" disabled>
+                        <input type="text" class="option-text" placeholder="Option 1">
+                        <button type="button" class="remove-option-btn">×</button>
+                    </div>
+                </div>
+                <button type="button" class="add-option-btn">+ Add Option</button>
+            `;
+        } else {
+            fieldHTML += `<input type="text" disabled placeholder="Short answer">`;
+        }
+
+        fieldHTML += `<button class="remove-field-btn">Remove Question</button>`;
+        field.innerHTML = fieldHTML;
+        formFields.appendChild(field);
+
+        // Get question title dynamically
+        const getQuestionTitle = () => field.querySelector(".field-title").value || `Question ${questionNumber}`;
+
+        // Log field creation
+        logAction(3, `Added field #${questionNumber} of type ${fieldType}`, "Form Creation");
+
+        // Remove field
+        field.querySelector(".remove-field-btn").addEventListener("click", () => {
+            checkOSA();
+            logAction(4, `Removed field: ${getQuestionTitle()}`, "Form Creation");
+            field.remove();
+        });
+
+        // Handle checkbox/radio options
+        if (fieldType === "checkbox" || fieldType === "radio") {
+            const optionsContainer = field.querySelector(".options-container");
+            const addOptionBtn = field.querySelector(".add-option-btn");
+
+            addOptionBtn.addEventListener("click", () => {
+                checkOSA();
+                const optionCount = optionsContainer.children.length + 1;
+                const optionItem = document.createElement("div");
+                optionItem.classList.add("option-item");
+
+                optionItem.innerHTML = `
+                    <input type="${fieldType}" disabled>
+                    <input type="text" class="option-text" placeholder="Option ${optionCount}">
+                    <button type="button" class="remove-option-btn">×</button>
+                `;
+                optionsContainer.appendChild(optionItem);
+
+                // Log option creation
+                logAction(3, `Added option #${optionCount} for question: ${getQuestionTitle()}`, "Form Creation");
+
+                // Remove option
+                optionItem.querySelector(".remove-option-btn").addEventListener("click", () => {
+                    checkOSA();
+                    logAction(4, `Removed option for question: ${getQuestionTitle()}`, "Form Creation");
+                    optionItem.remove();
+                });
+            });
+
+            // Remove the default first option's remove button
+            const firstRemoveBtn = optionsContainer.querySelector(".remove-option-btn");
+            firstRemoveBtn.addEventListener("click", () => {
+                checkOSA();
+                logAction(4, `Removed option for question: ${getQuestionTitle()}`, "Form Creation");
+                firstRemoveBtn.parentElement.remove();
+            });
+        }
+    });
 }
+
 
 loadFormCreation();
 document.getElementById("submitFormBtn").addEventListener("click", async (event) => {
     checkOSA();
-  event.preventDefault();
-
+     event.preventDefault();
 
 
 
@@ -155,6 +178,7 @@ const fields = [...document.querySelectorAll(".form-field")].map((field) => {
       .map(opt => opt.value.trim())
       .filter(opt => opt);
   }
+        logAction(6, `Submitted form: ${document.getElementById("formTitle").value}`, "Form Submission");
 
   return { question, field_type, required, options };
 });

@@ -24,6 +24,7 @@ document.body.addEventListener("click", (e) => {
 
 // Logout button
 logoutButton.addEventListener("click", () => {
+  localStorage.clear();
   fetch(`${API_BASE_URL}/api/auth/logout`, {
     method: "POST",
     credentials: "include"
