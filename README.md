@@ -21,3 +21,21 @@ Next of download the node packages, run the following:
 ```
 npm install
 ```
+
+## Credentials for logging in
+
+Admin
+1. orgmanager@slu.edu.ph - admin
+2. 225938@slu.edu.ph - jollibee
+3. fisalia@slu.edu.ph - 123
+
+OSA
+1. wazuwski@gmail.com - mike
+2. jax@slu.edu.ph - jax
+3. osa@slu.edu.ph - jd123
+4. vik@slu.edu.ph - victor
+
+ORG
+1. seauser@slu.edu.ph - sea
+2. 229938@slu.edu.ph - bog123
+3. scmuser@slu.edu.ph - scm123
