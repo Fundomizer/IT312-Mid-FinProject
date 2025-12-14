@@ -24,7 +24,6 @@ app.use(cors({
     credentials: true
 }));
 
-
 // Caching settings
 app.use((req, res, next) => {
     res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, private, max-age=0");
@@ -34,9 +33,8 @@ app.use((req, res, next) => {
 
     next();
 });
+
 app.use(express.static(path.join(__dirname, '../../')));
-
-
 
 app.use(session({ // Configure session handling 
     secret: "KeepThisSecretToYourself", // Secret :P
@@ -58,10 +56,6 @@ app.use(session({ // Configure session handling
 async function startServer() {
     const db = await connectToDB();
     exposeEndpoints(db, app)
-
-    // Set static resources
-    app.use(express.static('index.html'))
-    app.use(express.static('pages'))
 
     // Register routes
     app.use('/api/auth', require('./routes/auth'))

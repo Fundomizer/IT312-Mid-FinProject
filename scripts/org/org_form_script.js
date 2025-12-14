@@ -10,23 +10,39 @@ const objForm = {
   orgName: null
 };
 
+async function getProfile() {
+  let me = await fetch("/api/auth/profile", {
+    method: "POST",
+    credentials: "include"
+  })
+    .then(res => res.json())
+
+  return me
+}
+
 //---------------------------------------------------------------------------
 // Setup Forms
 async function createForms() {
   loadPage('org', 'assigned_form_page.html');
-  
-  objForm.orgName = localStorage.getItem('org_name');
-  console.log("Organization:", objForm.orgName);
 
-  const response = await fetchCollection(`orgs/requirements/${encodeURIComponent(objForm.orgName)}`);
-  
+  let profile = await getProfile()
+  console.log(profile);
+
+  const response = await await fetch(`/api/orgs/rsc/forms/${profile.user.organization}`, {
+    method: "GET",
+    credentials: "include"
+  })
+    .then(res => res.json());
+
+  console.log("Organization forms:", response);
+
   if (!response.success) {
     console.error("Failed to fetch forms");
     return null;
   }
 
   objForm.requirements = requirementsToArray(response.requirements);
-  
+
   renderForms(objForm.requirements);
   setupFilters(objForm.requirements, response.requirements);
   setupEventListeners();
@@ -67,7 +83,7 @@ function renderForms(forms) {
 
 function createFormCard(form) {
   const { requirement_name, description, fields, tags, last_updated, form_id } = form;
-  
+
   return `
     <div class="SubCard Form">
       <div class="FormDetails">
@@ -90,7 +106,7 @@ function createFormCard(form) {
           ${tags.map(tag => `<p class="Tag">${tag}</p>`).join("")}
         </div>
         
-        <p class="LastUpdated">Last updated: ${last_updated}</p>
+        ${last_updated ? `<p class="LastUpdated">Last updated: ${last_updated}</p>` : ""}
       </div>
       
       <div>
@@ -110,7 +126,7 @@ function createFormCard(form) {
 function populateFormPopup(formData) {
   const popup = document.querySelector(".PopupForm");
   const formElement = popup?.querySelector(".Form");
-  
+
   if (!popup || !formElement) {
     console.error("Popup or form element not found");
     return;
@@ -118,27 +134,27 @@ function populateFormPopup(formData) {
 
   popup.dataset.formId = formData.form_id;
   popup.dataset.requirementName = formData.requirement_name;
-  
+
   formElement.innerHTML = '';
-  
+
   appendFormHeader(formElement, formData);
   appendFormFields(formElement, formData.fields);
-  
+
   if (formData.upload) {
     appendFileUpload(formElement);
   }
-  
+
   appendFormButtons(formElement);
 }
 
 function appendFormHeader(container, formData) {
   const titleLabel = document.createElement("label");
   titleLabel.htmlFor = "FormTitle";
-  
+
   const title = document.createElement("h3");
   title.textContent = formatTitle(formData.requirement_name);
   titleLabel.appendChild(title);
-  
+
   container.appendChild(titleLabel);
   container.appendChild(document.createElement("br"));
 
@@ -169,14 +185,14 @@ function appendFormFields(container, fields) {
 function createFieldLabel(field, index) {
   const label = document.createElement("label");
   label.htmlFor = `field_${index}`;
-  
+
   const span = document.createElement("span");
   span.textContent = field.question;
-  
+
   if (field.required === "true" || field.required === true) {
     span.textContent += " *";
   }
-  
+
   label.appendChild(span);
   return label;
 }
@@ -184,7 +200,7 @@ function createFieldLabel(field, index) {
 function createFieldInput(field, index) {
   const isRequired = field.required === "true" || field.required === true;
   const inputId = `field_${index}`;
-  
+
   const inputConfig = {
     number: () => createInput("number", inputId, isRequired),
     date: () => createInput("date", inputId, isRequired),
@@ -195,7 +211,7 @@ function createFieldInput(field, index) {
 
   const input = (inputConfig[field.field_type] || inputConfig.text)();
   input.name = `field_${index}`;
-  
+
   return input;
 }
 
@@ -241,17 +257,17 @@ function appendFormButtons(container) {
 // Form Submission
 async function handleFormSubmit(event) {
   event.preventDefault();
-  
+
   const popup = document.querySelector(".PopupForm");
   const requirementName = popup.dataset.requirementName;
-  
+
   if (!requirementName) {
     console.error("No requirement name found");
     return;
   }
 
   const formData = collectFormData(popup);
-  
+
   try {
     const response = await submitForm(requirementName, formData);
     handleSubmitResponse(response, popup);
@@ -264,7 +280,7 @@ async function handleFormSubmit(event) {
 function collectFormData(popup) {
   const formElement = popup.querySelector(".Form");
   const formData = new FormData();
-  
+
   formData.append('org_name', objForm.orgName);
 
   // Collect text inputs
@@ -284,14 +300,14 @@ function collectFormData(popup) {
 
 async function submitForm(requirementName, formData) {
   const response = await fetch(
-    `${HOST}:${PORT}/api/orgs/requirements/${encodeURIComponent(requirementName)}`,
+    `/api/orgs/requirements/${encodeURIComponent(requirementName)}`,
     {
       method: "PUT",
       body: formData,
       credentials: "include"
     }
   );
-  
+
   return response.json();
 }
 
@@ -325,7 +341,7 @@ function openFormPopup(formId) {
 function closeFormPopup() {
   const popup = document.querySelector(".PopupForm");
   const overlay = document.getElementById("PopupOverlay");
-  
+
   if (popup && overlay) {
     popup.style.display = "none";
     overlay.classList.remove("show");
@@ -347,7 +363,7 @@ function handleFileSelection(event) {
 }
 
 function isFileDuplicate(file) {
-  return objForm.selectedFiles.some(f => 
+  return objForm.selectedFiles.some(f =>
     f.name === file.name && f.size === file.size
   );
 }
@@ -407,7 +423,7 @@ function getFileIcon(fileType) {
   if (fileType.includes('video')) return icons.video;
   if (fileType.includes('audio')) return icons.audio;
   if (fileType.includes('zip') || fileType.includes('compressed')) return icons.archive;
-  
+
   return '📄';
 }
 
@@ -457,10 +473,10 @@ function setupEventListeners() {
 
   // Delegate all clicks to a single handler
   document.addEventListener("click", handleDocumentClick);
-  
+
   // Handle file input changes
   document.addEventListener("change", handleDocumentChange);
-  
+
   // Close popup when clicking overlay
   const overlay = document.getElementById("PopupOverlay");
   if (overlay) {
@@ -504,7 +520,7 @@ function handleFormButtonClick(event) {
   }
 
   const formData = objForm.formModule.getFormById(formId, requirementName);
-  
+
   if (formData) {
     objForm.formModule.populatePopupForm(formData);
     openFormPopup(formData.form_id);

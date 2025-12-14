@@ -8,9 +8,9 @@ const {
 const { requireRole } = require('../middleware/gatekeeper');
 const router = express.Router();
 
-router.get("/reqforms/:org_name", requireRole('student organization user'), getRequirements);
-router.get("/hisform/:org_name", requireRole('student organization user'), getHistory);
+router.get("/rsc/forms/:org_name", requireRole('student organization user'), getRequirements);
+router.get("/rsc/history/:org_name", requireRole('student organization user'), getHistory);
 //
-router.put("/requirements/:requirement", fillRequirements)
+router.put("/requirements/:requirement", requireRole('student organization user'), fillRequirements)
 
 module.exports = router

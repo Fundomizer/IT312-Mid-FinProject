@@ -2,6 +2,7 @@ import { fetchCollection, loadPage } from "../utilities.js"
 
 const dashboard = document.getElementById("dashboardButton")
 const history = document.getElementById("historyButton")
+
 async function getProfile() {
     let me = await fetch("/api/auth/profile", {
         method: "POST",
@@ -44,25 +45,32 @@ async function loadDashboard() {
 async function loadHistory() {
     await loadPage('org', 'history_page.html');
 
+    const profile = await getProfile()
+
     // Fetch all student organizations
-    let orgs = await fetchCollection('student_organization');
+    let response = await fetch(`/api/orgs/rsc/history/${profile.user.organization}`, {
+        method: "GET",
+        credentials: "include"
+    })
+        .then(res => res.json())
+
+    let history = response.history.requirements
 
     // Collect all requirements from all orgs
     let allRequirements = [];
-    orgs.forEach(org => {
-        const reqs = org.requirements || {};
-        Object.keys(reqs).forEach(key => {
-            // key is the requirement name, reqs[key] is the details
-            allRequirements.push({
-                name: key,
-                ...reqs[key]
-            });
+    Object.entries(history).forEach(([name, details]) => {
+        allRequirements.push({
+            name,
+            ...details
         });
     });
 
     displayHistory(allRequirements);
 
     function displayHistory(requirements) {
+
+        console.log("All requirements: ", requirements);
+
         const logsDisplay = document.getElementById("History");
         if (!logsDisplay) return;
         logsDisplay.innerHTML = "";

@@ -18,11 +18,11 @@ router.get('/rsc/log', requireRole("admin"), getLogs)
 router.get('/rsc/users', requireRole("admin"), getUsers)
 router.get('/rsc/orgs', requireRole("admin"), getStudentOrgs)
 //
-router.post('/user/crt/', createUser)
-router.put('/user/upd/:id', updateUser)
-router.delete('/user/del/:id', deleteUser)
-router.post('/org/crt/', createOrganization)
-router.patch('/org/upd/:id', updateOrganization)
-router.delete('/org/del/:id', deleteOrganization)
+router.post('/user/crt/', requireRole("admin"), createUser)
+router.put('/user/upd/:id', requireRole("admin"), updateUser)
+router.delete('/user/del/:id', requireRole("admin"), deleteUser)
+router.post('/org/crt/', requireRole("admin"), createOrganization)
+router.patch('/org/upd/:id', requireRole("admin"), updateOrganization)
+router.delete('/org/del/:id', requireRole("admin"), deleteOrganization)
 
 module.exports = router

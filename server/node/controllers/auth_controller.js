@@ -15,6 +15,9 @@ exports.login = async (req, res) => {
     try {
         const user = await users.findOne({ email });
 
+        console.log(`${user} has logged in`);
+        
+
         if (!user || user.password !== password) {
             return res.status(400).json({
                 message: "Invalid email or password",
@@ -32,6 +35,7 @@ exports.login = async (req, res) => {
             id: user._id.toString(),
             role: user.role.toLowerCase(),
             name: user.name,
+            email: user.email,
             organization: user.organization || null
         }
 
@@ -61,19 +65,20 @@ exports.login = async (req, res) => {
 }
 
 exports.getProfile = (req, res) => {
-    if (!req.session.userId) {
-        return res.status(401).json({ message: "Not logged in" });
+    console.log(`Sent profile to ${req.session.user.name}`);
+    
+    if (!req.session.user) {
+        return res.status(401).json({ success: false, message: "Not logged in" });
     }
 
     res.json({
-        loggedIn: true,
-        userId: req.session.userId,
-        role: req.session.role
+        success: true,
+        user: req.session.user
     });
 };
 
 exports.logout = (req, res) => {
-
+console.log(`${req.session.user.name} logged out`);
     req.session.destroy(err => {
         if (err) {
             return res.status(500).json({ message: "Logout failed", success: false });

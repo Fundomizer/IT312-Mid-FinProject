@@ -9,6 +9,7 @@ let db;
 })();
 
 exports.getUsers = async (req, res) => {
+    console.log(`${req.session.user.name} is requesting for the list of users`);
     try {
         const users = db.collection("users");
         const data = await users.find().toArray();
@@ -20,6 +21,7 @@ exports.getUsers = async (req, res) => {
 }
 
 exports.getStudentOrgs = async (req, res) => {
+    console.log(`${req.session.user.name} is requesting for the list of student orgs`);
     try {
         const orgs = db.collection("student_organization");
         const data = await orgs.find().toArray();
@@ -31,6 +33,7 @@ exports.getStudentOrgs = async (req, res) => {
 };
 
 exports.getLogs = async (req, res) => {
+    console.log(`${req.session.user.name} is requesting for the list of logs`);
     try {
         const logs = db.collection("log");
         const data = await logs.find().toArray();
@@ -42,7 +45,7 @@ exports.getLogs = async (req, res) => {
 };
 
 exports.createUser = async (req, res) => {
-
+    console.log(`${req.session.user.name} is creating a user`);
     try {
         const newUser = sanitizeObject(req.body);
 
@@ -74,6 +77,7 @@ exports.createUser = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
+    console.log(`${req.session.user.name} is updating a user`);
     try {
         const userId = req.params.id;
         const updatedData = sanitizeObject(req.body);
@@ -128,6 +132,7 @@ exports.updateUser = async (req, res) => {
 }
 
 exports.deleteUser = async (req, res) => {
+    console.log(`${req.session.user.name} is deleting a user`);
     try {
         const userId = req.params.id;
 
@@ -149,6 +154,7 @@ exports.deleteUser = async (req, res) => {
 }
 
 exports.createOrganization = async (req, res) => {
+    console.log(`${req.session.user.name} is creating a user`);
     try {
         const orgs = db.collection("student_organization");
 
@@ -196,6 +202,7 @@ exports.createOrganization = async (req, res) => {
 }
 
 exports.updateOrganization = async (req, res) => {
+    console.log(`${req.session.user.name} is updating an organization`);
     try {
         const orgs = db.collection("student_organization");
         const orgId = req.params.id;
@@ -269,6 +276,7 @@ exports.updateOrganization = async (req, res) => {
 };
 
 exports.deleteOrganization = async (req, res) => {
+    console.log(`${req.session.user.name} is deleting an organization`);
     try {
         const orgs = db.collection("student_organization");
         const { id } = req.params;
