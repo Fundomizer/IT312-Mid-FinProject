@@ -166,7 +166,7 @@ async function handleAddOrg(e) {
     };
 
     try {
-        const res = await fetch(`${HOST}:${PORT}/api/orgs`, { // TODO fix up HOST later on
+        const res = await fetch(`/api/admin/org/crt`, { // TODO fix up HOST later on
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
@@ -242,7 +242,7 @@ async function handleSaveEditOrg(e) {
     };
 
     try {
-        const res = await fetch(`${HOST}:${PORT}/api/orgs/${orgId}`, {
+        const res = await fetch(`/api/admin/org/upd/${orgId}`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
@@ -283,7 +283,7 @@ function deleteOrganization(id) {
     const confirmed = window.confirm("Are you sure you want to delete this organization?");
     if (!confirmed) return;
 
-    fetch(`${HOST}:${PORT}/api/orgs/${id}`, {
+    fetch(`/api/admin/org/del/${id}`, {
         method: 'DELETE'
     })
         .then(res => res.json())

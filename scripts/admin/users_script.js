@@ -37,7 +37,7 @@ userForm.addEventListener('submit', (e) => {
     const filtered = entries.filter(([key, value]) => value && value.trim() !== "");
     const obj = Object.fromEntries(filtered);
 
-    fetch(`${HOST}:${PORT}/api/users`, { // TODO fix up HOST later on
+    fetch(`/api/admin/user/crt`, { // TODO fix up HOST later on
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(obj)

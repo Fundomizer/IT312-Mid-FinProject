@@ -147,7 +147,7 @@ async function loadUsersPage() {
             const data = Object.fromEntries(new FormData(form).entries());
 
 
-            fetch(`${HOST}:${PORT}/api/users/${userId}`, { // TODO fix up HOST later on
+            fetch(`/api/admin/user/crt/${userId}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data)
@@ -166,7 +166,7 @@ async function loadUsersPage() {
 
             let userId = button.dataset.userId
 
-            fetch(`${HOST}:${PORT}/api/users/${userId}`, {
+            fetch(`/api/admin/user/del${userId}`, {
                 method: "DELETE"
             }).then(response => response.json())
                 .then(result => alert(result['message']))
