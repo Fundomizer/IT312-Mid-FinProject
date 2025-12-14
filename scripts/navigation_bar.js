@@ -23,7 +23,7 @@ document.body.addEventListener("click", (e) => {
 });
 
 // Logout button
-logoutButton.addEventListener("click", async () => {
+if (logoutButton) logoutButton.addEventListener("click", async () => {
   try {
     let role = null;
 
@@ -61,7 +61,7 @@ logoutButton.addEventListener("click", async () => {
         return;
       }
 
-     window.location.href = `${HOST}`;
+      window.location.href = `${HOST}`;
     }
   } catch (err) {
     console.error("Logout error:", err);
