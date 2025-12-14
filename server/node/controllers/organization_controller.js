@@ -75,15 +75,84 @@ exports.getHistory = async (req, res) => {
 
 }
 
+// Helper function to handle file uploads
+async function uploadFiles(files, org_name) {
+    const uploadedFiles = [];
+    const uploadPromises = [];
+
+    Object.keys(files).forEach(fileKey => {
+        console.log(`Found file field: ${fileKey}`);
+
+        const fileOrArray = files[fileKey];
+        const fileList = Array.isArray(fileOrArray) ? fileOrArray : [fileOrArray];
+
+        fileList.forEach(file => {
+            // Create timestamp in YYYY-MM-DD_HH-MM format
+            const now = new Date();
+            const dateStr = now.toISOString().split('T')[0]; // YYYY-MM-DD
+            const timeStr = now.toTimeString().split(' ')[0].substring(0, 5).replace(':', '-'); // HH-MM
+
+            // Get file extension
+            const fileExt = file.name.substring(file.name.lastIndexOf('.'));
+            const fileNameWithoutExt = file.name.substring(0, file.name.lastIndexOf('.'));
+
+            // Replace spaces with underscores in org_name and filename
+            const sanitizedOrgName = org_name.replace(/\s+/g, '_');
+            const sanitizedFileName = fileNameWithoutExt.replace(/\s+/g, '_');
+
+            // Format: <YYYY-MM-DD>_<HH-MM>-<org-name>-<file name>
+            const newFileName = `${dateStr}_${timeStr}-${sanitizedOrgName}-${sanitizedFileName}${fileExt}`;
+            const savePath = `./uploads/${newFileName}`;
+
+            console.log(`Attempting to save file: ${file.name} as ${newFileName}`);
+
+            // Create a promise for each file upload
+            const uploadPromise = new Promise((resolve, reject) => {
+                file.mv(savePath, (err) => {
+                    if (err) {
+                        console.error("File upload error:", err);
+                        reject(err);
+                    } else {
+                        console.log(`File saved successfully: ${savePath}`);
+                        resolve({
+                            filename: file.name,
+                            saved_as: newFileName,
+                            filepath: savePath,
+                            mimetype: file.mimetype,
+                            size: file.size,
+                            uploaded_at: now.toISOString()
+                        });
+                    }
+                });
+            });
+
+            uploadPromises.push(uploadPromise);
+        });
+    });
+
+    // Wait for all files to upload
+    try {
+        const results = await Promise.all(uploadPromises);
+        uploadedFiles.push(...results);
+        console.log(`Successfully uploaded ${uploadedFiles.length} file(s)`);
+    } catch (err) {
+        console.error("Error uploading files:", err);
+        throw new Error(`File upload failed: ${err.message}`);
+    }
+
+    return uploadedFiles;
+}
+
+// Main function
 exports.fillRequirements = async (req, res) => {
     console.log("Filling out the requirements");
 
     try {
         const { org_name, requirement } = req.params;
 
-        console.log("Received the following form: ", req.body);
+        console.log("Received form data:", req.body);
         console.log("Files received:", req.files);
-        console.log(`Org name ${org_name}, requirement ${requirement}`);
+        console.log(`Org: ${org_name}, Requirement: ${requirement}`);
 
         if (!org_name || !requirement) {
             return res.status(400).json({
@@ -94,7 +163,7 @@ exports.fillRequirements = async (req, res) => {
 
         const orgs = db.collection("student_organization");
 
-        // 1. Load existing organization
+        // 1. Find the organization
         const org = await orgs.findOne({
             $or: [
                 { org_name: org_name },
@@ -109,32 +178,36 @@ exports.fillRequirements = async (req, res) => {
             });
         }
 
+        // 2. Create internal key for storing in org's requirements
         const internalKey = requirement
             .trim()
             .toLowerCase()
             .replace(/\s+/g, "_");
 
-        console.log(`Internal key "${internalKey}"`);
+        console.log(`Internal key: "${internalKey}"`);
 
         // Ensure requirements object exists
         if (!org.requirements) {
             org.requirements = {};
         }
 
-        // Get the form template from forms collection
+        // 3. Get the form template from forms collection
         const formsCollection = db.collection("forms");
         const formTemplate = await formsCollection.findOne({
             requirement_name: requirement
         });
 
         if (!formTemplate) {
+            console.log(`Form template not found for: ${requirement}`);
             return res.status(404).json({
                 success: false,
                 message: "Form template not found"
             });
         }
 
-        // Auto-create or get existing requirement
+        console.log(`Found form template: ${formTemplate.requirement_name}`);
+
+        // 4. Initialize requirement if it doesn't exist
         if (!org.requirements[internalKey]) {
             org.requirements[internalKey] = {
                 form_id: formTemplate._id,
@@ -152,12 +225,9 @@ exports.fillRequirements = async (req, res) => {
 
         const existingFields = org.requirements[internalKey].fields || [];
 
-        // 2. Build fields array from form data - preserve all original field properties
+        // 5. Build updated fields array preserving structure
         const updatedFields = existingFields.map((field, index) => {
-            // Start with the original field structure from the form template
             const templateField = formTemplate.fields[index] || {};
-
-            // Get content from request body if provided
             const content = req.body[`field_${index}`] || field.content || "";
 
             return {
@@ -169,58 +239,17 @@ exports.fillRequirements = async (req, res) => {
             };
         });
 
-        // 3. Handle supporting documents (files at requirement level)
+        // 6. Handle file uploads
         let uploadedFiles = [];
 
-        console.log("Checking for files...", req.files);
-
         if (req.files) {
-            // Check all possible file field names
-            Object.keys(req.files).forEach(fileKey => {
-                console.log(`Found file field: ${fileKey}`);
-
-                const fileOrArray = req.files[fileKey];
-                const files = Array.isArray(fileOrArray) ? fileOrArray : [fileOrArray];
-
-                files.forEach(file => {
-                    // Create timestamp in YYYY-MM-DD_HH:MM format
-                    const now = new Date();
-                    const dateStr = now.toISOString().split('T')[0]; // YYYY-MM-DD
-                    const timeStr = now.toTimeString().split(' ')[0].substring(0, 5); // HH:MM
-
-                    // Get file extension
-                    const fileExt = file.name.substring(file.name.lastIndexOf('.'));
-                    const fileNameWithoutExt = file.name.substring(0, file.name.lastIndexOf('.'));
-
-                    // Format: <YYYY-MM-DD>_<HH:MM>-<org-name>-<file name>
-                    const newFileName = `${dateStr}_${timeStr}-${org_name}-${fileNameWithoutExt}${fileExt}`;
-                    const savePath = `./uploads/${newFileName}`;
-
-                    console.log(`Attempting to save file: ${file.name} as ${newFileName} to ${savePath}`);
-
-                    file.mv(savePath, (err) => {
-                        if (err) {
-                            console.error("File upload error:", err);
-                        } else {
-                            console.log(`File saved successfully: ${savePath}`);
-                        }
-                    });
-
-                    uploadedFiles.push({
-                        filename: file.name,
-                        saved_as: newFileName,
-                        filepath: savePath,
-                        mimetype: file.mimetype,
-                        size: file.size,
-                        uploaded_at: now.toISOString()
-                    });
-                });
-            });
+            console.log("Processing file uploads...");
+            uploadedFiles = await uploadFiles(req.files, org_name);
         } else {
-            console.log("No files found in request");
+            console.log("No files to upload");
         }
 
-        // 4. Prepare update object
+        // 7. Prepare update object
         const updateObject = {
             [`requirements.${internalKey}.fields`]: updatedFields,
             [`requirements.${internalKey}.last_updated`]: new Date().toISOString().split("T")[0],
@@ -228,15 +257,14 @@ exports.fillRequirements = async (req, res) => {
             [`requirements.${internalKey}.form_id`]: formTemplate._id
         };
 
-        // Add files if any were uploaded
+        // Add file metadata if files were uploaded
         if (uploadedFiles.length > 0) {
-            // Store as arrays for multiple files
             updateObject[`requirements.${internalKey}.filenames`] = uploadedFiles.map(f => f.saved_as);
             updateObject[`requirements.${internalKey}.filepaths`] = uploadedFiles.map(f => f.filepath);
-            updateObject[`requirements.${internalKey}.files`] = uploadedFiles; // Full file metadata
+            updateObject[`requirements.${internalKey}.files`] = uploadedFiles;
         }
 
-        // 5. Update MongoDB
+        // 8. Update database
         await orgs.updateOne(
             {
                 $or: [
