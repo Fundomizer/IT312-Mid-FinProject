@@ -23,14 +23,14 @@ async function getProfile() {
 
 async function loadDashboardPage() {
 
-    loadPage("admin", "dashboard_page.html")
+    await loadPage("admin", "dashboard_page.html")
     renderDashboard()
     handleLogout()
 }
 
 async function loadUsersPage() {
 
-    loadPage("admin", "users_page.html", "", "users_script.js")
+    await loadPage("admin", "users_page.html", "", "users_script.js")
 
     users = await fetch("/api/admin/rsc/users", {
         method: "GET",
@@ -283,7 +283,7 @@ async function loadUsersPage() {
 
 async function loadLogsPage() {
 
-    loadPage("admin", "logs_page.html")
+    await loadPage("admin", "logs_page.html")
 
     logs = await fetch("/api/admin/rsc/log", {
         method: "GET",
@@ -372,7 +372,7 @@ async function loadLogsPage() {
 
 async function loadOrgsPage() {
 
-    loadPage("admin", "student_org_page.html", "", "")
+    await loadPage("admin", "student_org_page.html", "", "")
 
     displayOrgs()
 

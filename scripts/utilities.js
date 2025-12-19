@@ -9,24 +9,33 @@ import { HOST } from "./config.js";
  * @param {String} script Defaults to an empty string. File name of the script the page uses, it should include the file extension.
  * @param {String} loadInto Default as "Content". ID of the container to load the page into
  */
-export function loadPage(role, page, style, script, loadInto = "Content") {
+export async function loadPage(role, page, style, script, loadInto = "Content") {
   let pathToPage = `../../pages/${role}/${page}`;
   let pathToScript = `../../scripts/${role}/${script}`;
   let pathToStyle = `../../styles/${role}/${style}`;
 
-  fetch(pathToPage)
-    .then((result) => result.text()) // Convert into html text
-    .then((htmlText) => {
-      // Parse and grab the #PageContent only to ensure that you don't get the Head tag from the HTML element
-      const parser = new DOMParser();
-      const html = parser.parseFromString(htmlText, "text/html");
-      const mainContent = html.querySelector("#PageContent");
-      document.getElementById(loadInto).innerHTML = mainContent.innerHTML;
+  const result = await fetch(pathToPage);
+  const htmlText = await result.text();
 
-      // Load CSS and Script into assigned to that page
-      if (style) loadCSS(pathToStyle);
-      if (script) loadScript(pathToScript);
-    });
+  const parser = new DOMParser();
+  const html = parser.parseFromString(htmlText, "text/html");
+  const mainContent = html.querySelector("#PageContent");
+
+  if (!mainContent) {
+    console.error("No #PageContent found in loaded page:", pathToPage);
+    return;
+  }
+
+  const container = document.getElementById(loadInto);
+  if (!container) {
+    console.error(`Element #${loadInto} not found in DOM`);
+    return;
+  }
+
+  container.innerHTML = mainContent.innerHTML;
+
+  if (style) loadCSS(pathToStyle);
+  if (script) loadScript(pathToScript);
 
   function loadScript(src) {
     const existingScript = document.querySelector(`script[src="${src}"]`);
