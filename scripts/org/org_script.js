@@ -1,290 +1,337 @@
-import { fetchCollection, loadPage } from "../utilities.js"
+import { fetchCollection, loadPage } from "../utilities.js";
+import {HOST} from "../config.js"
 
-const dashboard = document.getElementById("dashboardButton")
-const forms = document.getElementById("formsButton")
-const history = document.getElementById("historyButton")
+const dashboard = document.getElementById("dashboardButton");
+const history = document.getElementById("historyButton");
+
+async function getProfile() {
+    return await fetch("/api/auth/profile", {
+        method: "POST",
+        credentials: "include"
+    }).then(res => res.json());
+}
 
 async function loadDashboard() {
-    loadPage('org', 'dashboard_page.html')
+    loadPage("org", "dashboard_page.html");
 
-    // Display the actual number of total submissions and forms
-    let submissions = await fetchCollection('history')
-    let assignedForms = await fetchCollection('forms')
+    const profile = await getProfile();
+
+    const forms = await fetch(
+        `/api/orgs/rsc/forms/${profile.user.organization}`,
+        { method: "GET", credentials: "include" }
+    ).then(res => res.json());
+
+    const totalSubmissions = await fetch(
+        `/api/orgs/rsc/history/${profile.user.organization}`,
+        { method: "GET", credentials: "include" }
+    ).then(res => res.json());
 
     const totalSubs = document.querySelector("#TotalSubmissions b");
     const totalAssForms = document.querySelector("#AssignedForms b");
 
-    totalSubs.textContent = submissions.length;
-    totalAssForms.textContent = assignedForms.length;
-}
-
-async function loadForms() {
-    loadPage('org', 'assigned_form_page.html')
-
-    let forms = await fetchCollection('forms')
-
-    displayForm(forms)
-
-    function displayForm(forms) {
-        const formDisplay = document.getElementById('Forms')
-
-        forms.forEach(item => {
-            formDisplay.appendChild(createForm(item))
-        });
-    }
-
-    function createForm(form) {
-        // Parent wrapper
-        const wrapper = document.createElement("div");
-        wrapper.className = "SubCard Form";
-
-        // Attach the two big parts
-        wrapper.appendChild(createFormDetails());
-        wrapper.appendChild(createStyledButtonDiv());
-
-        return wrapper;
-
-        function createFormDetails() {
-            const formDetails = document.createElement("div");
-            formDetails.className = "FormDetails";
-
-            // Title + Action
-            const titleBlock = document.createElement("span");
-            const titleEl = document.createElement("h3");
-            titleEl.className = "FormTitle";
-            titleEl.textContent = form.requirement_name;
-
-
-
-            titleBlock.appendChild(titleEl);
-
-
-            // Description
-            const descEl = document.createElement("p");
-            descEl.className = "FormDescription";
-            descEl.textContent = form.description;
-
-            // Requirements
-            const requirements = document.createElement("div");
-            requirements.className = "FormRequirements";
-
-            const reqSpan = document.createElement("span");
-
-            const imageWrapper = document.createElement("div");
-            imageWrapper.className = "ImageWrapper";
-
-            const icon = document.createElement("img");
-            icon.src = "../../assets/images/org_icons/document_icon.png";
-            icon.alt = "Document icon";
-
-            imageWrapper.appendChild(icon);
-
-            const reqText = document.createElement("p");
-            reqText.textContent = `${form.fields.length} Fields required`;
-
-            reqSpan.appendChild(imageWrapper);
-            reqSpan.appendChild(reqText);
-            requirements.appendChild(reqSpan);
-
-            // Tags
-            const tagsContainer = document.createElement("div");
-            tagsContainer.className = "Tags";
-            form.tags.forEach(tag => {
-                const tagEl = document.createElement("p");
-                tagEl.className = "Tag";
-                tagEl.textContent = tag;
-                tagsContainer.appendChild(tagEl);
-            });
-
-            // Assemble FormDetails
-            formDetails.appendChild(titleBlock);
-            formDetails.appendChild(descEl);
-            formDetails.appendChild(requirements);
-            formDetails.appendChild(tagsContainer);
-
-            return formDetails;
-        }
-
-        // --- Internal function: Styled button ---
-        function createStyledButtonDiv() {
-            const buttonWrapper = document.createElement("div");
-
-            const button = document.createElement("button");
-            button.className = "StyledButton";
-
-            const iconSpan = document.createElement("span");
-            const formIcon = document.createElement("img");
-            formIcon.src = "../../assets/images/icons/forms_icon.png";
-            formIcon.alt = "Form icon";
-            iconSpan.appendChild(formIcon);
-
-            const labelSpan = document.createElement("span");
-            labelSpan.textContent = "Fill Out form";
-
-            button.appendChild(iconSpan);
-            button.appendChild(labelSpan);
-            buttonWrapper.appendChild(button);
-
-            return buttonWrapper;
-        }
-    }
-
-
+    totalSubs.textContent = Object.keys(totalSubmissions.history.requirements).length;
+    totalAssForms.textContent = forms.requirements.length;
+    document.getElementById('OrgName').innerHTML = profile.user.organization
+    handleLogout()
 }
 
 async function loadHistory() {
-    loadPage('org', 'history_page.html')
+    await loadPage("org", "history_page.html");
 
-    let history = await fetchCollection('history')
+    const profile = await getProfile();
 
-    displayHistory(history)
+    const response = await fetch(
+        `/api/orgs/rsc/history/${profile.user.organization}`,
+        { method: "GET", credentials: "include" }
+    ).then(res => res.json());
 
-    function displayHistory(history) {
+    const history = response.history.requirements;
 
-        const logsDisplay = document.getElementById("History")
+    let allRequirements = Object.entries(history).map(([name, details]) => ({
+        name,
+        ...details
+    }));
 
-        history.forEach(item => {
-            logsDisplay.appendChild(createLog(item))
+    const searchInput = document.getElementById("SearchInput");
+
+    function displayHistory(requirements) {
+        const logsDisplay = document.getElementById("History");
+        if (!logsDisplay) return;
+
+        logsDisplay.innerHTML = "";
+        requirements.forEach(item => {
+            logsDisplay.appendChild(createLog(item));
         });
-
     }
 
-    function createLog(log) {
-        // Create parent Wrapper
+   function filterHistory() {
+    const term = searchInput.value.toLowerCase();
+
+    const filtered = allRequirements.filter(req => {
+        const nameMatch = req.name?.toLowerCase().includes(term);
+        const tagMatch = (req.tags || []).some(tag =>
+            tag.toLowerCase().includes(term)
+        );
+        const fieldMatch = (req.fields || []).some(field =>
+            field.question?.toLowerCase().includes(term) ||
+            field.content?.toLowerCase().includes(term)
+        );
+        const fileMatch =
+            req.filename?.toLowerCase().includes(term) ||
+            req.file_path?.toLowerCase().includes(term); 
+
+        return nameMatch || tagMatch || fieldMatch || fileMatch;
+    });
+
+    displayHistory(filtered);
+}
+
+
+    searchInput.addEventListener("input", filterHistory);
+
+    displayHistory(allRequirements);
+
+    function createLog(requirement) {
         const wrapper = document.createElement("div");
         wrapper.className = "SubCard Log";
 
-        wrapper.appendChild(createLogDetails())
-        wrapper.appendChild(createStyledButtonDiv())
+        const logDetails = document.createElement("div");
+        logDetails.className = "LogDetails";
 
-        return wrapper
+        const titleBlock = document.createElement("div");
+        const titleEl = document.createElement("h4");
+        titleEl.textContent = requirement.name || "No name";
+        titleBlock.appendChild(titleEl);
 
-        function createLogDetails() {
-            // Log details
-            const logDetails = document.createElement("div");
-            logDetails.className = "LogDetails";
+        const updatedEl = document.createElement("p");
+        updatedEl.textContent = `Last Updated: ${requirement.last_updated || "N/A"}`;
 
-            // For the title and the action
-            const titleBlock = document.createElement("div");
-            const titleEl = document.createElement("h4");
-            titleEl.textContent = log['title'];
-            const actionEl = document.createElement("p");
-            actionEl.textContent = log['action'];
-            titleBlock.appendChild(titleEl);
-            titleBlock.appendChild(actionEl);
+        const tagsContainer = document.createElement("div");
+        tagsContainer.className = "Tags";
+        (requirement.tags || []).forEach(tag => {
+            const tagEl = document.createElement("p");
+            tagEl.className = "Tag";
+            tagEl.textContent = tag;
+            tagsContainer.appendChild(tagEl);
+        });
 
-            const activityEl = document.createElement("p");
-            activityEl.textContent = log['activity'];
+        logDetails.appendChild(titleBlock);
+        logDetails.appendChild(updatedEl);
+        logDetails.appendChild(tagsContainer);
 
-            // Date details, time of activity and submission, A.Y. and semester
-            const logDate = document.createElement("div");
-            logDate.className = "LogDate";
+        const buttonWrapper = document.createElement("div");
+        const button = document.createElement("button");
+        button.className = "StyledButton";
 
-            const dateSpan = document.createElement("span");
-            const imgWrapper = document.createElement("div");
-            imgWrapper.className = "ImageWrapper";
-            const calendarImg = document.createElement("img");
-            calendarImg.src = "../../assets/images/icons/calendar.png";
-            calendarImg.alt = "Calendar icon";
-            imgWrapper.appendChild(calendarImg);
+        const imgWrapper = document.createElement("div");
+        imgWrapper.className = "ImageWrapper";
 
-            // Time of submission
-            const submittedText = document.createElement("p");
-            submittedText.textContent = `Submitted: ${log['submission_date']}`;
+        const icon = document.createElement("img");
+        icon.src = "../../assets/images/org_icons/view.png";
+        icon.alt = "Eye icon";
 
-            dateSpan.appendChild(imgWrapper);
-            dateSpan.appendChild(submittedText);
+        imgWrapper.appendChild(icon);
 
-            // Academic year + Semester
-            const academicYear = document.createElement("p");
-            academicYear.textContent = `Academic Year: ${log['academic_yr']}`;
-            const semester = document.createElement("p");
-            semester.textContent = `Semester: ${log['semester']}`;
+        const label = document.createElement("span");
+        label.textContent = "View details";
 
-            logDate.appendChild(dateSpan)
-            logDate.appendChild(academicYear)
-            logDate.appendChild(semester)
+        button.appendChild(imgWrapper);
+        button.appendChild(label);
 
-            // Tags section
-            const tagsContainer = document.createElement("div");
-            tagsContainer.className = "Tags";
-            log['tags'].forEach(tag => {
-                const tagEl = document.createElement("p");
-                tagEl.className = "Tag";
-                tagEl.textContent = tag;
-                tagsContainer.appendChild(tagEl);
-            });
+        button.addEventListener("click", () => {
+            showRequirementModal(requirement);
+        });
 
-            // Assemble everything into LogDetails
-            logDetails.appendChild(titleBlock);
-            logDetails.appendChild(activityEl);
-            logDetails.appendChild(logDate);
-            logDetails.appendChild(tagsContainer);
+        buttonWrapper.appendChild(button);
 
-            return logDetails
-        }
+        wrapper.appendChild(logDetails);
+        wrapper.appendChild(buttonWrapper);
 
-        function createStyledButtonDiv() {
-            const buttonWrapper = document.createElement("div");
-
-            const button = document.createElement("button");
-            button.className = "StyledButton";
-
-            const imgWrapper = document.createElement("div");
-            imgWrapper.className = "ImageWrapper";
-
-            const icon = document.createElement("img");
-            icon.src = "../../assets/images/org_icons/view.png";
-            icon.alt = "Eye icon";
-
-            imgWrapper.appendChild(icon);
-
-            const label = document.createElement("span");
-            label.textContent = "View details";
-
-            button.appendChild(imgWrapper);
-            button.appendChild(label);
-
-            buttonWrapper.appendChild(button);
-
-            return buttonWrapper;
-        }
-
+        return wrapper;
     }
 }
 
-function openForm() {
-    const popup = document.querySelector(".PopupForm");
-    if (popup) {
-        popup.style.display = "block";
-    } else {
-        console.error("Popup element not found");
-    }
-}
-
-function closeForm() {
-    const popup = document.querySelector(".PopupForm");
-    if (popup) {
-        popup.style.display = "none";
-    }
-}
 
 // Assign event handlers for navigation
 if (dashboard) dashboard.addEventListener('click', loadDashboard)
-if (forms) forms.addEventListener('click', loadForms)
 if (history) history.addEventListener('click', loadHistory)
 
-// EventHandlers for popup forms
-document.addEventListener("click", (e) => {
-    if (e.target.closest(".StyledButton")) {
-        openForm();
+
+async function setTexts() {
+    const profile = await getProfile()
+    document.getElementById('UsernameLabel').innerHTML = profile.user.email
+}
+
+function handleLogout() {
+    let logoutButton = document.getElementById('Logout')
+    logoutButton.addEventListener('click', async () => {
+        try {
+            const res = await fetch('/api/auth/logout', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await res.json();
+            console.log(data);
+
+            if (res.ok && data.success) {
+                window.location.href = '/';
+            } else {
+                alert('Logout failed.');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('An error occurred while logging out.');
+        }
+    });
+
+}
+function showRequirementModal(requirement) {
+    const modal = document.createElement("div");
+    modal.className = "ModalOverlay";
+    modal.style.zIndex = 1000; 
+    modal.innerHTML = `
+        <div class="ModalContent">
+            <span class="ModalClose">&times;</span>
+
+            <h2>${requirement.name}</h2>
+            <p><b>Last Updated:</b> ${requirement.last_updated || "N/A"}</p>
+
+            <div class="Tags">
+                ${(requirement.tags || [])
+                    .map(tag => `<span class="Tag">${tag}</span>`)
+                    .join("")}
+            </div>
+
+            <hr />
+
+            <h3>Submitted Fields</h3>
+            ${(requirement.fields || [])
+                .map(field => `
+                    <div class="FieldBlock">
+                        <p><b>${field.question}</b></p>
+                        <p>${field.content || "<i>No content</i>"}</p>
+                    </div>
+                `).join("")}
+        </div>
+    `;
+
+    // Add uploaded files section
+    if (requirement.filepaths && requirement.filepaths.length) {
+        const filesDiv = document.createElement("div");
+        filesDiv.innerHTML = `<hr /><h3>Uploaded Files</h3>`;
+        
+        requirement.filepaths.forEach((path, i) => {
+            // Fix relative path to absolute URL
+            const filename = requirement.filenames[i] || "View File";
+            const absolutePath = path.replace(/^\.\/uploads/, `${HOST}/uploads`);
+            
+            const fileButton = document.createElement("button");
+            fileButton.textContent = filename;
+            fileButton.style.display = "block";
+            fileButton.style.marginTop = "4px";
+            fileButton.style.padding = "6px 12px";
+            fileButton.style.cursor = "pointer";
+
+            fileButton.addEventListener("click", () => {
+                const overlay = document.createElement("div");
+                overlay.style.position = "fixed";
+                overlay.style.top = 0;
+                overlay.style.left = 0;
+                overlay.style.width = "100%";
+                overlay.style.height = "100%";
+                overlay.style.background = "rgba(0,0,0,0.8)";
+                overlay.style.display = "flex";
+                overlay.style.justifyContent = "center";
+                overlay.style.alignItems = "center";
+                overlay.style.zIndex = 3000;
+
+                const viewer = document.createElement("div");
+                viewer.style.background = "#fff";
+                viewer.style.padding = "10px";
+                viewer.style.borderRadius = "10px";
+                viewer.style.width = "90%";
+                viewer.style.height = "90%";
+                viewer.style.display = "flex";
+                viewer.style.flexDirection = "column";
+                viewer.style.position = "relative";
+
+                // Toolbar with download button
+                const toolbar = document.createElement("div");
+                toolbar.style.display = "flex";
+                toolbar.style.justifyContent = "flex-end";
+                toolbar.style.gap = "10px";
+                toolbar.style.marginBottom = "5px";
+
+                const downloadBtn = document.createElement("button");
+                downloadBtn.textContent = "Download";
+                downloadBtn.style.cursor = "pointer";
+                downloadBtn.addEventListener("click", () => {
+                    const link = document.createElement("a");
+                    link.href = absolutePath;
+                    link.download = filename;
+                    link.click();
+                });
+                toolbar.appendChild(downloadBtn);
+
+                const contentDiv = document.createElement("div");
+                contentDiv.style.flex = "1";
+                contentDiv.style.overflow = "auto";
+                contentDiv.style.display = "flex";
+                contentDiv.style.justifyContent = "center";
+                contentDiv.style.alignItems = "center";
+
+                const ext = filename.split('.').pop().toLowerCase();
+                if (ext === "pdf") {
+                    const iframe = document.createElement("iframe");
+                    iframe.src = absolutePath;
+                    iframe.style.width = "100%";
+                    iframe.style.height = "100%";
+                    contentDiv.appendChild(iframe);
+                } else if (["png","jpg","jpeg","gif"].includes(ext)) {
+                    const img = document.createElement("img");
+                    img.src = absolutePath;
+                    img.style.maxWidth = "100%";
+                    img.style.maxHeight = "100%";
+                    contentDiv.appendChild(img);
+                } else {
+                    contentDiv.textContent = "Cannot preview this file type.";
+                }
+
+                const closeBtn = document.createElement("button");
+                closeBtn.textContent = "Close";
+                closeBtn.style.position = "absolute";
+                closeBtn.style.top = "10px";
+                closeBtn.style.right = "10px";
+                closeBtn.style.padding = "6px 12px";
+                closeBtn.style.cursor = "pointer";
+                closeBtn.addEventListener("click", () => overlay.remove());
+
+                viewer.appendChild(toolbar);
+                viewer.appendChild(contentDiv);
+                viewer.appendChild(closeBtn);
+                overlay.appendChild(viewer);
+                document.body.appendChild(overlay);
+            });
+
+            filesDiv.appendChild(fileButton);
+        });
+
+        modal.querySelector(".ModalContent").appendChild(filesDiv);
     }
-    if (e.target.id === "CancelForm") {
-        closeForm();
-    }
-    if (e.target.closest("#EkisButton")) {
-        closeForm();
-    }
-});
+
+    document.body.appendChild(modal);
+
+    modal.querySelector(".ModalClose").onclick = () => modal.remove();
+    modal.onclick = e => { if (e.target === modal) modal.remove(); };
+}
+
+
+if (dashboard) dashboard.addEventListener("click", loadDashboard);
+if (history) history.addEventListener("click", loadHistory);
 
 loadDashboard() // Load dashboard by default
+setTexts()

@@ -7,11 +7,12 @@
     <link rel="icon" href="../../assets/images/icons/favicon.png">
     <link rel="stylesheet" href="../../styles/common.css">
     <link rel="stylesheet" href="../../styles/navigation_bar_style.css">
-    <link rel="stylesheet" href="../../styles/navigation_bar_mobile_style.css">
     <link rel="stylesheet" href="../../styles/admin/admin_style.css">
-    <link rel="stylesheet" href="../../styles/admin/admin_mobile_style.css" media="(max-width: 768px)">
-    <script src="../../scripts/navigation_bar.js" defer></script>
+    <script type="module" src="../../scripts/auth.js"></script>
+    <script type="module" src="../../scripts/config.js"></script>
+    <script type="module" src="../../scripts/navigation_bar.js" defer></script>
     <script type="module" src="../../scripts/admin/admin_script.js" defer></script>
+    <script type="module" src="../../scripts/utilities.js" defer></script>
     <title>Admin</title>
 </head>
 
@@ -28,23 +29,30 @@
         <div class="SideNavContent">
             <ul>
                 <li>
-                    <button class="NavItems" id="dashboardButton">
+                    <button class="NavItems" id="dashboardButton" title="Dashboard">
                         <span class="icon"><img src="../../assets/images/icons/dashboard_icon.png"
                                 alt="Dashboard icon"></span>
                         <span class="label">Dashboard</span>
                     </button>
                 </li>
                 <li>
-                    <button class="NavItems" id="usersButton">
+                    <button class="NavItems" id="usersButton" title="User Management">
                         <span class="icon"><img src="../../assets/images/icons/users_icon.png" alt="Users icon"></span>
                         <span class="label">Users</span>
                     </button>
                 </li>
                 <li>
-                    <button class="NavItems" id="activityLogButton">
+                    <button class="NavItems" id="activityLogButton" title="Admin Dashboard">
                         <span class="icon"><img src="../../assets/images/icons/activity_icon.png"
                                 alt="Activities icon"></span>
                         <span class="label">Activity Logs</span>
+                    </button>
+                </li>
+                <li>
+                    <button class="NavItems" id="orgsButton" title="Student Organizations">
+                        <span class="icon"><img src="../../assets/images/icons/organization_icon.png"
+                                alt="Organizations icon"></span>
+                        <span class="label">Organizations</span>
                     </button>
                 </li>
             </ul>
@@ -58,9 +66,9 @@
                 </button>
                 <button class="TopNavButton UserProfile">
                     <img id="UserProfilePic" src="../../assets/images/icons/users_icon.png" alt="User profile pic">
-                    <p id="UsernameLabel">Username</p>
+                    <p id="UsernameLabel"></p>
                 </button>
-                <button id="Logout" class="TopNavButton">
+                <button id="LogoutButton" class="TopNavButton">
                     <img src="../../assets/images/icons/logout_icon.png" alt="Logout icon">Logout</button>
             </div>
         </div>

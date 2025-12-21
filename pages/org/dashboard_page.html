@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../../styles/navigation_bar_style.css">
     <link rel="stylesheet" href="../../styles/org/org_style.css">
     <link rel="stylesheet" href="../../styles/common.css">
+    
     <script src="../../scripts/navigation_bar.js" defer></script>
     <title>Dashboard</title>
 </head>
@@ -14,15 +15,15 @@
 <body>
     <section id="PageContent">
 
-        <div>
-            <h1 id="OrgName">Association for Computing Machinery (ACM)</h1>
+        <div id="HeadingPart">
+            <h1 id="OrgName"></h1>
             <p>Submit and manage your organization's requirements</p>
         </div>
 
         <div class="Card OrgDashboard">
             <h1>Overview</h1>
             <div>
-                <div class="SubCard">
+                <div class="SubCard" id="SubCardOverview">
                     <span>
                         <p>Total Submissions</p>
                         <p id="TotalSubmissions"><b>0</b></p>
@@ -32,7 +33,7 @@
                     </div>
                 </div>
 
-                <div class="SubCard">
+                <div class="SubCard" id="SubCardOverview">
                     <span>
                         <p>Assigned Forms</p>
                         <p id="AssignedForms"><b>0</b></p>

@@ -1,0 +1,119 @@
+.SearchFilterContainer{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+}
+
+.SearchFilterContainer img{
+    filter: brightness(100);
+}
+
+#HistorySearchBar{
+    padding: 1rem;
+}
+
+.FilterPanel{
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, margin-top 0.3s ease-out;
+}
+.FilterPanel.Expand{
+    max-height: 500px;
+    margin-top: 1vh;
+}
+.FilterContent{
+    background: var(--card-bg-color);
+    border-radius: 8px;
+    padding: 1.25rem;
+}
+#GroupedFilter{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+#FilterDropdown{
+    background: var(--subcard-bg-color);
+    border: 1px solid var(--outline-color);
+    border-radius:0.313rem;
+    padding: .5rem;
+    color: var(--text-color);
+    font-size: 0.938rem;
+    cursor: pointer;
+}
+.TagsContainer{
+    justify-content: space-evenly;
+    border-style: solid;
+    border-color: var(--outline-color);
+    border-radius: .5rem;
+    background: var(--subcard-bg-color);
+    padding: 1rem 1rem 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 1vh;
+    column-gap: 1vw;
+}
+.TagsContainer label {
+    display: inline-block;
+    padding: .5vh .5vw .5vh;
+    background-color: var(--clear-cancel-color);
+    color: var(--body-title-color);
+    border-radius: .5rem;
+    font-size: medium;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+.TagsContainer label:hover {
+    background-color: var(--clear-cancel-color);
+}
+.TagsContainer input[type="checkbox"] {
+    display: none;
+}
+
+.TagsContainer input[type="checkbox"]:checked + label {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    border-color: var(--outline-color);
+}
+#TagsButton {
+    display: none;
+}
+#TagsButton:checked + label {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    border-color: var(--outline-color);
+}
+
+.FilterActionButtons{
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+#ClearFilterButton, #ApplyFilterButton{
+    padding: 0.625rem 1.25rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+#ClearFilterButton{
+    border: 2px solid var(--outline-color);
+    color: var(--body-title-color);
+}
+#ClearFilterButton:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+#ApplyFilterButton{
+    background: var(--accent-color);
+    border: none;
+    color: var(--text-color);
+}
+#ApplyFilterButton:hover {
+    background: var(--hover-accent-color);
+}

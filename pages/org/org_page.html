@@ -9,8 +9,12 @@
     <link rel="stylesheet" href="../../styles/navigation_bar_style.css">
     <link rel="stylesheet" href="../../styles/org/org_style.css">
     <link rel="stylesheet" href="../../styles/org/org_form_style.css">
-    <script src="../../scripts/navigation_bar.js" defer></script>
+    <link rel="stylesheet" href="../../styles/org/org_filter_style.css">
+    <script type="module" src="../../scripts/auth.js"></script>
+    <script type="module" src="../../scripts/config.js"></script>
+    <script type="module" src="../../scripts/navigation_bar.js" defer></script>
     <script type="module" src="../../scripts/org/org_script.js"></script>
+    <script type="module" src="../../scripts/org/org_form_script.js"></script>
     <title>Student Organization</title>
 </head>
 
@@ -27,7 +31,7 @@
         <div class="SideNavContent">
             <ul>
                 <li>
-                    <button class="NavItems" id="dashboardButton">
+                    <button class="NavItems" id="dashboardButton" title="Dashboard">
                         <span class="icon">
                             <img src="../../assets/images/icons/dashboard_icon.png" alt="Dashboard icon">
                         </span>
@@ -35,7 +39,7 @@
                     </button>
                 </li>
                 <li>
-                    <button class="NavItems" id="formsButton">
+                    <button class="NavItems" id="formsButton" title="Assigned Form">
                         <span class="icon">
                             <img src="../../assets/images/icons/forms_icon.png" alt="Dashboard icon">
                         </span>
@@ -43,11 +47,11 @@
                     </button>
                 </li>
                 <li>
-                    <button class="NavItems" id="historyButton">
+                    <button class="NavItems" id="historyButton" title="Submission History">
                         <span class="icon">
                             <img src="../../assets/images/icons/folder_icon.png" alt="Dashboard icon">
                         </span>
-                        <span class="label">History</span>
+                        <span class="label">Submission History</span>
                     </button>
                 </li>
             </ul>

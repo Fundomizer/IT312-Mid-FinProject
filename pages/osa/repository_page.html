@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="module" src="../../scripts/osa/osa_auth.js" defer ></script>
+
   <title>Repository</title>
 </head>
 
@@ -62,12 +62,11 @@
 
 
 
-    <section class="panel" aria-labelledby="repoHeading">
-      <h2 id="repoHeading">Requirements Repository</h2>
-      <div class="meta-row">
-        <div class="results-info">Use the search bar to filter by title, location or tags</div>
-        <div class="results-info" id="lastUpdated">Updated: Oct 2024</div>
-      </div>
+      <section class="panel" aria-labelledby="repoHeading">
+        <h2 id="repoHeading">Requirements Repository</h2>
+        <div class="meta-row">
+          <div class="results-info">Use the search bar to filter by title, location or tags</div>
+        </div>
 
 
       <div class="list" id="repoList">
@@ -86,9 +85,15 @@
         </div>
 
 
+      <!-- Modal -->
+      <div id="formDetailsModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000;">
+        <div style="background:#0f1724; padding:1.5rem; border-radius:12px; width:90%; max-width:700px; color:white; max-height:90%; overflow:auto; position:relative; box-shadow:0 6px 24px rgba(0,0,0,0.7); line-height:1.6; font-size:0.875rem;">
+          <button id="closeModal" style="position:absolute; top:10px; right:10px; background:#7c3aed; border:none; padding:6px 0.75rem; border-radius:6px; cursor:pointer; color:white; font-weight:600;">Close</button>
+          <h2 id="modalOrgName" style="display:flex; flex-direction:column; gap:12px;"></h2>
+          <div id="modalRequirements" style="margin-top:12px; display:flex; flex-direction:column; gap:12px;"></div>
+        </div>
       </div>
-    </section>
-  </main>
+   </main>
 </body>
 </html>
 

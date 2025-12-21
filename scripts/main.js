@@ -1,10 +1,71 @@
-// Element selectors
-const idInput = document.getElementById("IdInput");
-const passwordInput = document.getElementById("PasswordInput");
-const loginButton = document.getElementById("LoginButton");
-const googleLogButton = document.getElementById("GoogleLogin");
+// login.js
+import { HOST, PHP_HOST, PORT } from "./config.js";
 
-googleLogButton.addEventListener("click", () => {
-    // Add google login through here
-    console.log("Under construction!");
+const loginForm = document.getElementById('LoginForm');
+
+loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const data = Object.fromEntries(new FormData(loginForm).entries());
+
+    try {
+        const response = await fetch(`${HOST}/api/auth/login`, { // TODO fix up HOST later on
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify(data)
+        });
+
+        const text = await response.text();
+        let auth;
+        try {
+            auth = JSON.parse(text);
+        } catch (err) {
+            console.error("Failed to parse server response:", text);
+            alert("Server returned invalid response.");
+            return;
+        }
+
+        if (!auth.success) {
+            alert(auth.message || "Invalid credentials");
+            return;
+        }
+        localStorage.setItem("username", auth.username);
+        console.log(localStorage.getItem("username"))
+        if (auth.role === 'osa') {
+            localStorage.setItem("email", auth.email);
+            try {
+                const phpResponse = await fetch(`${PHP_HOST}/IT312-Mid-FinProject/server/php/start_session.php`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify({ email: data.email })
+                });
+
+
+                if (!phpResponse.ok) {
+                    console.error("PHP session error:", await phpResponse.text());
+                    alert("Failed to start PHP session.");
+                    return;
+                }
+
+                // Redirect after PHP session
+                window.location.href = `${PHP_HOST}/IT312-Mid-FinProject/pages/osa/osa_page.html`;
+
+            } catch (err) {
+                console.error("Failed to start PHP session:", err);
+                alert("Failed to start PHP session.");
+            }
+
+        } else {
+            // Non-OSA users redirect
+            window.location.href = `${HOST}${auth.redirect}`;
+        }
+
+        if (auth.organization) localStorage.setItem("org_name", auth.organization);
+
+    } catch (err) {
+        console.error("Login fetch error:", err);
+        alert("Login has hit an unexpected error. Check console for details.");
+    }
 });

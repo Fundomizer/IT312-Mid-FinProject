@@ -1,8 +1,21 @@
 <?php
+ini_set('session.cookie_lifetime', 0);
+session_start();
 require './vendor/autoload.php';
 
-// --- CORS headers ---
-header("Access-Control-Allow-Origin: *");
+//CORS headers 
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+
+$allowed_origins = [
+    "http://localhost:8123",
+    "http://192.168.0.111:8123"
+];
+
+if (in_array($origin, $allowed_origins)) {
+    header("Access-Control-Allow-Origin: $origin");
+    header("Access-Control-Allow-Credentials: true");
+}
+header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header('Content-Type: application/json');
@@ -13,33 +26,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
+if (!isset($_SESSION['user'])) {
+    http_response_code(401);
+    echo json_encode(["error" => "Not authenticated"]);
+    exit();
+}
+
+// Optional: enforce role-based access
+if ($_SESSION['user']['role'] !== 'OSA') {
+    http_response_code(403);
+    echo json_encode(["error" => "Forbidden"]);
+    exit();
+}
+
+
 try {
-    // --- MongoDB connection ---
-    $uri = "mongodb://localhost:27017/";
+    $uri = "mongodb://localhost:27017/"; // change to local if needed
     $client = new MongoDB\Client($uri);
     $db = $client->OrganizationManagementDatabase;
 
-    // --- Allowed collections ---
-    $collections = [
-        'forms',
-        'history',
-        'log',
-        'org_forms',
-        'osa_submissions',
-        'student_organization',
-        'users'
-    ];
+    $collections = ['forms', 'student_organization'];
 
-    // --- Get collection from query string ---
     $collectionName = $_GET['collection'] ?? null;
 
     if ($collectionName && in_array($collectionName, $collections)) {
         $collection = $db->$collectionName;
 
-        // Fetch all documents
         $cursor = $collection->find();
 
-        // Convert cursor to array
         $docs = iterator_to_array($cursor);
 
         // Encode with options to handle BSON types

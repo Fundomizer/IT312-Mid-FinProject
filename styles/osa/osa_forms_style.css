@@ -1,144 +1,249 @@
-  #PageContent {
+#PageContent {
   flex: 1;
-  padding: 28px 40px;
+  padding: 1.75rem 2.5rem;
   overflow: auto;
-  
 }
 
-/* Form Builder Section (Card Style) */
 .form-builder-section {
-  background: linear-gradient(180deg, #081226 0%, #071021 100%);
+  background: var(--card-bg-color);
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 0 6px 24px rgba(2, 6, 23, 0.6);
-  padding: 24px;
-  margin-bottom: 24px;
-  color: var(--text);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
-/* Section title */
 .form-builder-section h3 {
-  margin: 0 0 20px 0;
-  font-size: 20px;
+  margin: 0 0 1.25rem 0;
+  font-size: 1.5rem;
   font-weight: 600;
-  color: var(--text);
 }
 
-/* Each form item */
 .form-builder-section .form-item {
-  margin-bottom: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 10px;
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.03);
+  margin-bottom: 1rem;
+  border: 1px solid var(--outline-color);
+  border-radius: 12px;
+  padding: 1rem;
+  background: var(--subcard-bg-color);
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .form-builder-section .form-item:hover {
-  border-color: var(--accent);
-  background-color: rgba(255, 255, 255, 0.05);
+  border-color: var(--accent-color);
 }
 
-/* Header row inside each form */
-.form-builder-section .form-header {
+.form-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
-  font-size: 16px;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
   font-weight: 600;
-  color: var(--text);
 }
 
-/* Description / metadata */
-.form-builder-section .form-description {
-  font-size: 13px;
+.form-description {
+  font-size: 1rem;
   color: var(--muted);
-  margin-bottom: 6px;
+  margin-bottom: 0.375rem;
 }
 
-/* Tag inside header */
-.form-builder-section .form-tag {
+.form-tag {
   display: inline-block;
   background: var(--surface);
   color: var(--muted);
-  padding: 3px 10px;
+  padding: 0.188px 0.625rem;
   border-radius: 12px;
-  font-size: 12px;
+  font-size: 1rem;
   font-weight: 500;
-  margin-left: 8px;
+  margin-left: 0.5rem;
 }
 
-/* Field count */
-.form-builder-section .form-field-count {
-  font-size: 12px;
+.form-field-count {
+  font-size: 1rem;
   color: var(--muted);
   text-align: right;
 }
 
-/* Status badges */
-.form-status {
-  display: inline-block;
-  padding: 3px 10px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
-}
-.form-status.active {
-  background: linear-gradient(180deg, #10b981, #059669);
-  color: #fff;
-}
-.form-status.draft {
-  background: linear-gradient(180deg, #f59e0b, #d97706);
-  color: #111;
+.form-fields-container {
+  margin-top: 0.625rem;
+  padding: 0.625rem;
+  background: var(--main-bg-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  color: var(--body-title-color);
 }
 
-/* Header row for section */
+.form-fields-container div{
+  padding: 0.5rem 1rem;
+}
+
+.form-buttons {
+  margin-top: 0.625rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+
+.form-action-btn {
+  padding: 0.375rem 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+  border: none;
+  background: var(--accent-color);
+  box-shadow: 0 0 5px rgba(2, 6, 23, 0.6);
+  color: var(--text);
+}
+
+.form-action-btn:hover {
+  background-color: var(--hover-accent-color);
+}
+
 .form-header-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-}
-.form-header-row h3 {
-  margin: 0;
-  font-size: 18px;
-  color: var(--text);
-}
-.form-header-row p {
-  color: var(--muted);
-  margin: 0;
-  font-size: 13px;
+  margin-bottom: 1.25rem;
 }
 
-/* Buttons */
-#create-form-btn,
-.form-action-btn {
-  padding: 8px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.2s ease, transform 0.15s ease;
-}
-
-#create-form-btn {
-  background: linear-gradient(180deg, var(--accent), #5b21b6);
-  color: #fff;
-  border: none;
-  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
-}
 #create-form-btn:hover {
-  background: linear-gradient(180deg, #6d28d9, #4c1d95);
-  transform: translateY(-2px);
+  background: var(--hover-accent-color);
 }
 
-.form-action-btn {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: var(--text);
-  margin-left: 6px;
+#form-modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
-.form-action-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+
+#form-modal .modal-content {
+  background: var(--card-bg-color);
+  border-radius: var(--border-rad);
+  color: var(--text-color);
+  padding: 1.5rem;
+  width: 35vw;
+  text-align: left;
+  border: 1px solid rgba(255,255,255,0.05);
+  box-shadow: 0 6px 24px rgba(2,6,23,0.6);
+  position: relative;
+
+  max-height: 85vh;
+  overflow-y: auto;
+
+}
+
+.modal-description textarea {
+  resize: none;
+  overflow: hidden;
+  min-height: 3rem;
+  line-height: 1.4;
+  width: 100%;
+}
+
+#form-modal textarea::-webkit-scrollbar {
+  display: none;
+}
+
+#modal-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: var(--muted-color);
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+#modal-close:hover {
+  color: var(--accent-color);
+  transform: scale(1.2);
+}
+
+#form-modal input,
+#form-modal textarea {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  margin-top: 0.25rem;
+  border-radius: var(--border-rad);
+  border: 1px solid var(--outline-color);
+  font-size: 1rem;
+  box-sizing: border-box;
+  margin-bottom: 0.5rem;
+}
+
+#form-modal input:focus,
+#form-modal textarea:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 6px var(--accent-color);
+  outline: none;
+}
+
+#form-modal .modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.625rem;
+  margin-top: 1rem;
+}
+
+#form-modal button {
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-rad);
+  cursor: pointer;
+  border: none;
+  font-weight: bold;
+  border: 1px solid var(--outline-color);
+}
+
+#form-modal textarea {
+  resize: none;
+}
+
+#modal-update-btn {
+  background-color: var(--accent-color);
+  color: var(--text-color);
+  transition: background-color 0.2s ease;
+}
+
+#modal-update-btn:hover {
+  background: var(--hover-accent-color);
+}
+
+#modal-delete-btn {
+  background: var(--clear-cancel-color);
+  color: var(--body-title-color);
+}
+
+#modal-delete-btn:hover {
+  color: var(--accent-color);
+  border: 1px solid var(--accent-color);
+}
+
+#form-modal .required-toggle {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+
+#form-modal .required-toggle input[type="checkbox"] {
+    margin-top: 10px;
+
+  transform: scale(1.2); 
+  margin: 0;             
+  vertical-align: middle; 
+  display: inline-block; 
+}
+.modal-form-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* ensures EVERYTHING inside aligns left */
 }

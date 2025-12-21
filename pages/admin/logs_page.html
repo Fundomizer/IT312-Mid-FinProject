@@ -4,21 +4,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>Document</title>
 </head>
 
 <body>
     <section id="PageContent">
-        <div>
+        <div id="title">
             <h1>Admin Dashboard</h1>
             <p>View system activity</p>
         </div>
+        <div class="Card" id="SearchContainer">
+            <div class="SearchBar">
+                <img src="../../assets/images/icons/magnify_icon.png" alt="Magnify icon">
+                <input id="SearchInput" type="text" placeholder="Search logs">
+            </div>
+            <label class="SubCard" for="DateFilter">
+                Date:
+                <select name="DateFilter" id="DateFilter">
+                    <option value="oldest">Oldest</option>
+                    <option value="newest">Newest</option>
+                </select>
+            </label>
+            <label class="SubCard" for="AlphaFilter">
+                Alphabetical:
+                <select name="AlphaFilter" id="AlphaFilter">
+                    <option value="desc">Descending</option>
+                    <option value="asc">Ascending</option>
+                </select>
+            </label>
+            <div class="SubCard DateRange">
+                <label for="StartDate">From:</label>
+                <input type="date" id="StartDate">
 
-        <div class="SearchBar">
-            <img src="../../assets/images/icons/magnify_icon.png" alt="Magnify icon">
-            <input id="SearchInput" type="text" placeholder="Search for users">
+                <label for="EndDate">To:</label>
+                <input type="date" id="EndDate">
+            </div>
         </div>
-
         <div class="Card" id="LogsView">
             <div class="Header">
                 <div>
@@ -26,8 +48,16 @@
                     <p>Complete log of all user and OSA activities</p>
                 </div>
             </div>
-            <div id="Logs">
-                
+            <div>
+                <table id="LogsTableView">
+                    <tr>
+                        <th>Action</th>
+                        <th>User</th>
+                        <th>Activity</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                    </tr>
+                </table>
             </div>
         </div>
     </section>

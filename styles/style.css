@@ -24,16 +24,22 @@ section>div {
     align-items: center;
 }
 
+section img{
+    filter: brightness(1);
+}
+
 input {
-    background-color: var(--search-bar-bg-color);
     border-width: 0px;
+    padding: 0.625rem;
+    background-color: var(--subcard-bg-color);
     color: var(--text-color);
+    font-size: 1rem;
 }
 
 #LoginButton {
     background-color: var(--accent-color);
-    border-width: 0px;
     color: white;
+    margin-top:4rem;
 }
 
 button:last-child {
@@ -42,11 +48,8 @@ button:last-child {
 
 .LoginTitle {
     max-width: 100%;
-    /* never exceed parent width */
     text-align: center;
-    /* center text */
     word-wrap: break-word;
-    /* break long words if needed */
     overflow-wrap: break-word;
     margin: 0;
 }
@@ -56,29 +59,34 @@ button:last-child {
     flex-direction: column;
     flex-wrap: wrap;
     justify-content: center;
-    align-items: stretch;
-    width: min(90%, 480px);
-    width: 30%;
-    gap: 10px;
-    padding: 50px 40px;
+    align-items: center;
+    width:75%;
+    gap: 0.625rem;
+    padding: 3.125rem 2.5rem;
+}
+
+.Card {
+    background: linear-gradient(180deg, #2b3240 0%, #151e2f 100%);
 }
 
 .LoginForm>div,
 .LoginForm div {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 0.625rem;
+}
+
+#LoginForm > div:nth-child(-n+2) {
+    margin-bottom: 1rem;
+}
+
+#LoginForm label {
+   font-weight: bold;
 }
 
 #InputFields {
-    gap: 20px;
-}
-
-.LoginForm> :nth-last-child(2) {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    width: 100%;
+    gap: 1.25rem;
+    width: 80%;
 }
 
 .LoginForm input {
@@ -87,14 +95,14 @@ button:last-child {
 }
 
 .LoginForm button {
-    margin-top: 25px;
-    padding: 10px;
+    margin-top: 1.563rem;
+    padding: 0.625rem;
     height: 3rem;
     width: 100%;
     border-radius: var(--border-rad);
     display: flex;
     flex-direction: row;
-    gap: 10px;
+    gap: 0.625rem;
     align-items: center;
     justify-content: center;
 }
@@ -114,10 +122,8 @@ button:last-child {
     width: 100px;
     height: 100px;
     aspect-ratio: 1 / 1;
-    /* ensures 1:1 ratio */
     overflow: hidden;
     border-radius: 8px;
-    /* optional: rounded corners */
 }
 
 .ImageWrapper img {
@@ -127,7 +133,6 @@ button:last-child {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* crop to fill without distortion */
 }
 
 .header {
@@ -150,8 +155,6 @@ button:last-child {
 .header h1,
 .header h2 {
     width: 100%;
-    /* occupy full width of .header */
     display: block;
-    /* ensure block-level behavior */
     box-sizing: border-box;
 }

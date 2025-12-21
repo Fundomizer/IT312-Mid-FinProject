@@ -1,23 +1,59 @@
-/* Dashboard styling */
-
 .Main>div:last-child>p {
     font-size: 3rem;
-    margin: 10px 0px;
+    margin: 0.625rem 0px;
 }
 
 .AdminDashboard {
     min-width: min-content;
     display: flex;
     flex-direction: column;
+    align-items: center;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 2rem;
 }
 
+.AdminDashboard h1 {
+    align-self: flex-start;
+}
+
 .AdminDashboard>div {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 2rem;
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    justify-content: center;
+    gap: 5rem;
+}
+
+.Card.SearchContainer{
+    padding: 1rem 1.5rem;
+    gap: 1rem;
+}
+
+.Card.SearchContainer label{
+    margin-left: 0.5rem;
+}
+
+.SearchBar {
+    width: 100%;
+    margin: 0;;
+    margin-bottom: 1rem;
+}
+
+#ClearFiltersButton {
+    margin: 0 1rem;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid var(--outline-color);
+    border-radius: var(--border-rad);
+    background-color: var(--clear-cancel-color);
+    color: var( --body-title-color);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+#ClearFiltersButton:hover {
+    color: var(--accent-color);
+    border-color: var(--accent-color);
 }
 
 .SubCard {
@@ -25,7 +61,7 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 1.25rem;
     width: 20vw;
 }
 
@@ -49,7 +85,6 @@
     align-items: center;
 }
 
-/* Users page styling */
 #Content {
     display: flex;
     flex-direction: column;
@@ -73,31 +108,18 @@
     flex: 1;
 }
 
-#AccountsTableView {
-    padding: 10px;
-    border-radius: 5px;
+#AccountsTableView,
+#LogsTableView,
+#OrgsTableView {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 2rem;
     min-width: 100px;
     min-height: 100px;
     overflow: auto;
 }
 
-#AccountsTableView td,
-#AccountsTableView th {
-    border-bottom: 1px solid var(--outline-color);
-    padding-bottom: 2rem;
-    word-wrap: break-word;
+td {
+    padding: 2rem;
 }
-
-#AccountsTableView th {
-    text-align: left;
-    font-weight: normal;
-}
-
-
-/* Logs Page styling */
 
 #LogsView {
     display: flex;
@@ -131,7 +153,7 @@
 .Log>div:last-child {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 0.125rem;
     align-items: flex-start;
     aspect-ratio: auto;
 }
@@ -142,8 +164,275 @@
 
 .Tag {
     border-radius: var(--border-rad);
-    padding: 5px 10px;
+    padding:0.313rem 0.625rem;
     outline: 1px solid var(--outline-color);
+}
+
+#DetailsActions {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+#EditButton,
+#SaveButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    background-color: var(--accent-color);
+    border: none;
+    border-radius: var(--border-rad);
+    color: var(--text-color);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.Hidden {
+    display: none !important;
+}
+
+#EditButton:hover,
+#SaveButton:hover {
+    background-color: var(--hover-accent-color);
+    transform: scale(1.05);
+}
+
+#AlphaFilter + label,
+#SchoolFilter + label,
+#OrgTypeFilter + label,
+.Card.SearchContainer label {
+  font-weight: 600;
+  color: var(--text-color);
+  margin-right: 0.5rem;
+  white-space: nowrap;
+}
+
+#AlphaFilter,
+#SchoolFilter,
+#OrgTypeFilter {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--outline-color);
+  border-radius: var(--border-rad);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#AlphaFilter:hover,
+#SchoolFilter:hover,
+#OrgTypeFilter:hover {
+  border-color: var(--accent-color);
+}
+
+#AlphaFilter:focus,
+#SchoolFilter:focus,
+#OrgTypeFilter:focus {
+  outline: none;
+  border-color: white;
+}
+
+.OrgSection {
+    border: none;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    background-color: var(--card-bg-color);
+}
+
+#AddOrgForm .OrgSection:first-of-type {
+    margin-top: 1rem;
+}
+
+.OrgSectionTitle {
+    font-weight: bold;
+    font-size: 2rem;
+    color: var(--text-color);
+    padding: 0 0.5rem;
+}
+
+.OrgSection label {
+    display: block;
+    font-weight: 500;
+    margin-top: 0.75rem;
+    color: var(--text-color);
+}
+
+.OrgSection input,
+.OrgSection select,
+.OrgSection textarea {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.25rem;
+    border: 1px solid var(--outline-color);
+    border-radius: var(--border-rad, 6px);
+    font-size: 0.875rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.OrgSection input:hover,
+.OrgSection select:hover,
+.OrgSection textarea:hover {
+    border-color: white;
+}
+
+.OrgSection input:focus,
+.OrgSection select:focus,
+.OrgSection textarea:focus {
+    outline: none;
+    border-color: white;
+}
+
+#CreateOrgButton {
+    padding: 0.5rem 1rem;
+    background-color: var(--accent-color);
+    border: none;
+    border-radius: var(--border-rad);
+    color: var(--text-color);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+#AddOrgPopup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+#AddOrgDetails, #Details {
+    background: var(--card-bg-color);
+    padding: 1.5rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 50vw;
+    color: var(--text-color);
+    max-height: 75%;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.7);
+    line-height: 1.6;
+    font-size: 1rem;
+    margin: 10vh auto;
+}
+
+#AddOrgDetails img,
+#Details img{
+    width: 1rem;
+    height: 1rem;
+}
+
+#AddDescription.OrgTextarea {
+    margin: 0;
+    padding: 0;
+    height: 5rem;
+}
+
+#XAddOrgPopup, #XPopup {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    width: 1.5rem;
+    height: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+#XAddOrgPopup img,
+#XPopup img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: invert(1);
+    transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+#XAddOrgPopup:hover,
+#XPopup:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+#XAddOrgPopup:hover img,
+#XPopup:hover img{
+    filter: invert(62%) sepia(92%) saturate(500%) hue-rotate(200deg);
+    transform: rotate(90deg);
+}
+
+#AddOrgForm label {
+    font-weight: bold;
+    margin-top: 0.75rem;
+    display: block;
+    color: var(--text-color);
+}
+
+#AddOrgForm input,
+#AddOrgForm select,
+#AddOrgForm textarea {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.25rem;
+    border: 1px solid var(--outline-color);
+    font-size: 1rem;
+    resize: none;
+}
+
+#AddOrgForm button {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-rad, 6px);
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+#AddOrgForm button[type="reset"] {
+    background-color: var(--clear-cancel-color);
+    color: var(--body-title-color);
+}
+
+#AddOrgForm button[type="submit"] {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+}
+
+#AddOrgForm button[type="submit"]:hover {
+    background-color: var(--hover-accent-color);
+}
+
+#AddOrgForm button[type="reset"] {
+    margin: 0 1rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--outline-color);
+    border-radius: var(--border-rad);
+    background-color: var(--clear-cancel-color);
+    color: var(--body-title-color);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+#AddOrgForm button[type="reset"]:hover {
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+#AddPopupContent.PopUpContent label{
+    color: var(--text-color);
 }
 
 @media (max-width: 480px) {

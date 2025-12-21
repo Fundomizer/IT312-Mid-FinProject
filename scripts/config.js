@@ -1,1 +1,5 @@
-export const API_BASE_URL = "http://localhost:3000";
+const HOST = window.location.origin;
+const PHP_HOST = `http://${window.location.hostname}`;
+const PORT = 8123;
+
+export { HOST, PHP_HOST, PORT };
